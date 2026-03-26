@@ -1,0 +1,92 @@
+import { useState, useCallback, type ReactNode } from 'react';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthContext } from '@/hooks/useAuth';
+import { AppLayout } from '@/components/layout/AppLayout';
+import { LoginPage } from '@/pages/LoginPage';
+import { DashboardPage } from '@/pages/DashboardPage';
+import { PurchaseOrdersPage } from '@/pages/PurchaseOrdersPage';
+import type { User } from '@/types';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+// ============================================
+// Auth Provider
+// ============================================
+function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(() => {
+    const stored = localStorage.getItem('auth_user');
+    return stored ? JSON.parse(stored) : null;
+  });
+
+  const isAuthenticated = user !== null;
+
+  const login = useCallback((token: string, user: User) => {
+    localStorage.setItem('auth_token', token);
+    localStorage.setItem('auth_user', JSON.stringify(user));
+    setUser(user);
+  }, []);
+
+  const logout = useCallback(() => {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
+    setUser(null);
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+// ============================================
+// Protected Route
+// ============================================
+function ProtectedRoute({ children }: { children: ReactNode }) {
+  const stored = localStorage.getItem('auth_user');
+  if (!stored) {
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+}
+
+// ============================================
+// App
+// ============================================
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/purchase-orders" element={<PurchaseOrdersPage />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
+}
