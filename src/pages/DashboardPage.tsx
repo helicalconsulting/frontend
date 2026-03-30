@@ -36,47 +36,68 @@ export function DashboardPage() {
   const { data, isLoading } = useDashboard();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20">
+      {/* Animated background pattern */}
+      <div className="fixed inset-0 -z-10">
+        <div 
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(59 130 246) 1px, transparent 1px)',
+            backgroundSize: '50px 50px',
+          }}
+        />
+        <div className="absolute top-40 -left-40 h-96 w-96 rounded-full bg-blue-400/10 blur-3xl animate-pulse" style={{animationDuration: '4s'}} />
+        <div className="absolute bottom-40 -right-40 h-96 w-96 rounded-full bg-indigo-400/10 blur-3xl animate-pulse" style={{animationDuration: '6s', animationDelay: '2s'}} />
+      </div>
+      
       <Header title="Dashboard Overview" subtitle="Real-time approval command center" />
 
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-6 animate-in">
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <KPICard
-            title="Pending Approvals"
-            value={isLoading ? '—' : formatNumber(data!.kpis.pendingApprovals)}
-            icon={<AlertTriangle className="h-6 w-6 text-amber-600" />}
-            iconBgColor="bg-amber-100"
-            trend={{ value: 12, isPositive: false }}
-            isLoading={isLoading}
-          />
-          <KPICard
-            title="Approved Today"
-            value={isLoading ? '—' : formatNumber(data!.kpis.approvedToday)}
-            icon={<CheckCircle2 className="h-6 w-6 text-emerald-600" />}
-            iconBgColor="bg-emerald-100"
-            trend={{ value: 8, isPositive: true }}
-            isLoading={isLoading}
-          />
-          <KPICard
-            title="Avg. Processing (hrs)"
-            value={isLoading ? '—' : data!.kpis.avgProcessingTime.toLocaleString()}
-            icon={<Clock className="h-6 w-6 text-blue-600" />}
-            iconBgColor="bg-blue-100"
-            isLoading={isLoading}
-          />
-          <KPICard
-            title="Total Value"
-            value={
-              isLoading
-                ? '—'
-                : formatCurrency(data!.kpis.totalFinancialExposure, data!.kpis.currency)
-            }
-            icon={<DollarSign className="h-6 w-6 text-indigo-600" />}
-            iconBgColor="bg-indigo-100"
-            trend={{ value: 15, isPositive: true }}
-            isLoading={isLoading}
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+          <div className="animate-slide-up">
+            <KPICard
+              title="Pending Approvals"
+              value={isLoading ? '—' : formatNumber(data!.kpis.pendingApprovals)}
+              icon={<AlertTriangle className="h-6 w-6 text-amber-600" />}
+              iconBgColor="bg-amber-100"
+              trend={{ value: 12, isPositive: false }}
+              isLoading={isLoading}
+            />
+          </div>
+          <div className="animate-slide-up delay-75">
+            <KPICard
+              title="Approved Today"
+              value={isLoading ? '—' : formatNumber(data!.kpis.approvedToday)}
+              icon={<CheckCircle2 className="h-6 w-6 text-emerald-600" />}
+              iconBgColor="bg-emerald-100"
+              trend={{ value: 8, isPositive: true }}
+              isLoading={isLoading}
+            />
+          </div>
+          <div className="animate-slide-up delay-100">
+            <KPICard
+              title="Avg. Processing (hrs)"
+              value={isLoading ? '—' : data!.kpis.avgProcessingTime.toLocaleString()}
+              icon={<Clock className="h-6 w-6 text-blue-600" />}
+              iconBgColor="bg-blue-100"
+              isLoading={isLoading}
+            />
+          </div>
+          <div className="animate-slide-up delay-200">
+            <KPICard
+              title="Total Value"
+              value={
+                isLoading
+                  ? '—'
+                  : formatCurrency(data!.kpis.totalFinancialExposure, data!.kpis.currency)
+              }
+              icon={<DollarSign className="h-6 w-6 text-indigo-600" />}
+              iconBgColor="bg-indigo-100"
+              trend={{ value: 15, isPositive: true }}
+              isLoading={isLoading}
+            />
+          </div>
         </div>
 
         {/* Charts */}
@@ -115,15 +136,12 @@ export function DashboardPage() {
             : data?.sections.map((section) => {
                 const IconComp = sectionIcons[section.icon] || ShoppingCart;
                 const gradient = sectionColors[section.id] || 'from-gray-500 to-gray-600';
-                const isClickable = section.id === 'purchase-orders';
 
                 return (
                   <button
                     key={section.id}
-                    onClick={() => isClickable && navigate('/purchase-orders')}
-                    className={`group rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 text-center ${
-                      isClickable ? 'cursor-pointer' : 'cursor-default'
-                    }`}
+                    onClick={() => section.route && navigate(section.route)}
+                    className="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 text-center cursor-pointer"
                   >
                     <div className="flex flex-col items-center gap-3">
                       <div

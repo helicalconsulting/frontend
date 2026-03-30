@@ -1,41 +1,54 @@
-import type { PurchaseOrdersResponse, ApproveRejectRequest, ApproveRejectResponse } from '@/types';
+import type { PurchaseOrdersResponse, ApproveRejectRequest, ApproveRejectResponse, PurchaseOrder } from '@/types';
 import { mockPurchaseOrders } from '@/mocks/data';
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 /**
- * Fetch all purchase orders.
- * Replace with: apiClient.get<PurchaseOrdersResponse>('/purchase-orders').then(r => r.data);
+ * Mock — Fetch all pending purchase orders
  */
 export async function getPurchaseOrders(): Promise<PurchaseOrdersResponse> {
-  await delay(900);
-  return JSON.parse(JSON.stringify(mockPurchaseOrders)); // deep clone so mutations don't affect mock
+  await new Promise((r) => setTimeout(r, 400));
+  return mockPurchaseOrders;
 }
 
 /**
- * Approve a purchase order.
- * Replace with: apiClient.post<ApproveRejectResponse>('/approve-order', request).then(r => r.data);
+ * Mock — Get single PO details
+ */
+export async function getPurchaseOrderDetails(poNumber: string): Promise<PurchaseOrder> {
+  await new Promise((r) => setTimeout(r, 300));
+  const order = mockPurchaseOrders.orders.find((o) => o.poNumber === poNumber);
+  if (!order) throw new Error('PO not found');
+  return order;
+}
+
+/**
+ * Mock — Approve a purchase order
  */
 export async function approveOrder(request: ApproveRejectRequest): Promise<ApproveRejectResponse> {
-  await delay(600);
+  await new Promise((r) => setTimeout(r, 600));
   return {
     success: true,
-    message: `Order ${request.orderId} has been approved.`,
+    message: `Order ${request.orderId} approved successfully`,
     orderId: request.orderId,
     newStatus: 'approved',
   };
 }
 
 /**
- * Reject a purchase order.
- * Replace with: apiClient.post<ApproveRejectResponse>('/reject-order', request).then(r => r.data);
+ * Mock — Reject a purchase order
  */
 export async function rejectOrder(request: ApproveRejectRequest): Promise<ApproveRejectResponse> {
-  await delay(600);
+  await new Promise((r) => setTimeout(r, 600));
   return {
     success: true,
-    message: `Order ${request.orderId} has been rejected.`,
+    message: `Order ${request.orderId} rejected`,
     orderId: request.orderId,
     newStatus: 'rejected',
   };
+}
+
+/**
+ * Mock — Get PO approval history
+ */
+export async function getPOHistory(poNumber: string) {
+  await new Promise((r) => setTimeout(r, 300));
+  return [];
 }

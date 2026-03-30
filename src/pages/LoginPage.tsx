@@ -4,13 +4,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { login as loginService } from '@/services/authService';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Eye, EyeOff, Loader2, Shield } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Shield, Building2 } from 'lucide-react';
 
 export function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [username, setUsername] = useState('ADMIN');
-  const [password, setPassword] = useState('admin123');
+  const [username, setUsername] = useState('admin');
+  const [password, setPassword] = useState('password123');
   const [company, setCompany] = useState('EDU1');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +26,11 @@ export function LoginPage() {
       login(response.token, response.user);
       navigate('/dashboard');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Login failed. Please check your credentials.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -51,24 +55,30 @@ export function LoginPage() {
       </div>
 
       {/* Login Card */}
-      <div className="relative z-10 w-full max-w-md px-4">
+      <div className="relative z-10 w-full max-w-md px-4 animate-scale-in">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-2xl shadow-blue-500/25">
-            <Shield className="h-8 w-8 text-white" />
+          <div className="relative mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 shadow-2xl shadow-blue-500/40 ring-4 ring-white/10">
+            <Shield className="h-10 w-10 text-white drop-shadow-lg" />
+            <div className="absolute inset-0 rounded-3xl bg-white/20 animate-pulse"></div>
           </div>
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">
             Workflow Approval
           </h1>
-          <p className="mt-2 text-sm text-blue-200/70">
+          <p className="text-sm text-blue-200/80 font-medium">
             Enterprise Governance & Approval Platform
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl ring-1 ring-white/5">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300 animate-in fade-in">
-                {error}
+              <div className="flex items-start gap-3 rounded-xl border border-red-400/30 bg-red-500/20 backdrop-blur-sm px-4 py-3.5 text-sm text-red-200 animate-in shadow-lg shadow-red-500/10">
+                <div className="flex-shrink-0 mt-0.5">
+                  <div className="h-5 w-5 rounded-full bg-red-500/30 flex items-center justify-center">
+                    <span className="text-red-300 font-bold text-xs">!</span>
+                  </div>
+                </div>
+                <div className="font-medium">{error}</div>
               </div>
             )}
 
@@ -138,16 +148,22 @@ export function LoginPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full h-11 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/25 text-white font-semibold"
+              className="w-full h-12 bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-600 hover:from-blue-500 hover:via-blue-600 hover:to-indigo-500 shadow-xl shadow-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/40 text-white font-bold transition-all duration-300 active:scale-[0.98] relative overflow-hidden group"
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Authenticating...
-                </>
-              ) : (
-                'Login'
-              )}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {isLoading ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Authenticating...
+                  </>
+                ) : (
+                  <>
+                    Login
+                    <span className="text-xl">→</span>
+                  </>
+                )}
+              </span>
             </Button>
           </form>
 
@@ -157,11 +173,28 @@ export function LoginPage() {
         </div>
 
         {/* Hint */}
-        <div className="mt-4 rounded-lg border border-white/5 bg-white/5 px-4 py-3 backdrop-blur-sm">
-          <p className="text-xs text-blue-200/50 text-center">
-            <span className="font-semibold text-blue-200/70">Demo:</span>{' '}
-            Username: ADMIN | Password: admin123
-          </p>
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/10 backdrop-blur-md px-5 py-4 shadow-lg">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 mt-0.5">
+              <div className="h-6 w-6 rounded-full bg-blue-500/20 flex items-center justify-center ring-2 ring-blue-400/30">
+                <span className="text-blue-300 font-bold text-xs">i</span>
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-blue-100 mb-1">Demo Credentials</p>
+              <p className="text-xs text-blue-200/70 leading-relaxed">
+                <span className="font-semibold text-blue-200">Users:</span> admin, approver1, approver2, requester
+                <br />
+                <span className="font-semibold text-blue-200">Password:</span> password123
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-6 flex items-center justify-center gap-2 text-blue-200/40">
+          <Building2 className="h-4 w-4" />
+          <span className="text-xs">Helical Consulting</span>
         </div>
       </div>
     </div>

@@ -11,6 +11,14 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { LoginPage } from '@/pages/LoginPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { PurchaseOrdersPage } from '@/pages/PurchaseOrdersPage';
+import { AccountsPayablePage } from '@/pages/AccountsPayablePage';
+import { PaymentsPage } from '@/pages/PaymentsPage';
+import { SalesOrdersPage } from '@/pages/SalesOrdersPage';
+import { ReportsPage } from '@/pages/ReportsPage';
+import { MasterDataPage } from '@/pages/MasterDataPage';
+import { MasterDataRequestPage } from '@/pages/MasterDataRequestPage';
+import { SignaturePage } from '@/pages/SignaturePage';
+import { AuditTrailPage } from '@/pages/AuditTrailPage';
 import type { User } from '@/types';
 
 const queryClient = new QueryClient({
@@ -82,6 +90,14 @@ export default function App() {
             >
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/purchase-orders" element={<PurchaseOrdersPage />} />
+              <Route path="/accounts-payable" element={<AccountsPayablePage />} />
+              <Route path="/payments" element={<PaymentsPage />} />
+              <Route path="/sales-orders" element={<SalesOrdersPage />} />
+              <Route path="/reports" element={<ReportsPage />} />
+              <Route path="/master-data" element={<MasterDataPage />} />
+              <Route path="/master-data/new" element={<MasterDataRequestPage />} />
+              <Route path="/signature" element={<SignaturePage />} />
+              <Route path="/audit-trail" element={<AuditTrailPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
