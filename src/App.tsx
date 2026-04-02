@@ -1,4 +1,5 @@
 import { useState, useCallback, type ReactNode } from 'react';
+import { ToastProvider } from '@/components/ui/Toast';
 import {
   BrowserRouter,
   Routes,
@@ -19,6 +20,10 @@ import { MasterDataPage } from '@/pages/MasterDataPage';
 import { MasterDataRequestPage } from '@/pages/MasterDataRequestPage';
 import { SignaturePage } from '@/pages/SignaturePage';
 import { AuditTrailPage } from '@/pages/AuditTrailPage';
+import { UsersPage } from '@/pages/admin/UsersPage';
+import { RolesPage } from '@/pages/admin/RolesPage';
+import { ApprovalLevelsPage } from '@/pages/admin/ApprovalLevelsPage';
+import { SettingsPage } from '@/pages/admin/SettingsPage';
 import type { User } from '@/types';
 
 const queryClient = new QueryClient({
@@ -77,6 +82,7 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <ToastProvider>
       <AuthProvider>
         <BrowserRouter>
           <Routes>
@@ -98,11 +104,17 @@ export default function App() {
               <Route path="/master-data/new" element={<MasterDataRequestPage />} />
               <Route path="/signature" element={<SignaturePage />} />
               <Route path="/audit-trail" element={<AuditTrailPage />} />
+              {/* Admin Routes */}
+              <Route path="/admin/users" element={<UsersPage />} />
+              <Route path="/admin/roles" element={<RolesPage />} />
+              <Route path="/admin/approval-levels" element={<ApprovalLevelsPage />} />
+              <Route path="/admin/settings" element={<SettingsPage />} />
             </Route>
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
+      </ToastProvider>
     </QueryClientProvider>
   );
 }

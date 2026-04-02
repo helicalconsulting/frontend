@@ -3,7 +3,9 @@ import { Header } from '@/components/layout/Header';
 import { KPICard } from '@/components/KPICard';
 import { ApprovalTrendChart } from '@/components/ApprovalTrendChart';
 import { RequestTypeChart } from '@/components/RequestTypeChart';
+import { Badge } from '@/components/ui/Badge';
 import { useDashboard } from '@/hooks/useDashboard';
+import { useAuth } from '@/hooks/useAuth';
 import { formatCurrency, formatNumber } from '@/lib/utils';
 import {
   Clock,
@@ -15,50 +17,160 @@ import {
   CreditCard,
   TrendingUp,
   ArrowRight,
+  Users,
+  Wifi,
+  Activity,
+  FileText,
+  Shield,
 } from 'lucide-react';
 
 const sectionIcons: Record<string, typeof ShoppingCart> = {
-  'ShoppingCart': ShoppingCart,
-  'Receipt': Receipt,
-  'CreditCard': CreditCard,
-  'TrendingUp': TrendingUp,
+  ShoppingCart: ShoppingCart,
+  Receipt: Receipt,
+  CreditCard: CreditCard,
+  TrendingUp: TrendingUp,
 };
 
 const sectionColors: Record<string, string> = {
   'purchase-orders': 'from-blue-500 to-blue-600',
   'accounts-payable': 'from-emerald-500 to-emerald-600',
-  'payments': 'from-amber-500 to-amber-600',
+  payments: 'from-amber-500 to-amber-600',
   'sales-orders': 'from-purple-500 to-purple-600',
 };
+
+// Recent activity data
+const recentActivity = [
+  {
+    id: 1,
+    action: 'approved',
+    user: 'John Manager',
+    item: 'PO-000512',
+    module: 'Purchase Order',
+    amount: 45000,
+    currency: 'USD',
+    time: '5 min ago',
+    icon: CheckCircle2,
+    color: 'text-emerald-500',
+  },
+  {
+    id: 2,
+    action: 'submitted',
+    user: 'Mike Staff',
+    item: 'PR-2026-006',
+    module: 'Payment Request',
+    amount: 12500,
+    currency: 'USD',
+    time: '12 min ago',
+    icon: FileText,
+    color: 'text-blue-500',
+  },
+  {
+    id: 3,
+    action: 'rejected',
+    user: 'Sarah Finance',
+    item: 'INV-2026-0515',
+    module: 'AP Invoice',
+    amount: 3200,
+    currency: 'USD',
+    time: '28 min ago',
+    icon: AlertTriangle,
+    color: 'text-red-500',
+  },
+  {
+    id: 4,
+    action: 'approved',
+    user: 'Robert Director',
+    item: 'SO-000001142',
+    module: 'Credit Override',
+    amount: 25000,
+    currency: 'USD',
+    time: '1 hr ago',
+    icon: CheckCircle2,
+    color: 'text-emerald-500',
+  },
+  {
+    id: 5,
+    action: 'created',
+    user: 'Emily Procurement',
+    item: 'ONB-007',
+    module: 'Supplier Onboarding',
+    amount: null,
+    currency: null,
+    time: '2 hrs ago',
+    icon: Users,
+    color: 'text-indigo-500',
+  },
+];
 
 export function DashboardPage() {
   const navigate = useNavigate();
   const { data, isLoading } = useDashboard();
+  const { user } = useAuth();
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20">
       {/* Animated background pattern */}
       <div className="fixed inset-0 -z-10">
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(59 130 246) 1px, transparent 1px)',
+            backgroundImage:
+              'radial-gradient(circle at 1px 1px, rgb(59 130 246) 1px, transparent 1px)',
             backgroundSize: '50px 50px',
           }}
         />
-        <div className="absolute top-40 -left-40 h-96 w-96 rounded-full bg-blue-400/10 blur-3xl animate-pulse" style={{animationDuration: '4s'}} />
-        <div className="absolute bottom-40 -right-40 h-96 w-96 rounded-full bg-indigo-400/10 blur-3xl animate-pulse" style={{animationDuration: '6s', animationDelay: '2s'}} />
+        <div
+          className="absolute top-40 -left-40 h-96 w-96 rounded-full bg-blue-400/10 blur-3xl animate-pulse"
+          style={{ animationDuration: '4s' }}
+        />
+        <div
+          className="absolute bottom-40 -right-40 h-96 w-96 rounded-full bg-indigo-400/10 blur-3xl animate-pulse"
+          style={{ animationDuration: '6s', animationDelay: '2s' }}
+        />
       </div>
-      
-      <Header title="Dashboard Overview" subtitle="Real-time approval command center" />
+
+      <Header
+        title="Dashboard Overview"
+        subtitle="Real-time approval command center"
+      />
 
       <div className="p-6 space-y-6 animate-in">
+        {/* Welcome + SYSPRO Status */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">
+              Welcome back, {user?.fullName?.split(' ')[0] || 'Admin'} 👋
+            </h2>
+            <p className="text-sm text-gray-500 mt-0.5">
+              Here's what's happening across your workflow system
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1.5">
+              <Wifi className="h-3.5 w-3.5 text-emerald-600" />
+              <span className="text-xs font-medium text-emerald-700">
+                SYSPRO: Mock Mode
+              </span>
+            </div>
+            <div className="flex items-center gap-2 rounded-full bg-blue-50 border border-blue-200 px-3 py-1.5">
+              <Activity className="h-3.5 w-3.5 text-blue-600" />
+              <span className="text-xs font-medium text-blue-700">
+                System Healthy
+              </span>
+            </div>
+          </div>
+        </div>
+
         {/* KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
           <div className="animate-slide-up">
             <KPICard
               title="Pending Approvals"
-              value={isLoading ? '—' : formatNumber(data!.kpis.pendingApprovals)}
+              value={
+                isLoading
+                  ? '—'
+                  : formatNumber(data!.kpis.pendingApprovals)
+              }
               icon={<AlertTriangle className="h-6 w-6 text-amber-600" />}
               iconBgColor="bg-amber-100"
               trend={{ value: 12, isPositive: false }}
@@ -68,7 +180,11 @@ export function DashboardPage() {
           <div className="animate-slide-up delay-75">
             <KPICard
               title="Approved Today"
-              value={isLoading ? '—' : formatNumber(data!.kpis.approvedToday)}
+              value={
+                isLoading
+                  ? '—'
+                  : formatNumber(data!.kpis.approvedToday)
+              }
               icon={<CheckCircle2 className="h-6 w-6 text-emerald-600" />}
               iconBgColor="bg-emerald-100"
               trend={{ value: 8, isPositive: true }}
@@ -78,7 +194,11 @@ export function DashboardPage() {
           <div className="animate-slide-up delay-100">
             <KPICard
               title="Avg. Processing (hrs)"
-              value={isLoading ? '—' : data!.kpis.avgProcessingTime.toLocaleString()}
+              value={
+                isLoading
+                  ? '—'
+                  : data!.kpis.avgProcessingTime.toLocaleString()
+              }
               icon={<Clock className="h-6 w-6 text-blue-600" />}
               iconBgColor="bg-blue-100"
               isLoading={isLoading}
@@ -90,7 +210,10 @@ export function DashboardPage() {
               value={
                 isLoading
                   ? '—'
-                  : formatCurrency(data!.kpis.totalFinancialExposure, data!.kpis.currency)
+                  : formatCurrency(
+                      data!.kpis.totalFinancialExposure,
+                      data!.kpis.currency
+                    )
               }
               icon={<DollarSign className="h-6 w-6 text-indigo-600" />}
               iconBgColor="bg-indigo-100"
@@ -100,7 +223,7 @@ export function DashboardPage() {
           </div>
         </div>
 
-        {/* Charts */}
+        {/* Charts + Activity Feed */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2">
             <ApprovalTrendChart
@@ -116,50 +239,204 @@ export function DashboardPage() {
           </div>
         </div>
 
-        {/* Section Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {isLoading
-            ? Array(4)
-                .fill(null)
-                .map((_, i) => (
+        {/* Module Cards + Recent Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Section Cards */}
+          <div className="lg:col-span-2">
+            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
+              Approval Queues
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {isLoading
+                ? Array(4)
+                    .fill(null)
+                    .map((_, i) => (
+                      <div
+                        key={i}
+                        className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm animate-pulse"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="h-12 w-12 rounded-lg bg-gray-200" />
+                          <div className="flex-1">
+                            <div className="h-4 w-28 rounded bg-gray-200 mb-2" />
+                            <div className="h-6 w-16 rounded bg-gray-200" />
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                : data?.sections.map((section) => {
+                    const IconComp =
+                      sectionIcons[section.icon] || ShoppingCart;
+                    const gradient =
+                      sectionColors[section.id] || 'from-gray-500 to-gray-600';
+
+                    return (
+                      <button
+                        key={section.id}
+                        onClick={() =>
+                          section.route && navigate(section.route)
+                        }
+                        className="group rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 text-left cursor-pointer w-full"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div
+                            className={`flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${gradient} shadow-md transition-transform duration-300 group-hover:scale-110`}
+                          >
+                            <IconComp className="h-6 w-6 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-sm font-semibold text-gray-700 truncate">
+                              {section.title}
+                            </h3>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-2xl font-bold text-gray-900">
+                                {section.count}
+                              </span>
+                              <Badge variant="warning" className="text-xs">
+                                pending
+                              </Badge>
+                            </div>
+                          </div>
+                          <ArrowRight className="h-4 w-4 text-gray-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-blue-500" />
+                        </div>
+                      </button>
+                    );
+                  })}
+            </div>
+
+            {/* Quick Actions */}
+            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mt-6 mb-3">
+              Quick Access
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[
+                {
+                  label: 'Master Data',
+                  icon: Users,
+                  route: '/master-data',
+                  gradient: 'from-cyan-500 to-cyan-600',
+                  count: 4,
+                },
+                {
+                  label: 'Reports',
+                  icon: Activity,
+                  route: '/reports',
+                  gradient: 'from-blue-500 to-blue-600',
+                  count: null,
+                },
+                {
+                  label: 'Audit Trail',
+                  icon: FileText,
+                  route: '/audit-trail',
+                  gradient: 'from-gray-500 to-gray-600',
+                  count: null,
+                },
+                {
+                  label: 'Admin',
+                  icon: Shield,
+                  route: '/admin/users',
+                  gradient: 'from-indigo-500 to-indigo-600',
+                  count: null,
+                },
+              ].map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => navigate(item.route)}
+                  className="group flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3.5 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 cursor-pointer"
+                >
                   <div
-                    key={i}
-                    className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm animate-pulse"
+                    className={`flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br ${item.gradient} shadow-sm transition-transform duration-200 group-hover:scale-110`}
                   >
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="h-12 w-12 rounded-lg bg-gray-200" />
-                      <div className="h-4 w-28 rounded bg-gray-200" />
-                      <div className="h-8 w-16 rounded bg-gray-200" />
+                    <item.icon className="h-4 w-4 text-white" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-semibold text-gray-700">
+                      {item.label}
+                    </p>
+                    {item.count && (
+                      <p className="text-[10px] text-gray-400">
+                        {item.count} pending
+                      </p>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Recent Activity Feed */}
+          <div>
+            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
+              Recent Activity
+            </h3>
+            <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+              <div className="divide-y divide-gray-100">
+                {recentActivity.map((activity) => (
+                  <div
+                    key={activity.id}
+                    className="p-4 hover:bg-gray-50/80 transition-colors"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5">
+                        <activity.icon
+                          className={`h-4 w-4 ${activity.color}`}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-gray-900">
+                          <span className="font-semibold">
+                            {activity.user}
+                          </span>{' '}
+                          <span
+                            className={
+                              activity.action === 'approved'
+                                ? 'text-emerald-600'
+                                : activity.action === 'rejected'
+                                ? 'text-red-600'
+                                : 'text-blue-600'
+                            }
+                          >
+                            {activity.action}
+                          </span>{' '}
+                          <span className="font-mono text-xs bg-gray-100 px-1.5 py-0.5 rounded">
+                            {activity.item}
+                          </span>
+                        </p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-gray-500">
+                            {activity.module}
+                          </span>
+                          {activity.amount && (
+                            <>
+                              <span className="text-xs text-gray-300">•</span>
+                              <span className="text-xs font-medium text-gray-600">
+                                {formatCurrency(
+                                  activity.amount,
+                                  activity.currency || 'USD'
+                                )}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <span className="text-[10px] text-gray-400 whitespace-nowrap">
+                        {activity.time}
+                      </span>
                     </div>
                   </div>
-                ))
-            : data?.sections.map((section) => {
-                const IconComp = sectionIcons[section.icon] || ShoppingCart;
-                const gradient = sectionColors[section.id] || 'from-gray-500 to-gray-600';
-
-                return (
-                  <button
-                    key={section.id}
-                    onClick={() => section.route && navigate(section.route)}
-                    className="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 text-center cursor-pointer"
-                  >
-                    <div className="flex flex-col items-center gap-3">
-                      <div
-                        className={`flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${gradient} shadow-md transition-transform duration-300 group-hover:scale-110`}
-                      >
-                        <IconComp className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="text-sm font-semibold text-gray-700">
-                        {section.title}
-                      </h3>
-                      <div className="flex items-center gap-2 text-blue-600">
-                        <span className="text-xs font-medium">Open</span>
-                        <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1" />
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
+                ))}
+              </div>
+              <div className="px-4 py-3 bg-gray-50/80 border-t border-gray-100">
+                <button
+                  onClick={() => navigate('/audit-trail')}
+                  className="text-xs font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                >
+                  View All Activity
+                  <ArrowRight className="h-3 w-3" />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

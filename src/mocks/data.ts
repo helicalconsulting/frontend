@@ -500,3 +500,273 @@ export const mockAttachments: Attachment[] = [
   { id: 'att-003', fileName: 'Technical_Spec_PCB-X500.xlsx', fileSize: '420 KB', fileType: 'xlsx', uploadDate: '2025-05-12', uploadedBy: 'Robert Chen' },
   { id: 'att-004', fileName: 'Delivery_Note_DN10122.jpg', fileSize: '1.2 MB', fileType: 'jpg', uploadDate: '2025-12-01', uploadedBy: 'Sarah Williams' },
 ];
+
+// ============================================
+// Mock Users Data (Admin Module)
+// ============================================
+export const mockUsers = [
+  {
+    id: 'usr-001',
+    username: 'admin',
+    email: 'admin@helical.com',
+    fullName: 'System Administrator',
+    department: 'IT',
+    phone: '+1-555-100-0001',
+    isActive: true,
+    roles: [{ id: 'role-001', name: 'super_admin', displayName: 'Super Admin', permissions: ['*'] }],
+    createdAt: '2025-01-01T00:00:00Z',
+    lastLogin: '2026-03-31T08:00:00Z',
+    company: 'DEMO',
+  },
+  {
+    id: 'usr-002',
+    username: 'approver1',
+    email: 'manager@helical.com',
+    fullName: 'John Manager',
+    department: 'Finance',
+    phone: '+1-555-100-0002',
+    isActive: true,
+    roles: [{ id: 'role-003', name: 'manager', displayName: 'Manager', permissions: [] }],
+    createdAt: '2025-02-15T00:00:00Z',
+    lastLogin: '2026-03-30T14:30:00Z',
+    company: 'DEMO',
+  },
+  {
+    id: 'usr-003',
+    username: 'approver2',
+    email: 'finance@helical.com',
+    fullName: 'Sarah Finance',
+    department: 'Finance',
+    phone: '+1-555-100-0003',
+    isActive: true,
+    roles: [{ id: 'role-004', name: 'finance_approver', displayName: 'Finance Approver', permissions: [] }],
+    createdAt: '2025-02-20T00:00:00Z',
+    lastLogin: '2026-03-31T07:45:00Z',
+    company: 'DEMO',
+  },
+  {
+    id: 'usr-004',
+    username: 'requester',
+    email: 'staff@helical.com',
+    fullName: 'Mike Staff',
+    department: 'Operations',
+    phone: '+1-555-100-0004',
+    isActive: true,
+    roles: [{ id: 'role-005', name: 'staff', displayName: 'Staff', permissions: [] }],
+    createdAt: '2025-03-01T00:00:00Z',
+    lastLogin: '2026-03-31T06:00:00Z',
+    company: 'DEMO',
+  },
+  {
+    id: 'usr-005',
+    username: 'procurement',
+    email: 'procurement@helical.com',
+    fullName: 'Emily Procurement',
+    department: 'Procurement',
+    phone: '+1-555-100-0005',
+    isActive: true,
+    roles: [{ id: 'role-003', name: 'manager', displayName: 'Manager', permissions: [] }],
+    createdAt: '2025-03-10T00:00:00Z',
+    lastLogin: '2026-03-29T16:00:00Z',
+    company: 'DEMO',
+  },
+  {
+    id: 'usr-006',
+    username: 'sales_mgr',
+    email: 'sales@helical.com',
+    fullName: 'David Sales',
+    department: 'Sales',
+    phone: '+1-555-100-0006',
+    isActive: false,
+    roles: [{ id: 'role-003', name: 'manager', displayName: 'Manager', permissions: [] }],
+    createdAt: '2025-04-01T00:00:00Z',
+    lastLogin: '2026-02-15T10:00:00Z',
+    company: 'DEMO',
+  },
+  {
+    id: 'usr-007',
+    username: 'approver3',
+    email: 'director@helical.com',
+    fullName: 'Robert Director',
+    department: 'Executive',
+    phone: '+1-555-100-0007',
+    isActive: true,
+    roles: [{ id: 'role-002', name: 'admin', displayName: 'Administrator', permissions: [] }],
+    createdAt: '2025-01-15T00:00:00Z',
+    lastLogin: '2026-03-31T07:00:00Z',
+    company: 'DEMO',
+  },
+];
+
+// ============================================
+// Mock Roles Data
+// ============================================
+export const mockRoles = [
+  {
+    id: 'role-001',
+    name: 'super_admin',
+    displayName: 'Super Admin',
+    description: 'Full system access with all permissions',
+    permissions: [
+      'PAYMENT:canView', 'PAYMENT:canCreate', 'PAYMENT:canApprove', 'PAYMENT:canReject',
+      'AP:canView', 'AP:canApprove', 'AP:canReject',
+      'PO:canView', 'PO:canApprove', 'PO:canReject',
+      'SALES:canView', 'SALES:canApprove', 'SALES:canReject',
+      'ONBOARDING:canView', 'ONBOARDING:canCreate', 'ONBOARDING:canApprove', 'ONBOARDING:canReject',
+      'REPORTS:canView', 'ADMIN:canManage',
+    ],
+    userCount: 1,
+    isSystem: true,
+  },
+  {
+    id: 'role-002',
+    name: 'admin',
+    displayName: 'Administrator',
+    description: 'Administrative access without system configuration',
+    permissions: [
+      'PAYMENT:canView', 'PAYMENT:canCreate', 'PAYMENT:canApprove', 'PAYMENT:canReject',
+      'AP:canView', 'AP:canApprove', 'AP:canReject',
+      'PO:canView', 'PO:canApprove', 'PO:canReject',
+      'SALES:canView', 'SALES:canApprove', 'SALES:canReject',
+      'ONBOARDING:canView', 'ONBOARDING:canCreate', 'ONBOARDING:canApprove', 'ONBOARDING:canReject',
+      'REPORTS:canView',
+    ],
+    userCount: 0,
+    isSystem: true,
+  },
+  {
+    id: 'role-003',
+    name: 'manager',
+    displayName: 'Manager',
+    description: 'Can approve up to $50,000',
+    permissions: [
+      'PAYMENT:canView', 'PAYMENT:canCreate', 'PAYMENT:canApprove', 'PAYMENT:canReject',
+      'AP:canView', 'AP:canApprove', 'AP:canReject',
+      'PO:canView', 'PO:canApprove', 'PO:canReject',
+      'REPORTS:canView',
+    ],
+    userCount: 3,
+    isSystem: false,
+  },
+  {
+    id: 'role-004',
+    name: 'finance_approver',
+    displayName: 'Finance Approver',
+    description: 'Finance department approval authority',
+    permissions: [
+      'PAYMENT:canView', 'PAYMENT:canApprove', 'PAYMENT:canReject',
+      'AP:canView', 'AP:canApprove', 'AP:canReject',
+      'REPORTS:canView',
+    ],
+    userCount: 1,
+    isSystem: false,
+  },
+  {
+    id: 'role-005',
+    name: 'staff',
+    displayName: 'Staff',
+    description: 'Basic view and create access',
+    permissions: [
+      'PAYMENT:canView', 'PAYMENT:canCreate',
+      'PO:canView',
+      'ONBOARDING:canView', 'ONBOARDING:canCreate',
+    ],
+    userCount: 1,
+    isSystem: false,
+  },
+];
+
+// ============================================
+// Mock Permissions Data
+// ============================================
+export const mockPermissions = [
+  { id: 'perm-001', module: 'PAYMENT', action: 'canView', description: 'View payment requests' },
+  { id: 'perm-002', module: 'PAYMENT', action: 'canCreate', description: 'Create payment requests' },
+  { id: 'perm-003', module: 'PAYMENT', action: 'canApprove', description: 'Approve payment requests' },
+  { id: 'perm-004', module: 'PAYMENT', action: 'canReject', description: 'Reject payment requests' },
+  { id: 'perm-005', module: 'AP', action: 'canView', description: 'View AP invoices' },
+  { id: 'perm-006', module: 'AP', action: 'canApprove', description: 'Approve AP invoices' },
+  { id: 'perm-007', module: 'AP', action: 'canReject', description: 'Reject AP invoices' },
+  { id: 'perm-008', module: 'PO', action: 'canView', description: 'View purchase orders' },
+  { id: 'perm-009', module: 'PO', action: 'canApprove', description: 'Approve purchase orders' },
+  { id: 'perm-010', module: 'PO', action: 'canReject', description: 'Reject purchase orders' },
+  { id: 'perm-011', module: 'SALES', action: 'canView', description: 'View sales orders' },
+  { id: 'perm-012', module: 'SALES', action: 'canApprove', description: 'Approve sales orders' },
+  { id: 'perm-013', module: 'SALES', action: 'canReject', description: 'Reject sales orders' },
+  { id: 'perm-014', module: 'ONBOARDING', action: 'canView', description: 'View onboarding requests' },
+  { id: 'perm-015', module: 'ONBOARDING', action: 'canCreate', description: 'Create onboarding requests' },
+  { id: 'perm-016', module: 'ONBOARDING', action: 'canApprove', description: 'Approve onboarding requests' },
+  { id: 'perm-017', module: 'ONBOARDING', action: 'canReject', description: 'Reject onboarding requests' },
+  { id: 'perm-018', module: 'REPORTS', action: 'canView', description: 'View reports' },
+  { id: 'perm-019', module: 'ADMIN', action: 'canManage', description: 'Manage system settings' },
+];
+
+// ============================================
+// Mock Approval Levels Data
+// ============================================
+export const mockApprovalLevels = [
+  { id: 'lvl-001', module: 'PAYMENT', levelNumber: 1, levelName: 'Team Lead Approval', minValue: 0, maxValue: 5000, requiredRole: 'manager', description: 'For payments up to $5,000', isActive: true, isFinal: false, autoApprove: false, timeoutHours: 24 },
+  { id: 'lvl-002', module: 'PAYMENT', levelNumber: 2, levelName: 'Manager Approval', minValue: 5000, maxValue: 25000, requiredRole: 'manager', description: 'For payments $5,000 - $25,000', isActive: true, isFinal: false, autoApprove: false, timeoutHours: 48 },
+  { id: 'lvl-003', module: 'PAYMENT', levelNumber: 3, levelName: 'Finance Approval', minValue: 25000, maxValue: 100000, requiredRole: 'finance_approver', description: 'For payments $25,000 - $100,000', isActive: true, isFinal: false, autoApprove: false, timeoutHours: 72 },
+  { id: 'lvl-004', module: 'PAYMENT', levelNumber: 4, levelName: 'Director Approval', minValue: 100000, maxValue: null, requiredRole: 'admin', description: 'For payments over $100,000', isActive: true, isFinal: true, autoApprove: false, timeoutHours: 96 },
+  { id: 'lvl-005', module: 'PO', levelNumber: 1, levelName: 'Procurement Review', minValue: 0, maxValue: 10000, requiredRole: 'manager', description: 'PO up to $10,000', isActive: true, isFinal: false, autoApprove: false, timeoutHours: 24 },
+  { id: 'lvl-006', module: 'PO', levelNumber: 2, levelName: 'Manager Approval', minValue: 10000, maxValue: 50000, requiredRole: 'manager', description: 'PO $10,000 - $50,000', isActive: true, isFinal: false, autoApprove: false, timeoutHours: 48 },
+  { id: 'lvl-007', module: 'PO', levelNumber: 3, levelName: 'Director Approval', minValue: 50000, maxValue: null, requiredRole: 'admin', description: 'PO over $50,000', isActive: true, isFinal: true, autoApprove: false, timeoutHours: 72 },
+  { id: 'lvl-008', module: 'AP', levelNumber: 1, levelName: 'AP Clerk Review', minValue: 0, maxValue: 5000, requiredRole: 'staff', description: 'Invoice up to $5,000', isActive: true, isFinal: false, autoApprove: true, timeoutHours: 12 },
+  { id: 'lvl-009', module: 'AP', levelNumber: 2, levelName: 'Finance Approval', minValue: 5000, maxValue: null, requiredRole: 'finance_approver', description: 'Invoice over $5,000', isActive: true, isFinal: true, autoApprove: false, timeoutHours: 48 },
+  { id: 'lvl-010', module: 'SALES', levelNumber: 1, levelName: 'Credit Review', minValue: 0, maxValue: null, requiredRole: 'manager', description: 'Credit limit override', isActive: true, isFinal: true, autoApprove: false, timeoutHours: 24 },
+  { id: 'lvl-011', module: 'ONBOARDING', levelNumber: 1, levelName: 'Compliance Check', minValue: 0, maxValue: null, requiredRole: 'staff', description: 'Documentation review', isActive: true, isFinal: false, autoApprove: false, timeoutHours: 48 },
+  { id: 'lvl-012', module: 'ONBOARDING', levelNumber: 2, levelName: 'Final Approval', minValue: 0, maxValue: null, requiredRole: 'admin', description: 'Final onboarding approval', isActive: true, isFinal: true, autoApprove: false, timeoutHours: 72 },
+];
+
+// ============================================
+// Mock System Settings
+// ============================================
+export const mockSystemSettings = {
+  defaultCurrency: 'USD',
+  sessionTimeoutMinutes: 30,
+  maxLoginAttempts: 5,
+  requireTwoFactor: false,
+  emailNotifications: true,
+  approvalReminderHours: 24,
+  autoEscalationEnabled: true,
+  autoEscalationHours: 48,
+  companyName: 'Helical Demo Company',
+  companyLogo: '',
+  sysproIntegration: {
+    enabled: true,
+    baseUrl: 'http://syspro.example.com',
+    company: 'DEMO',
+    maxSessions: 10,
+  },
+};
+
+// ============================================
+// Mock Credit Overrides
+// ============================================
+export const mockCreditOverrides = [
+  { id: 'co-001', customerId: 'CUST-001', customerName: 'Premium Electronics Ltd', currentLimit: 50000, requestedLimit: 75000, orderAmount: 62000, reason: 'Large seasonal order - Q2 promotion', status: 'pending', requestedBy: 'David Sales', requestDate: '2026-03-28', salesOrderNumber: 'SO-2026-0145', currency: 'USD' },
+  { id: 'co-002', customerId: 'CUST-002', customerName: 'Tech Solutions Inc', currentLimit: 25000, requestedLimit: 40000, orderAmount: 35000, reason: 'New project contract signed', status: 'pending', requestedBy: 'Emily Sales', requestDate: '2026-03-30', salesOrderNumber: 'SO-2026-0152', currency: 'USD' },
+  { id: 'co-003', customerId: 'CUST-003', customerName: 'Global Supplies Co', currentLimit: 100000, requestedLimit: 150000, orderAmount: 125000, reason: 'Annual bulk purchase agreement', status: 'approved', requestedBy: 'David Sales', requestDate: '2026-03-25', salesOrderNumber: 'SO-2026-0138', currency: 'USD' },
+];
+
+// ============================================
+// Mock AP Invoices (Extended)
+// ============================================
+export const mockAPInvoices = [
+  { id: 'ap-001', invoiceNumber: 'INV-2026-0512', supplier: 'Aztech Components', supplierCode: 'SUP-001', invoiceDate: '2026-03-15', dueDate: '2026-04-15', amount: 45000, currency: 'USD', status: 'pending', matchStatus: 'matched', variance: 0, variancePercentage: 0, poNumbers: ['PO-000512'], grnNumbers: ['GRN-1001'], agingDays: 0 },
+  { id: 'ap-002', invoiceNumber: 'INV-2026-0513', supplier: 'TechParts Global', supplierCode: 'SUP-002', invoiceDate: '2026-03-10', dueDate: '2026-04-10', amount: 15750, currency: 'USD', status: 'pending', matchStatus: 'partial', variance: 250, variancePercentage: 1.6, poNumbers: ['PO-000513'], grnNumbers: ['GRN-1002'], agingDays: 5 },
+  { id: 'ap-003', invoiceNumber: 'INV-2026-0514', supplier: 'Industrial Fasteners', supplierCode: 'SUP-003', invoiceDate: '2026-03-01', dueDate: '2026-03-31', amount: 8900, currency: 'USD', status: 'approved', matchStatus: 'matched', variance: 0, variancePercentage: 0, poNumbers: ['PO-000510'], grnNumbers: ['GRN-0998'], agingDays: 15 },
+  { id: 'ap-004', invoiceNumber: 'INV-2026-0515', supplier: 'Office Supplies Ltd', supplierCode: 'SUP-004', invoiceDate: '2026-02-28', dueDate: '2026-03-28', amount: 3200, currency: 'USD', status: 'pending', matchStatus: 'unmatched', variance: 3200, variancePercentage: 100, poNumbers: [], grnNumbers: [], agingDays: 18 },
+  { id: 'ap-005', invoiceNumber: 'INV-2026-0516', supplier: 'Chemical Solutions', supplierCode: 'SUP-005', invoiceDate: '2026-03-20', dueDate: '2026-04-20', amount: 22500, currency: 'USD', status: 'pending', matchStatus: 'matched', variance: 0, variancePercentage: 0, poNumbers: ['PO-000518', 'PO-000519'], grnNumbers: ['GRN-1005', 'GRN-1006'], agingDays: 0 },
+];
+
+// ============================================
+// Login Credentials Helper (for UI display)
+// ============================================
+export const loginCredentials = {
+  admin: { username: 'admin', password: 'password123', company: 'DEMO', role: 'Super Admin', description: 'Full system access' },
+  manager: { username: 'approver1', password: 'password123', company: 'DEMO', role: 'Manager', description: 'Can approve up to $50,000' },
+  finance: { username: 'approver2', password: 'password123', company: 'DEMO', role: 'Finance Approver', description: 'Finance approvals' },
+  staff: { username: 'requester', password: 'password123', company: 'DEMO', role: 'Staff', description: 'Create & view only' },
+};

@@ -48,6 +48,15 @@ const navSections = [
       { to: '/audit-trail', label: 'Audit Trail', icon: ClipboardList },
     ],
   },
+  {
+    label: 'Administration',
+    items: [
+      { to: '/admin/users', label: 'Users', icon: Users },
+      { to: '/admin/roles', label: 'Roles & Permissions', icon: Settings },
+      { to: '/admin/approval-levels', label: 'Approval Levels', icon: ClipboardList },
+      { to: '/admin/settings', label: 'System Settings', icon: Settings },
+    ],
+  },
 ];
 
 export function Sidebar() {

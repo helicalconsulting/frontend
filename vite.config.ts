@@ -18,14 +18,6 @@ export default defineConfig({
     },
     assetsInlineLimit: 0,
   },
-  server: {
-    headers: {
-      'Content-Type': 'application/javascript; charset=utf-8',
-    },
-  },
-  preview: {
-    headers: {
-      'Content-Type': 'application/javascript; charset=utf-8',
-    },
-  },
+  server: {},
+  preview: {},
 })

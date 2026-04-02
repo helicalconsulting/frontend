@@ -11,7 +11,7 @@ export function LoginPage() {
   const { login } = useAuth();
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('password123');
-  const [company, setCompany] = useState('EDU1');
+  const [company, setCompany] = useState('DEMO');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -172,7 +172,7 @@ export function LoginPage() {
           </p>
         </div>
 
-        {/* Hint */}
+        {/* Demo Credentials Card */}
         <div className="mt-6 rounded-2xl border border-white/10 bg-white/10 backdrop-blur-md px-5 py-4 shadow-lg">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0 mt-0.5">
@@ -180,13 +180,27 @@ export function LoginPage() {
                 <span className="text-blue-300 font-bold text-xs">i</span>
               </div>
             </div>
-            <div>
-              <p className="text-xs font-bold text-blue-100 mb-1">Demo Credentials</p>
-              <p className="text-xs text-blue-200/70 leading-relaxed">
-                <span className="font-semibold text-blue-200">Users:</span> admin, approver1, approver2, requester
-                <br />
-                <span className="font-semibold text-blue-200">Password:</span> password123
-              </p>
+            <div className="w-full">
+              <p className="text-xs font-bold text-blue-100 mb-2">Demo Credentials</p>
+              <div className="grid grid-cols-2 gap-2 text-[10px]">
+                <button type="button" onClick={() => { setUsername('admin'); setPassword('password123'); setCompany('DEMO'); }} className="text-left p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+                  <span className="font-bold text-green-300">admin</span>
+                  <span className="text-blue-200/60 block">Super Admin</span>
+                </button>
+                <button type="button" onClick={() => { setUsername('approver1'); setPassword('password123'); setCompany('DEMO'); }} className="text-left p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+                  <span className="font-bold text-yellow-300">approver1</span>
+                  <span className="text-blue-200/60 block">Manager</span>
+                </button>
+                <button type="button" onClick={() => { setUsername('approver2'); setPassword('password123'); setCompany('DEMO'); }} className="text-left p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+                  <span className="font-bold text-orange-300">approver2</span>
+                  <span className="text-blue-200/60 block">Finance</span>
+                </button>
+                <button type="button" onClick={() => { setUsername('requester'); setPassword('password123'); setCompany('DEMO'); }} className="text-left p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+                  <span className="font-bold text-cyan-300">requester</span>
+                  <span className="text-blue-200/60 block">Staff</span>
+                </button>
+              </div>
+              <p className="text-[10px] text-blue-200/50 mt-2 text-center">Password: password123 | Company: DEMO</p>
             </div>
           </div>
         </div>

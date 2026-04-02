@@ -329,3 +329,230 @@ export interface Attachment {
   uploadDate: string;
   uploadedBy: string;
 }
+
+// ============================================
+// Admin Types
+// ============================================
+export interface Role {
+  id: string;
+  name: string;
+  displayName: string;
+  description?: string;
+  permissions: string[];
+  userCount?: number;
+  isSystem?: boolean;
+  createdAt?: string;
+}
+
+export interface Permission {
+  id: string;
+  module: string;
+  action: string;
+  description?: string;
+}
+
+export interface AdminUser {
+  id: string;
+  username: string;
+  email: string;
+  fullName: string;
+  department?: string;
+  phone?: string;
+  isActive: boolean;
+  roles: Role[];
+  roleIds?: string[];
+  createdAt: string;
+  lastLogin?: string;
+  company: string;
+}
+
+export interface ApprovalLevel {
+  id: string;
+  module: string;
+  levelNumber: number;
+  levelName: string;
+  minValue: number;
+  maxValue: number | null;
+  requiredRole: string;
+  description?: string;
+  isActive: boolean;
+  isFinal: boolean;
+  autoApprove: boolean;
+  timeoutHours?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface SystemSettings {
+  defaultCurrency: string;
+  sessionTimeoutMinutes: number;
+  maxLoginAttempts: number;
+  requireTwoFactor: boolean;
+  emailNotifications: boolean;
+  approvalReminderHours: number;
+  autoEscalationEnabled: boolean;
+  autoEscalationHours: number;
+  companyName: string;
+  companyLogo?: string;
+  sysproIntegration: {
+    enabled: boolean;
+    baseUrl: string;
+    company: string;
+    maxSessions: number;
+  };
+}
+
+// ============================================
+// Credit Override Types
+// ============================================
+export interface CreditOverride {
+  id: string;
+  customerId: string;
+  customerName: string;
+  currentLimit: number;
+  requestedLimit: number;
+  orderAmount: number;
+  reason: string;
+  status: 'pending' | 'approved' | 'rejected';
+  requestedBy: string;
+  requestDate: string;
+  salesOrderNumber?: string;
+  currency: string;
+}
+
+// ============================================
+// AP Invoice Types (Extended)
+// ============================================
+export interface APInvoice {
+  id: string;
+  invoiceNumber: string;
+  supplier: string;
+  supplierCode: string;
+  invoiceDate: string;
+  dueDate: string;
+  amount: number;
+  currency: string;
+  status: 'pending' | 'approved' | 'rejected' | 'paid';
+  matchStatus: 'matched' | 'partial' | 'unmatched';
+  variance?: number;
+  variancePercentage?: number;
+  poNumbers: string[];
+  grnNumbers: string[];
+  agingDays: number;
+  approvalHistory?: ApprovalHistoryEntry[];
+}
+
+export interface ApprovalHistoryEntry {
+  id: string;
+  action: 'submit' | 'approve' | 'reject' | 'escalate';
+  performedBy: string;
+  performedAt: string;
+  level: number;
+  comment?: string;
+}
+
+// ============================================
+// Onboarding Types (Extended)
+// ============================================
+export interface OnboardingRequest {
+  id: string;
+  entityType: 'SUPPLIER' | 'CUSTOMER';
+  entityName: string;
+  taxVatNumber?: string;
+  contactPerson: string;
+  contactEmail: string;
+  contactPhone?: string;
+  fullAddress?: string;
+  currency: string;
+  status: 'draft' | 'pending' | 'approved' | 'rejected';
+  requestedBy: string;
+  requestDate: string;
+  sysproCode?: string;
+  documents: Attachment[];
+  approvalStatus?: {
+    currentLevel: number;
+    totalLevels: number;
+    history: ApprovalHistoryEntry[];
+  };
+}
+
+// ============================================
+// Report Types
+// ============================================
+export interface ApprovalReport {
+  id: string;
+  module: string;
+  documentNumber: string;
+  action: 'approve' | 'reject';
+  approverId: string;
+  approverName: string;
+  performedAt: string;
+  amount?: number;
+  currency?: string;
+  comment?: string;
+}
+
+export interface ActivityReport {
+  id: string;
+  userId: string;
+  userName: string;
+  action: string;
+  module: string;
+  documentNumber: string;
+  timestamp: string;
+  ipAddress?: string;
+  details?: string;
+}
+
+export interface ReportStatistics {
+  totalApprovals: number;
+  totalRejections: number;
+  avgProcessingTimeHours: number;
+  approvalsByModule: Record<string, number>;
+  rejectionsByModule: Record<string, number>;
+  topApprovers: { name: string; count: number }[];
+  pendingByModule: Record<string, number>;
+}
+
+// ============================================
+// API Response Types
+// ============================================
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
+export interface PaginatedResponse<T> {
+  success: boolean;
+  data: {
+    items: T[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface PaginationParams {
+  page?: number;
+  limit?: number;
+}
+
+// ============================================
+// Health Check Types
+// ============================================
+export interface HealthStatus {
+  status: 'healthy' | 'degraded' | 'unhealthy';
+  timestamp: string;
+  version: string;
+  environment: string;
+  syspro: {
+    connected: boolean;
+    mode: string;
+    baseUrl: string;
+    company: string;
+    activeSessions: number;
+    maxSessions: number;
+  };
+}
