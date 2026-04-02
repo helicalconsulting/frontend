@@ -50,6 +50,7 @@ const navSections = [
   },
   {
     label: 'Administration',
+    requireAdmin: true,
     items: [
       { to: '/admin/users', label: 'Users', icon: Users },
       { to: '/admin/roles', label: 'Roles & Permissions', icon: Settings },
@@ -63,6 +64,9 @@ export function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
+
+  // Check if user has admin permissions
+  const hasAdminAccess = user?.permissions?.ADMIN?.canView || user?.role === 'Super Admin' || user?.role === 'Administrator';
 
   const handleLogout = () => {
     logout();
@@ -94,7 +98,9 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto py-3 px-3">
-        {navSections.map((section) => (
+        {navSections
+          .filter((section) => !section.requireAdmin || hasAdminAccess)
+          .map((section) => (
           <div key={section.label} className="mb-4">
             {!collapsed && (
               <p className="px-3 mb-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
