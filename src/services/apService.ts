@@ -1,7 +1,5 @@
-import apiClient from './apiClient';
-
-// Toggle between mock and real API calls
-const USE_MOCK = false;
+import apiClient from "./apiClient";
+import { API_CONFIG } from "@/config";
 
 // ============================================
 // Types
@@ -112,10 +110,6 @@ export interface PaginatedResponse<T> {
  * Get all invoices with pagination and filters
  */
 export async function getInvoices(params?: GetInvoicesParams): Promise<PaginatedResponse<APInvoice>> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300));
-    return { items: [], pagination: { page: 1, limit: 20, total: 0, pages: 0 } };
-  }
   const response = await apiClient.get('/ap', { params });
   return response.data.data;
 }
@@ -124,10 +118,6 @@ export async function getInvoices(params?: GetInvoicesParams): Promise<Paginated
  * Get a single invoice by invoice number
  */
 export async function getInvoice(invoiceNumber: string): Promise<APInvoice> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    throw new Error('Invoice not found');
-  }
   const response = await apiClient.get(`/ap/${invoiceNumber}`);
   return response.data.data;
 }
@@ -139,10 +129,6 @@ export async function approveInvoice(
   invoiceNumber: string,
   data: ApproveInvoiceData
 ): Promise<APInvoice> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot approve invoice');
-  }
   const response = await apiClient.post(`/ap/${invoiceNumber}/approve`, data);
   return response.data.data;
 }
@@ -154,10 +140,6 @@ export async function rejectInvoice(
   invoiceNumber: string,
   data: RejectInvoiceData
 ): Promise<APInvoice> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot reject invoice');
-  }
   const response = await apiClient.post(`/ap/${invoiceNumber}/reject`, data);
   return response.data.data;
 }
@@ -166,10 +148,6 @@ export async function rejectInvoice(
  * Get approval history for an invoice
  */
 export async function getInvoiceHistory(invoiceNumber: string): Promise<ApprovalHistoryEntry[]> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    return [];
-  }
   const response = await apiClient.get(`/ap/${invoiceNumber}/history`);
   return response.data.data;
 }

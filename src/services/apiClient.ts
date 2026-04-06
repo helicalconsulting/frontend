@@ -1,10 +1,9 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+import { API_CONFIG } from '@/config';
 
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 15000,
+  baseURL: API_CONFIG.BASE_URL,
+  timeout: API_CONFIG.TIMEOUT,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -31,7 +30,7 @@ const processQueue = (error: unknown, token: string | null = null) => {
 // Request interceptor — attach auth token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('auth_token');
+    const token = localStorage.getItem(API_CONFIG.TOKEN_KEY);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -63,27 +62,27 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const refreshToken = localStorage.getItem('refresh_token');
+      const refreshToken = localStorage.getItem(API_CONFIG.REFRESH_TOKEN_KEY);
       
       if (!refreshToken) {
         // No refresh token, logout
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('auth_user');
+        localStorage.removeItem(API_CONFIG.TOKEN_KEY);
+        localStorage.removeItem(API_CONFIG.REFRESH_TOKEN_KEY);
+        localStorage.removeItem(API_CONFIG.USER_KEY);
         window.location.href = '/login';
         return Promise.reject(error);
       }
 
       try {
         // Try to refresh the token
-        const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+        const response = await axios.post(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.AUTH.REFRESH}`, {
           refreshToken,
         });
 
         const { accessToken, refreshToken: newRefreshToken } = response.data.data;
         
-        localStorage.setItem('auth_token', accessToken);
-        localStorage.setItem('refresh_token', newRefreshToken);
+        localStorage.setItem(API_CONFIG.TOKEN_KEY, accessToken);
+        localStorage.setItem(API_CONFIG.REFRESH_TOKEN_KEY, newRefreshToken);
 
         processQueue(null, accessToken);
         
@@ -93,9 +92,9 @@ apiClient.interceptors.response.use(
         processQueue(refreshError, null);
         
         // Refresh failed, logout
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('auth_user');
+        localStorage.removeItem(API_CONFIG.TOKEN_KEY);
+        localStorage.removeItem(API_CONFIG.REFRESH_TOKEN_KEY);
+        localStorage.removeItem(API_CONFIG.USER_KEY);
         window.location.href = '/login';
         
         return Promise.reject(refreshError);

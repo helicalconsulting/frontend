@@ -1,7 +1,5 @@
 import apiClient from './apiClient';
-
-// Toggle between mock and real API calls
-const USE_MOCK = false;
+import { API_CONFIG } from '@/config';
 
 // ============================================
 // Types
@@ -103,11 +101,7 @@ export interface PaginatedResponse<T> {
 export async function getPendingOrders(
   params?: GetPendingPOsParams
 ): Promise<PaginatedResponse<PurchaseOrder>> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300));
-    return { items: [], pagination: { page: 1, limit: 20, total: 0, pages: 0 } };
-  }
-  const response = await apiClient.get('/po/pending', { params });
+  const response = await apiClient.get(API_CONFIG.ENDPOINTS.PO.PENDING, { params });
   return response.data.data;
 }
 
@@ -115,11 +109,7 @@ export async function getPendingOrders(
  * Get a single purchase order by PO number
  */
 export async function getPurchaseOrder(poNumber: string): Promise<PurchaseOrder> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    throw new Error('PO not found');
-  }
-  const response = await apiClient.get(`/po/${poNumber}`);
+  const response = await apiClient.get(API_CONFIG.ENDPOINTS.PO.DETAIL(poNumber));
   return response.data.data;
 }
 
@@ -130,11 +120,7 @@ export async function approvePO(
   poNumber: string,
   data: ApprovePOData
 ): Promise<PurchaseOrder> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot approve PO');
-  }
-  const response = await apiClient.post(`/po/${poNumber}/approve`, data);
+  const response = await apiClient.post(API_CONFIG.ENDPOINTS.PO.APPROVE(poNumber), data);
   return response.data.data;
 }
 
@@ -145,11 +131,7 @@ export async function rejectPO(
   poNumber: string,
   data: RejectPOData
 ): Promise<PurchaseOrder> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot reject PO');
-  }
-  const response = await apiClient.post(`/po/${poNumber}/reject`, data);
+  const response = await apiClient.post(API_CONFIG.ENDPOINTS.PO.REJECT(poNumber), data);
   return response.data.data;
 }
 
@@ -157,10 +139,6 @@ export async function rejectPO(
  * Get approval history for a purchase order
  */
 export async function getPOHistory(poNumber: string): Promise<ApprovalHistoryEntry[]> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    return [];
-  }
-  const response = await apiClient.get(`/po/${poNumber}/history`);
+  const response = await apiClient.get(API_CONFIG.ENDPOINTS.PO.HISTORY(poNumber));
   return response.data.data;
 }

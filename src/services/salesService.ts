@@ -1,7 +1,5 @@
-import apiClient from './apiClient';
-
-// Toggle between mock and real API calls
-const USE_MOCK = false;
+import apiClient from "./apiClient";
+import { API_CONFIG } from "@/config";
 
 // ============================================
 // Types
@@ -122,10 +120,6 @@ export interface PaginatedResponse<T> {
  * Get all sales orders with pagination and filters
  */
 export async function getOrders(params?: GetOrdersParams): Promise<PaginatedResponse<SalesOrder>> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300));
-    return { items: [], pagination: { page: 1, limit: 20, total: 0, pages: 0 } };
-  }
   const response = await apiClient.get('/sales', { params });
   return response.data.data;
 }
@@ -134,10 +128,6 @@ export async function getOrders(params?: GetOrdersParams): Promise<PaginatedResp
  * Get a single sales order by order number
  */
 export async function getOrder(orderNumber: string): Promise<SalesOrder> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    throw new Error('Order not found');
-  }
   const response = await apiClient.get(`/sales/${orderNumber}`);
   return response.data.data;
 }
@@ -149,10 +139,6 @@ export async function approveOrder(
   orderNumber: string,
   data: ApproveOrderData
 ): Promise<SalesOrder> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot approve order');
-  }
   const response = await apiClient.post(`/sales/${orderNumber}/approve`, data);
   return response.data.data;
 }
@@ -164,10 +150,6 @@ export async function rejectOrder(
   orderNumber: string,
   data: RejectOrderData
 ): Promise<SalesOrder> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot reject order');
-  }
   const response = await apiClient.post(`/sales/${orderNumber}/reject`, data);
   return response.data.data;
 }
@@ -180,10 +162,6 @@ export async function rejectOrder(
  * Get credit overrides with optional status filter
  */
 export async function getCreditOverrides(status?: string): Promise<CreditOverride[]> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    return [];
-  }
   const params = status ? { status } : undefined;
   const response = await apiClient.get('/sales/credit-overrides', { params });
   return response.data.data;
@@ -196,10 +174,6 @@ export async function approveCreditOverride(
   overrideId: number,
   data: ApproveCreditOverrideData
 ): Promise<CreditOverride> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot approve credit override');
-  }
   const response = await apiClient.post(`/sales/credit-overrides/${overrideId}/approve`, data);
   return response.data.data;
 }

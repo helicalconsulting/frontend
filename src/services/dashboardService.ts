@@ -1,19 +1,12 @@
 import type { DashboardData, DashboardKPI, ApprovalTrend, RequestTypeBreakdown } from '@/types';
-import { mockDashboardData } from '@/mocks/data';
 import apiClient from './apiClient';
-
-// Toggle between mock and real API calls
-const USE_MOCK = true;
+import { API_CONFIG } from '@/config';
 
 /**
  * Fetch dashboard KPIs
  */
 export async function getDashboardKPIs(): Promise<DashboardKPI> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300));
-    return mockDashboardData.kpis;
-  }
-  const response = await apiClient.get('/dashboard/kpis');
+  const response = await apiClient.get(API_CONFIG.ENDPOINTS.DASHBOARD.KPIS);
   return response.data.data;
 }
 
@@ -21,11 +14,7 @@ export async function getDashboardKPIs(): Promise<DashboardKPI> {
  * Fetch approval trends
  */
 export async function getApprovalTrends(): Promise<ApprovalTrend[]> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    return mockDashboardData.approvalTrends;
-  }
-  const response = await apiClient.get('/dashboard/trends');
+  const response = await apiClient.get(API_CONFIG.ENDPOINTS.DASHBOARD.TRENDS);
   return response.data.data;
 }
 
@@ -33,11 +22,23 @@ export async function getApprovalTrends(): Promise<ApprovalTrend[]> {
  * Fetch request type breakdown
  */
 export async function getRequestTypeBreakdown(): Promise<RequestTypeBreakdown[]> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    return mockDashboardData.requestTypes;
-  }
-  const response = await apiClient.get('/dashboard/breakdown');
+  const response = await apiClient.get(API_CONFIG.ENDPOINTS.DASHBOARD.BREAKDOWN);
+  return response.data.data;
+}
+
+/**
+ * Fetch pending counts
+ */
+export async function getPendingCounts(): Promise<any> {
+  const response = await apiClient.get(API_CONFIG.ENDPOINTS.DASHBOARD.PENDING);
+  return response.data.data;
+}
+
+/**
+ * Fetch recent activity
+ */
+export async function getRecentActivity(): Promise<any> {
+  const response = await apiClient.get(API_CONFIG.ENDPOINTS.DASHBOARD.ACTIVITY);
   return response.data.data;
 }
 
@@ -45,10 +46,15 @@ export async function getRequestTypeBreakdown(): Promise<RequestTypeBreakdown[]>
  * Fetch all dashboard data
  */
 export async function getDashboardData(): Promise<DashboardData> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 400));
-    return mockDashboardData;
-  }
-  const response = await apiClient.get('/dashboard');
-  return response.data.data;
+  const [kpis, trends, breakdown] = await Promise.all([
+    getDashboardKPIs(),
+    getApprovalTrends(),
+    getRequestTypeBreakdown(),
+  ]);
+  
+  return {
+    kpis,
+    approvalTrends: trends,
+    requestTypes: breakdown,
+  };
 }

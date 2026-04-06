@@ -1,7 +1,5 @@
-import apiClient from './apiClient';
-
-// Toggle between mock and real API calls
-const USE_MOCK = false;
+import apiClient from "./apiClient";
+import { API_CONFIG } from "@/config";
 
 // ============================================
 // Types
@@ -100,10 +98,6 @@ export interface PaginatedResponse<T> {
 export async function getApprovalsReport(
   params?: GetApprovalsReportParams
 ): Promise<PaginatedResponse<ApprovalReportEntry>> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300));
-    return { items: [], pagination: { page: 1, limit: 20, total: 0, pages: 0 } };
-  }
   const response = await apiClient.get('/reports/approvals', { params });
   return response.data.data;
 }
@@ -114,10 +108,6 @@ export async function getApprovalsReport(
 export async function getActivityReport(
   params?: GetActivityReportParams
 ): Promise<PaginatedResponse<ActivityReportEntry>> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300));
-    return { items: [], pagination: { page: 1, limit: 20, total: 0, pages: 0 } };
-  }
   const response = await apiClient.get('/reports/activity', { params });
   return response.data.data;
 }
@@ -129,15 +119,6 @@ export async function getStatistics(
   startDate: string,
   endDate: string
 ): Promise<StatisticsResponse> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300));
-    return {
-      period: { startDate, endDate },
-      summary: { totalApprovals: 0, totalRejections: 0, avgProcessingTime: 0, totalValue: 0 },
-      byModule: [],
-      trends: [],
-    };
-  }
   const response = await apiClient.get('/reports/statistics', {
     params: { startDate, endDate },
   });
@@ -149,10 +130,6 @@ export async function getStatistics(
  * Returns a Blob for file download
  */
 export async function exportExcel(params?: ExportParams): Promise<Blob> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot export');
-  }
   const response = await apiClient.get('/reports/export/excel', {
     params,
     responseType: 'blob',
@@ -165,10 +142,6 @@ export async function exportExcel(params?: ExportParams): Promise<Blob> {
  * Returns a Blob for file download
  */
 export async function exportPdf(params?: ExportParams): Promise<Blob> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot export');
-  }
   const response = await apiClient.get('/reports/export/pdf', {
     params,
     responseType: 'blob',

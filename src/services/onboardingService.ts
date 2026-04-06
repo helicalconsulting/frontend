@@ -1,7 +1,5 @@
-import apiClient from './apiClient';
-
-// Toggle between mock and real API calls
-const USE_MOCK = false;
+import apiClient from "./apiClient";
+import { API_CONFIG } from "@/config";
 
 // ============================================
 // Types
@@ -150,10 +148,6 @@ export interface PaginatedResponse<T> {
 export async function getRequests(
   params?: GetRequestsParams
 ): Promise<PaginatedResponse<OnboardingRequest>> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300));
-    return { items: [], pagination: { page: 1, limit: 20, total: 0, pages: 0 } };
-  }
   const response = await apiClient.get('/onboarding', { params });
   return response.data.data;
 }
@@ -162,10 +156,6 @@ export async function getRequests(
  * Get a single onboarding request by ID
  */
 export async function getRequest(id: number): Promise<OnboardingRequest> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    throw new Error('Request not found');
-  }
   const response = await apiClient.get(`/onboarding/${id}`);
   return response.data.data;
 }
@@ -174,10 +164,6 @@ export async function getRequest(id: number): Promise<OnboardingRequest> {
  * Get approval status for an onboarding request
  */
 export async function getApprovalStatus(id: number): Promise<ApprovalStatus> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    return { currentLevel: 0, totalLevels: 2, levels: [] };
-  }
   const response = await apiClient.get(`/onboarding/${id}/approval-status`);
   return response.data.data;
 }
@@ -186,10 +172,6 @@ export async function getApprovalStatus(id: number): Promise<ApprovalStatus> {
  * Create a new onboarding request (as draft)
  */
 export async function createRequest(data: CreateRequestData): Promise<OnboardingRequest> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot create request');
-  }
   const response = await apiClient.post('/onboarding', data);
   return response.data.data;
 }
@@ -201,10 +183,6 @@ export async function updateRequest(
   id: number,
   data: UpdateRequestData
 ): Promise<OnboardingRequest> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot update request');
-  }
   const response = await apiClient.put(`/onboarding/${id}`, data);
   return response.data.data;
 }
@@ -213,10 +191,6 @@ export async function updateRequest(
  * Submit an onboarding request for approval
  */
 export async function submitRequest(id: number): Promise<OnboardingRequest> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 400));
-    throw new Error('Mock mode - cannot submit request');
-  }
   const response = await apiClient.post(`/onboarding/${id}/submit`);
   return response.data.data;
 }
@@ -228,10 +202,6 @@ export async function approveRequest(
   id: number,
   data: ApproveRequestData
 ): Promise<OnboardingRequest> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot approve request');
-  }
   const response = await apiClient.post(`/onboarding/${id}/approve`, data);
   return response.data.data;
 }
@@ -243,10 +213,6 @@ export async function rejectRequest(
   id: number,
   data: RejectRequestData
 ): Promise<OnboardingRequest> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot reject request');
-  }
   const response = await apiClient.post(`/onboarding/${id}/reject`, data);
   return response.data.data;
 }
@@ -255,9 +221,5 @@ export async function rejectRequest(
  * Delete an onboarding request
  */
 export async function deleteRequest(id: number): Promise<void> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300));
-    throw new Error('Mock mode - cannot delete request');
-  }
   await apiClient.delete(`/onboarding/${id}`);
 }

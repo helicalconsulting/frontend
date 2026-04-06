@@ -1,7 +1,5 @@
 import apiClient from './apiClient';
-
-// Toggle between mock and real API calls
-const USE_MOCK = false;
+import { API_CONFIG } from '@/config';
 
 export interface PaymentRequest {
   id: number;
@@ -81,11 +79,7 @@ export async function getPaymentRequests(params?: {
   payments: PaymentRequest[];
   pagination: { page: number; limit: number; total: number; pages: number };
 }> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300));
-    return { payments: [], pagination: { page: 1, limit: 20, total: 0, pages: 0 } };
-  }
-  const response = await apiClient.get('/payments', { params });
+  const response = await apiClient.get(API_CONFIG.ENDPOINTS.PAYMENTS.BASE, { params });
   return response.data.data;
 }
 
@@ -93,11 +87,7 @@ export async function getPaymentRequests(params?: {
  * Get single payment request
  */
 export async function getPaymentRequest(id: number): Promise<PaymentRequest> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    throw new Error('Payment not found');
-  }
-  const response = await apiClient.get(`/payments/${id}`);
+  const response = await apiClient.get(`${API_CONFIG.ENDPOINTS.PAYMENTS.BASE}/${id}`);
   return response.data.data;
 }
 
@@ -105,11 +95,7 @@ export async function getPaymentRequest(id: number): Promise<PaymentRequest> {
  * Get approval status for a payment request
  */
 export async function getPaymentApprovalStatus(id: number): Promise<PaymentApprovalStatus> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200));
-    return { currentLevel: 0, totalLevels: 2, levels: [] };
-  }
-  const response = await apiClient.get(`/payments/${id}/approval-status`);
+  const response = await apiClient.get(`${API_CONFIG.ENDPOINTS.PAYMENTS.BASE}/${id}/approval-status`);
   return response.data.data;
 }
 
@@ -117,11 +103,7 @@ export async function getPaymentApprovalStatus(id: number): Promise<PaymentAppro
  * Create payment request (draft)
  */
 export async function createPaymentRequest(data: CreatePaymentInput): Promise<PaymentRequest> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot create payment');
-  }
-  const response = await apiClient.post('/payments', data);
+  const response = await apiClient.post(API_CONFIG.ENDPOINTS.PAYMENTS.BASE, data);
   return response.data.data;
 }
 
@@ -129,11 +111,7 @@ export async function createPaymentRequest(data: CreatePaymentInput): Promise<Pa
  * Update payment request
  */
 export async function updatePaymentRequest(id: number, data: Partial<CreatePaymentInput>): Promise<PaymentRequest> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot update payment');
-  }
-  const response = await apiClient.put(`/payments/${id}`, data);
+  const response = await apiClient.put(`${API_CONFIG.ENDPOINTS.PAYMENTS.BASE}/${id}`, data);
   return response.data.data;
 }
 
@@ -141,11 +119,7 @@ export async function updatePaymentRequest(id: number, data: Partial<CreatePayme
  * Submit payment request for approval
  */
 export async function submitPaymentRequest(id: number): Promise<PaymentRequest> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 400));
-    throw new Error('Mock mode - cannot submit payment');
-  }
-  const response = await apiClient.post(`/payments/${id}/submit`);
+  const response = await apiClient.post(`${API_CONFIG.ENDPOINTS.PAYMENTS.BASE}/${id}/submit`);
   return response.data.data;
 }
 
@@ -153,11 +127,7 @@ export async function submitPaymentRequest(id: number): Promise<PaymentRequest> 
  * Approve payment request
  */
 export async function approvePaymentRequest(id: number, data: { comment?: string; signature?: string }): Promise<PaymentRequest> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot approve payment');
-  }
-  const response = await apiClient.post(`/payments/${id}/approve`, data);
+  const response = await apiClient.post(API_CONFIG.ENDPOINTS.PAYMENTS.APPROVE(String(id)), data);
   return response.data.data;
 }
 
@@ -165,11 +135,7 @@ export async function approvePaymentRequest(id: number, data: { comment?: string
  * Reject payment request
  */
 export async function rejectPaymentRequest(id: number, data: { comment: string }): Promise<PaymentRequest> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 500));
-    throw new Error('Mock mode - cannot reject payment');
-  }
-  const response = await apiClient.post(`/payments/${id}/reject`, data);
+  const response = await apiClient.post(API_CONFIG.ENDPOINTS.PAYMENTS.REJECT(String(id)), data);
   return response.data.data;
 }
 
@@ -177,9 +143,5 @@ export async function rejectPaymentRequest(id: number, data: { comment: string }
  * Delete draft payment request
  */
 export async function deletePaymentRequest(id: number): Promise<void> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 300));
-    throw new Error('Mock mode - cannot delete payment');
-  }
-  await apiClient.delete(`/payments/${id}`);
+  await apiClient.delete(`${API_CONFIG.ENDPOINTS.PAYMENTS.BASE}/${id}`);
 }
