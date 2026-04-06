@@ -45,6 +45,7 @@ export function PurchaseOrdersPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
+  const [selectedOrderDetails, setSelectedOrderDetails] = useState<PurchaseOrder | null>(null);
 
   const filteredOrders = useMemo(() => {
     if (!data?.orders) return [];
@@ -75,6 +76,14 @@ export function PurchaseOrdersPage() {
       else next.add(id);
       return next;
     });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedRows.size === filteredOrders.length && filteredOrders.length > 0) {
+      setSelectedRows(new Set());
+    } else {
+      setSelectedRows(new Set(filteredOrders.filter(o => o.status === 'pending').map(o => o.id)));
+    }
   };
 
   const handleApprove = (orderId: string) => {
@@ -189,13 +198,19 @@ export function PurchaseOrdersPage() {
               <thead>
                 <tr className="border-b border-gray-200 bg-gray-50/80">
                   <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider w-10">
-                    Select
+                    <input
+                      type="checkbox"
+                      checked={selectedRows.size > 0 && selectedRows.size === filteredOrders.filter(o => o.status === 'pending').length}
+                      onChange={toggleSelectAll}
+                      className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      title="Select All"
+                    />
                   </th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider w-10">
                     {' '}
                   </th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">
-                    Actions
+                    PO Number
                   </th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">
                     Supplier
@@ -247,6 +262,7 @@ export function PurchaseOrdersPage() {
                         onReject={() => handleReject(order.id)}
                         isApproving={approveOrder.isPending}
                         isRejecting={rejectOrder.isPending}
+                        onShowDetails={() => setSelectedOrderDetails(order)}
                       />
                     ))}
               </tbody>
@@ -262,6 +278,82 @@ export function PurchaseOrdersPage() {
           )}
         </div>
       </div>
+
+      {selectedOrderDetails && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col animate-scale-in">
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900">PO Details: {selectedOrderDetails.poNumber}</h3>
+              <button onClick={() => setSelectedOrderDetails(null)} className="text-gray-400 hover:text-gray-500">
+                <XCircle className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto flex-1">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider">Supplier</p>
+                  <p className="font-medium text-gray-900 mt-1">{selectedOrderDetails.supplier}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider">Order Date</p>
+                  <p className="font-medium text-gray-900 mt-1">{formatDate(selectedOrderDetails.orderDate)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider">Total Value</p>
+                  <p className="font-medium text-gray-900 mt-1">{formatCurrency(selectedOrderDetails.amount, selectedOrderDetails.currency)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider">Status</p>
+                  <Badge variant={statusVariants[selectedOrderDetails.status]} className="mt-1">
+                    {selectedOrderDetails.status.charAt(0).toUpperCase() + selectedOrderDetails.status.slice(1)}
+                  </Badge>
+                </div>
+              </div>
+              
+              <div className="rounded-lg border border-gray-200 overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Line</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Price</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {selectedOrderDetails.lineItems.map((item) => (
+                      <tr key={item.id}>
+                        <td className="px-4 py-2 text-gray-700">{item.lineNumber}</td>
+                        <td className="px-4 py-2 text-gray-900 font-medium">{item.description}</td>
+                        <td className="px-4 py-2 text-right text-gray-700">{item.quantity.toLocaleString()}</td>
+                        <td className="px-4 py-2 text-right text-gray-700">{item.unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                        <td className="px-4 py-2 text-right font-semibold text-gray-900">{item.total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 items-center">
+              <Button variant="ghost" onClick={() => setSelectedOrderDetails(null)} className="mr-auto">
+                Close
+              </Button>
+              {selectedOrderDetails.status === 'pending' && (
+                <>
+                  <Button variant="destructive" onClick={() => { handleReject(selectedOrderDetails.id); setSelectedOrderDetails(null); }}>
+                    Reject
+                  </Button>
+                  <Button variant="success" onClick={() => { handleApprove(selectedOrderDetails.id); setSelectedOrderDetails(null); }}>
+                    Approve
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -279,6 +371,7 @@ interface OrderRowProps {
   onReject: () => void;
   isApproving: boolean;
   isRejecting: boolean;
+  onShowDetails: () => void;
 }
 
 function OrderRow({
@@ -291,6 +384,7 @@ function OrderRow({
   onReject,
   isApproving,
   isRejecting,
+  onShowDetails,
 }: OrderRowProps) {
   return (
     <>
@@ -321,50 +415,26 @@ function OrderRow({
           </button>
         </td>
         <td className="px-4 py-3">
-          <div className="flex items-center gap-1.5">
-            {order.status === 'pending' && (
-              <>
-                <Button
-                  size="sm"
-                  variant="success"
-                  onClick={onApprove}
-                  disabled={isApproving}
-                  className="h-7 px-2 text-xs"
-                >
-                  {isApproving ? (
-                    <Loader2 className="h-3 w-3 animate-spin" />
-                  ) : (
-                    <CheckCircle2 className="h-3 w-3" />
-                  )}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={onReject}
-                  disabled={isRejecting}
-                  className="h-7 px-2 text-xs"
-                >
-                  {isRejecting ? (
-                    <Loader2 className="h-3 w-3 animate-spin" />
-                  ) : (
-                    <XCircle className="h-3 w-3" />
-                  )}
-                </Button>
-              </>
-            )}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onShowDetails}
+              className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 rounded-md font-medium text-sm transition-all shadow-sm border border-blue-200/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+              title="View PO Details"
+            >
+              <span className="font-mono tracking-tight">{order.poNumber}</span>
+            </button>
             <Button
               size="sm"
               variant="ghost"
-              className="h-7 px-2 text-xs"
+              className="h-8 px-2 text-xs text-gray-500 hover:text-gray-700"
             >
-              <FileText className="h-3 w-3" /> Files
+              <FileText className="h-3.5 w-3.5 mr-1.5" /> Files
             </Button>
           </div>
         </td>
         <td className="px-4 py-3">
           <div>
             <p className="font-medium text-gray-900">{order.supplier}</p>
-            <p className="text-xs text-gray-400">PO# {order.poNumber}</p>
           </div>
         </td>
         <td className="px-4 py-3 text-gray-600">{formatDate(order.orderDate)}</td>

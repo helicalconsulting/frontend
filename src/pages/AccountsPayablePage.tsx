@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Eye,
   FileText,
+  XCircle,
 } from 'lucide-react';
 import type { SupplierInvoice } from '@/types';
 
@@ -32,6 +33,10 @@ export function AccountsPayablePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [showFilesModal, setShowFilesModal] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
+  const [showPOModal, setShowPOModal] = useState(false);
+  const [selectedPO, setSelectedPO] = useState<string | null>(null);
+  const [selectedInvoiceDetails, setSelectedInvoiceDetails] = useState<SupplierInvoice | null>(null);
 
   const filteredInvoices = useMemo(() => {
     return mockSupplierInvoices.filter((inv) => {
@@ -49,6 +54,28 @@ export function AccountsPayablePage() {
       else next.add(id);
       return next;
     });
+  };
+
+  const toggleSelect = (id: string) => {
+    setSelectedRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedRows.size === filteredInvoices.length && filteredInvoices.length > 0) {
+      setSelectedRows(new Set());
+    } else {
+      setSelectedRows(new Set(filteredInvoices.map((inv) => inv.id)));
+    }
+  };
+
+  const handlePOClick = (poNumber: string) => {
+    setSelectedPO(poNumber);
+    setShowPOModal(true);
   };
 
   const pendingCount = mockSupplierInvoices.filter((i) => i.status === 'pending').length;
@@ -154,6 +181,11 @@ export function AccountsPayablePage() {
             />
           </div>
           <div className="flex items-center gap-2">
+            {selectedRows.size > 0 && (
+              <span className="text-xs text-gray-500 font-medium mr-2">
+                {selectedRows.size} selected
+              </span>
+            )}
             <Button size="sm" variant="outline" onClick={() => setShowFilesModal(true)}>
               <Eye className="h-4 w-4" />
               View Details
@@ -167,7 +199,17 @@ export function AccountsPayablePage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 bg-gray-50/80">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider w-10">
+                    <input
+                      type="checkbox"
+                      checked={selectedRows.size === filteredInvoices.length && filteredInvoices.length > 0}
+                      onChange={toggleSelectAll}
+                      className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      title="Select All"
+                    />
+                  </th>
                   <th className="px-4 py-3 text-left w-10" />
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">PO Number</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Ref #</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Supplier</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Invoice #</th>
@@ -186,7 +228,11 @@ export function AccountsPayablePage() {
                     key={invoice.id}
                     invoice={invoice}
                     isExpanded={expandedRows.has(invoice.id)}
+                    isSelected={selectedRows.has(invoice.id)}
                     onToggle={() => toggleRow(invoice.id)}
+                    onToggleSelect={() => toggleSelect(invoice.id)}
+                    onPOClick={handlePOClick}
+                    onInvoiceClick={(inv) => setSelectedInvoiceDetails(inv)}
                   />
                 ))}
               </tbody>
@@ -210,6 +256,107 @@ export function AccountsPayablePage() {
         attachments={mockAttachments}
         title="Invoice Attachments"
       />
+
+      {/* PO Details Modal */}
+      {showPOModal && selectedPO && (
+        <PODetailsModal
+          isOpen={showPOModal}
+          onClose={() => {
+            setShowPOModal(false);
+            setSelectedPO(null);
+          }}
+          poNumber={selectedPO}
+        />
+      )}
+
+      {/* Invoice Details Modal */}
+      {selectedInvoiceDetails && (
+        <InvoiceDetailsModal
+          isOpen={true}
+          onClose={() => setSelectedInvoiceDetails(null)}
+          invoice={selectedInvoiceDetails}
+        />
+      )}
+    </div>
+  );
+}
+
+// ================================================
+// PO Details Modal
+// ================================================
+interface PODetailsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  poNumber: string;
+}
+
+function PODetailsModal({ isOpen, onClose, poNumber }: PODetailsModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4 flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-bold text-white">Purchase Order Details</h3>
+            <p className="text-sm text-blue-100">PO# {poNumber}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors"
+          >
+            <XCircle className="h-5 w-5" />
+          </button>
+        </div>
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Supplier</p>
+                <p className="text-sm font-medium text-gray-900 mt-1">Acme Corporation Ltd.</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Order Date</p>
+                <p className="text-sm font-medium text-gray-900 mt-1">2024-03-15</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Due Date</p>
+                <p className="text-sm font-medium text-gray-900 mt-1">2024-04-15</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Total Amount</p>
+                <p className="text-sm font-bold text-gray-900 mt-1">$45,230.00</p>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-200 pt-4">
+              <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-3">Line Items</h4>
+              <div className="rounded-lg border border-gray-200 overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-100 bg-gray-50">
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Item</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Unit Price</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    <tr className="hover:bg-blue-50/30">
+                      <td className="px-4 py-2.5 text-gray-700">1</td>
+                      <td className="px-4 py-2.5 text-gray-900 font-medium">Industrial Equipment</td>
+                      <td className="px-4 py-2.5 text-right text-gray-700 font-mono">150</td>
+                      <td className="px-4 py-2.5 text-right text-gray-700 font-mono">$301.53</td>
+                      <td className="px-4 py-2.5 text-right font-semibold text-gray-900 font-mono">$45,230.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -220,15 +367,36 @@ export function AccountsPayablePage() {
 function InvoiceRow({
   invoice,
   isExpanded,
+  isSelected,
   onToggle,
+  onToggleSelect,
+  onPOClick,
+  onInvoiceClick,
 }: {
   invoice: SupplierInvoice;
   isExpanded: boolean;
+  isSelected: boolean;
   onToggle: () => void;
+  onToggleSelect: () => void;
+  onPOClick: (poNumber: string) => void;
+  onInvoiceClick: (invoice: SupplierInvoice) => void;
 }) {
+  // Extract PO number from GRN details
+  const poNumber = invoice.grnDetails[0]?.purchaseOrder || 'N/A';
+
   return (
     <>
-      <tr className="hover:bg-gray-50/80 transition-colors duration-150">
+      <tr className={`transition-colors duration-150 ${
+        isSelected ? 'bg-blue-50/50' : 'hover:bg-gray-50/80'
+      }`}>
+        <td className="px-4 py-3">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={onToggleSelect}
+            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          />
+        </td>
         <td className="px-4 py-3">
           <button
             onClick={onToggle}
@@ -241,9 +409,26 @@ function InvoiceRow({
             )}
           </button>
         </td>
+        <td className="px-4 py-3">
+          <button
+            onClick={() => onPOClick(poNumber)}
+            className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 rounded-md font-medium text-xs transition-all shadow-sm border border-blue-200/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+            title="View PO Details"
+          >
+            <span className="font-mono tracking-tight">{poNumber}</span>
+          </button>
+        </td>
         <td className="px-4 py-3 font-mono text-xs text-gray-700">{invoice.refNumber}</td>
         <td className="px-4 py-3 font-medium text-gray-900">{invoice.supplier}</td>
-        <td className="px-4 py-3 font-mono text-xs text-gray-700">{invoice.invoiceNumber}</td>
+        <td className="px-4 py-3">
+          <button
+            onClick={() => onInvoiceClick(invoice)}
+            className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 rounded-md font-medium text-xs transition-all shadow-sm border border-blue-200/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+            title="View Invoice Details"
+          >
+            <span className="font-mono tracking-tight">{invoice.invoiceNumber}</span>
+          </button>
+        </td>
         <td className="px-4 py-3 text-right">
           <span className={`font-semibold ${invoice.netValue > 10000 ? 'text-red-600' : 'text-gray-900'}`}>
             $ {invoice.netValue.toLocaleString(undefined, { minimumFractionDigits: 0 })}
@@ -269,7 +454,7 @@ function InvoiceRow({
       {/* Expanded GRN Details */}
       {isExpanded && (
         <tr>
-          <td colSpan={11} className="bg-slate-50/80 px-4 py-0">
+          <td colSpan={13} className="bg-slate-50/80 px-4 py-0">
             <div className="py-4 pl-10">
               <div className="rounded-lg border border-gray-200 bg-white overflow-hidden shadow-sm">
                 <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
@@ -327,5 +512,105 @@ function InvoiceRow({
         </tr>
       )}
     </>
+  );
+}
+
+// ================================================
+// Invoice Details Modal
+// ================================================
+interface InvoiceDetailsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  invoice: SupplierInvoice;
+}
+
+function InvoiceDetailsModal({ isOpen, onClose, invoice }: InvoiceDetailsModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-scale-in">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-gray-900">Invoice Details: {invoice.invoiceNumber}</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
+            <XCircle className="h-6 w-6" />
+          </button>
+        </div>
+        <div className="p-6 overflow-y-auto flex-1">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div>
+              <p className="text-xs text-gray-500 uppercase tracking-wider">Supplier</p>
+              <p className="font-medium text-gray-900 mt-1">{invoice.supplier}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 uppercase tracking-wider">Reference #</p>
+              <p className="font-medium text-gray-900 mt-1">{invoice.refNumber}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 uppercase tracking-wider">Due Date</p>
+              <p className="font-medium text-gray-900 mt-1">{invoice.dueDate}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 uppercase tracking-wider">Status</p>
+              <Badge variant={statusVariants[invoice.status]} className="mt-1">
+                {invoice.approvalStatus}
+              </Badge>
+            </div>
+          </div>
+          
+          <div className="rounded-lg border border-gray-200 overflow-hidden mt-6">
+            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+              <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                GRN Details — Goods Received
+              </h4>
+            </div>
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Item</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">PO #</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
+                  <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">WH</th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty</th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Value</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {invoice.grnDetails.map((grn) => (
+                  <tr key={grn.id}>
+                    <td className="px-4 py-2 text-gray-700">{grn.item}</td>
+                    <td className="px-4 py-2 font-mono text-xs text-gray-700">{grn.purchaseOrder}</td>
+                    <td className="px-4 py-2 text-gray-900 font-medium">{grn.description}</td>
+                    <td className="px-4 py-2 text-center text-gray-500">{grn.warehouse}</td>
+                    <td className="px-4 py-2 text-right text-gray-700">{grn.qtyReceived.toLocaleString()} {grn.uom}</td>
+                    <td className="px-4 py-2 text-right font-semibold text-gray-900">${grn.matchedValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="border-t border-gray-200 bg-gray-50/50">
+                  <td colSpan={5} className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase">
+                    Total Matched
+                  </td>
+                  <td className="px-4 py-2 text-right font-bold text-gray-900 font-mono">
+                    ${invoice.grnDetails.reduce((s, g) => s + g.matchedValue, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        
+        <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 items-center">
+          <Button variant="ghost" onClick={onClose} className="mr-auto">Close</Button>
+          {(invoice.status === 'pending' || invoice.status === 'overdue') && (
+            <>
+              <Button variant="destructive" onClick={onClose}>Reject</Button>
+              <Button variant="success" onClick={onClose}>Approve</Button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

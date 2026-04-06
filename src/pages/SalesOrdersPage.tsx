@@ -237,7 +237,15 @@ function SalesOrderRow({
             {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           </button>
         </td>
-        <td className="px-3 py-3 font-mono text-xs font-medium text-gray-900">{order.salesOrderNumber}</td>
+        <td className="px-3 py-3">
+          <button
+            onClick={onToggleExpand}
+            className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 rounded-md font-medium text-xs transition-all shadow-sm border border-blue-200/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+            title="View Details"
+          >
+            <span className="font-mono tracking-tight">{order.salesOrderNumber}</span>
+          </button>
+        </td>
         <td className="px-3 py-3">
           <div className="flex items-center gap-2">
             <span className="font-medium text-gray-900">{order.customerName}</span>
