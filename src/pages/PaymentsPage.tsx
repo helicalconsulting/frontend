@@ -346,6 +346,7 @@ export function PaymentsPage() {
                         }
                       }}
                       className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      title="Select All"
                     />
                   </th>
                   <th className="px-4 py-3 text-left w-10" />
@@ -387,7 +388,15 @@ export function PaymentsPage() {
                         )}
                       </button>
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs font-medium text-blue-600">{item.requestNumber}</td>
+                    <td className="px-4 py-3">
+                      <button
+                        onClick={() => setExpandedRequest(expandedRequest === item.id ? null : item.id)}
+                        className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 rounded-md font-medium text-xs transition-all shadow-sm border border-blue-200/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                        title="View Details"
+                      >
+                        <span className="font-mono tracking-tight">{item.requestNumber}</span>
+                      </button>
+                    </td>
                     <td className="px-4 py-3 font-medium text-gray-900">{item.supplier}</td>
                     <td className="px-4 py-3 text-right font-semibold text-gray-900 font-mono">
                       ${item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -415,7 +424,17 @@ export function PaymentsPage() {
             if (!req) return null;
             return (
               <div className="border-t border-gray-200 bg-slate-50/80 p-5">
-                <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-3">Transaction Breakdown</h4>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wider">Transaction Breakdown</h4>
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" variant="destructive" onClick={() => setExpandedRequest(null)}>
+                      Reject
+                    </Button>
+                    <Button size="sm" variant="success" onClick={() => setExpandedRequest(null)}>
+                      Approve
+                    </Button>
+                  </div>
+                </div>
                 <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
                   <table className="w-full text-sm">
                     <thead>
