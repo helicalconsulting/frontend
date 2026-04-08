@@ -10,19 +10,31 @@ interface HeaderProps {
 export function Header({ title, subtitle }: HeaderProps) {
   const { user } = useAuth();
 
-  const [darkMode, setDarkMode] = useState(
-    () => localStorage.getItem('theme') === 'dark'
-  );
+  const [darkMode, setDarkMode] = useState(false);
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [darkMode]);
+// Load theme on mount
+useEffect(() => {
+  const savedTheme = localStorage.getItem('theme');
+
+  if (savedTheme) {
+    setDarkMode(savedTheme === 'dark');
+  } else {
+    // system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setDarkMode(prefersDark);
+  }
+}, []);
+
+// Apply theme
+useEffect(() => {
+  if (darkMode) {
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+  }
+}, [darkMode]);
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between 
@@ -38,15 +50,21 @@ export function Header({ title, subtitle }: HeaderProps) {
           </h2>
 
           <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="ml-2 p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-          >
-            {darkMode ? (
-              <Sun className="h-4 w-4 text-yellow-400" />
-            ) : (
-              <Moon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-            )}
-          </button>
+  onClick={() => setDarkMode(!darkMode)}
+  className={`relative w-12 h-6 flex items-center rounded-full p-1 transition duration-300
+    ${darkMode ? 'bg-blue-600' : 'bg-gray-300'}`}
+>
+  <div
+    className={`w-4 h-4 bg-white rounded-full shadow-md transform transition duration-300 flex items-center justify-center
+      ${darkMode ? 'translate-x-6' : 'translate-x-0'}`}
+  >
+    {darkMode ? (
+      <Sun className="w-3 h-3 text-yellow-400" />
+    ) : (
+      <Moon className="w-3 h-3 text-gray-700" />
+    )}
+  </div>
+</button>
         </div>
 
         {subtitle && (
