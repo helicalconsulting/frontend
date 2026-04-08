@@ -60,10 +60,9 @@ const navSections = [
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({ collapsed, setCollapsed }: any) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState(false);
 
   // Check if user has admin permissions
   const hasAdminAccess = user?.permissions?.ADMIN?.canView || user?.role === 'Super Admin' || user?.role === 'Administrator';

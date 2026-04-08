@@ -16,6 +16,7 @@ import {
   Eye,
   FileText,
   XCircle,
+  CheckCircle2,
 } from 'lucide-react';
 import type { SupplierInvoice } from '@/types';
 
@@ -47,6 +48,7 @@ export function AccountsPayablePage() {
     });
   }, [searchQuery]);
 
+  const selectableCount = filteredInvoices.filter(inv => inv.status !== 'approved').length;
   const toggleRow = (id: string) => {
     setExpandedRows((prev) => {
       const next = new Set(prev);
@@ -66,12 +68,15 @@ export function AccountsPayablePage() {
   };
 
   const toggleSelectAll = () => {
-    if (selectedRows.size === filteredInvoices.length && filteredInvoices.length > 0) {
-      setSelectedRows(new Set());
-    } else {
-      setSelectedRows(new Set(filteredInvoices.map((inv) => inv.id)));
-    }
-  };
+  const selectableIds = filteredInvoices
+    .filter((inv) => inv.status !== 'approved') // ❗ approved hata diye
+    .map((inv) => inv.id);
+  if (selectedRows.size === selectableIds.length) {
+    setSelectedRows(new Set());
+  } else {
+    setSelectedRows(new Set(selectableIds));
+  }
+};
 
   const handlePOClick = (poNumber: string) => {
     setSelectedPO(poNumber);
@@ -181,16 +186,46 @@ export function AccountsPayablePage() {
             />
           </div>
           <div className="flex items-center gap-2">
-            {selectedRows.size > 0 && (
-              <span className="text-xs text-gray-500 font-medium mr-2">
-                {selectedRows.size} selected
-              </span>
-            )}
-            <Button size="sm" variant="outline" onClick={() => setShowFilesModal(true)}>
-              <Eye className="h-4 w-4" />
-              View Details
-            </Button>
-          </div>
+  {selectedRows.size > 0 && (
+    <>
+      <span className="text-xs text-gray-500 font-medium mr-2">
+        {selectedRows.size} selected
+      </span>
+
+      
+
+      {/* ✅ Accept */}
+      <Button
+        size="sm"
+        variant="success"
+        className="h-8 px-3 text-xs"
+        onClick={() => {
+          console.log("Approve selected:", Array.from(selectedRows));
+        }}
+        
+      >
+        Approve
+      </Button>
+      {/* ✅ Reject */}
+      <Button
+        size="sm"
+        variant="destructive"
+        className="h-8 px-3 text-xs"
+        onClick={() => {
+          console.log("Reject selected:", Array.from(selectedRows));
+        }}
+      >
+        Reject
+      </Button>
+    </>
+  )}
+
+  {/* View Details (always right side) */}
+  <Button size="sm" variant="outline" onClick={() => setShowFilesModal(true)}>
+    <Eye className="h-4 w-4" />
+    View Details
+  </Button>
+</div>
         </div>
 
         {/* Invoices Table */}
@@ -202,7 +237,7 @@ export function AccountsPayablePage() {
                   <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider w-10">
                     <input
                       type="checkbox"
-                      checked={selectedRows.size === filteredInvoices.length && filteredInvoices.length > 0}
+                      checked={selectedRows.size === selectableCount && selectableCount > 0}
                       onChange={toggleSelectAll}
                       className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       title="Select All"
@@ -391,23 +426,15 @@ function InvoiceRow({
       }`}>
         <td className="px-4 py-3">
           <input
-            type="checkbox"
-            checked={isSelected}
-            onChange={onToggleSelect}
-            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
+  type="checkbox"
+  checked={isSelected}
+  disabled={invoice.status === 'approved'} // 🔥 main logic
+  onChange={onToggleSelect}
+  className="h-4 w-4 rounded border-gray-300 text-blue-600 disabled:opacity-40 cursor-pointer"
+/>
         </td>
         <td className="px-4 py-3">
-          <button
-            onClick={onToggle}
-            className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-all"
-          >
-            {isExpanded ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4" />
-            )}
-          </button>
+          
         </td>
         <td className="px-4 py-3">
           <button
@@ -415,7 +442,7 @@ function InvoiceRow({
             className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 rounded-md font-medium text-xs transition-all shadow-sm border border-blue-200/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
             title="View PO Details"
           >
-            <span className="font-mono tracking-tight">{poNumber}</span>
+            <span className="font-mono whitespace-nowrap">{poNumber}</span>
           </button>
         </td>
         <td className="px-4 py-3 font-mono text-xs text-gray-700">{invoice.refNumber}</td>
@@ -605,8 +632,15 @@ function InvoiceDetailsModal({ isOpen, onClose, invoice }: InvoiceDetailsModalPr
           <Button variant="ghost" onClick={onClose} className="mr-auto">Close</Button>
           {(invoice.status === 'pending' || invoice.status === 'overdue') && (
             <>
-              <Button variant="destructive" onClick={onClose}>Reject</Button>
-              <Button variant="success" onClick={onClose}>Approve</Button>
+              <Button variant="destructive" size="sm" onClick={onClose}>
+  <XCircle className="h-4 w-4" />
+  Reject
+</Button>
+
+<Button variant="success" size="sm" onClick={onClose}>
+  <CheckCircle2 className="h-4 w-4" />
+  Approve
+</Button>
             </>
           )}
         </div>

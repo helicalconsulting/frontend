@@ -161,67 +161,63 @@ export function DashboardPage() {
           </div>
         </div>
 
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-          <div className="animate-slide-up">
-            <KPICard
-              title="Pending Approvals"
-              value={
-                isLoading
-                  ? '—'
-                  : formatNumber(data!.kpis.pendingApprovals)
-              }
-              icon={<AlertTriangle className="h-6 w-6 text-amber-600" />}
-              iconBgColor="bg-amber-100"
-              trend={{ value: 12, isPositive: false }}
-              isLoading={isLoading}
-            />
-          </div>
-          <div className="animate-slide-up delay-75">
-            <KPICard
-              title="Approved Today"
-              value={
-                isLoading
-                  ? '—'
-                  : formatNumber(data!.kpis.approvedToday)
-              }
-              icon={<CheckCircle2 className="h-6 w-6 text-emerald-600" />}
-              iconBgColor="bg-emerald-100"
-              trend={{ value: 8, isPositive: true }}
-              isLoading={isLoading}
-            />
-          </div>
-          <div className="animate-slide-up delay-100">
-            <KPICard
-              title="Avg. Processing (hrs)"
-              value={
-                isLoading
-                  ? '—'
-                  : data!.kpis.avgProcessingTime.toLocaleString()
-              }
-              icon={<Clock className="h-6 w-6 text-blue-600" />}
-              iconBgColor="bg-blue-100"
-              isLoading={isLoading}
-            />
-          </div>
-          <div className="animate-slide-up delay-200">
-            <KPICard
-              title="Total Value"
-              value={
-                isLoading
-                  ? '—'
-                  : formatCurrency(
-                      data!.kpis.totalFinancialExposure,
-                      data!.kpis.currency
-                    )
-              }
-              icon={<DollarSign className="h-6 w-6 text-indigo-600" />}
-              iconBgColor="bg-indigo-100"
-              trend={{ value: 15, isPositive: true }}
-              isLoading={isLoading}
-            />
-          </div>
-        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 items-stretch">
+
+  <div className="animate-slide-up h-full">
+    <KPICard
+      className="h-full"
+      title="Pending Approvals"
+      value={isLoading ? '—' : formatNumber(data!.kpis.pendingApprovals)}
+      icon={<AlertTriangle className="h-6 w-6 text-amber-600" />}
+      iconBgColor="bg-amber-100"
+      trend={{ value: 12, isPositive: false }}
+      isLoading={isLoading}
+    />
+  </div>
+
+  <div className="animate-slide-up delay-75 h-full">
+    <KPICard
+      className="h-full"
+      title="Approved Today"
+      value={isLoading ? '—' : formatNumber(data!.kpis.approvedToday)}
+      icon={<CheckCircle2 className="h-6 w-6 text-emerald-600" />}
+      iconBgColor="bg-emerald-100"
+      trend={{ value: 8, isPositive: true }}
+      isLoading={isLoading}
+    />
+  </div>
+
+  <div className="animate-slide-up delay-100 h-full">
+    <KPICard
+      className="h-full"
+      title="Avg. Processing (hrs)"
+      value={isLoading ? '—' : data!.kpis.avgProcessingTime.toLocaleString()}
+      icon={<Clock className="h-6 w-6 text-blue-600" />}
+      iconBgColor="bg-blue-100"
+      isLoading={isLoading}
+    />
+  </div>
+
+  <div className="animate-slide-up delay-200 h-full">
+    <KPICard
+      className="h-full"
+      title="Total Value"
+      
+      value={
+        isLoading
+          ? '—'
+          : formatCurrency(
+              data!.kpis.totalFinancialExposure,
+              data!.kpis.currency
+            )
+      }
+      iconBgColor="bg-indigo-100"
+      trend={{ value: 15, isPositive: true }}
+      isLoading={isLoading}
+    />
+  </div>
+
+</div>
 
         {/* Charts + Activity Feed */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">

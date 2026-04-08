@@ -21,6 +21,8 @@ import {
   Filter,
   Loader2,
   Package,
+  AlertTriangle,
+  DollarSign,
 } from 'lucide-react';
 
 const priorityVariants: Record<string, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
@@ -35,19 +37,57 @@ const statusVariants: Record<string, 'default' | 'success' | 'warning' | 'danger
   approved: 'success',
   rejected: 'danger',
 };
+const CURRENCIES = [
+  { code: "KES", label: "Kenyan Shilling", flag: "🇰🇪", region: "africa" },
+  { code: "NGN", label: "Nigerian Naira", flag: "🇳🇬", region: "africa" },
+  { code: "ZAR", label: "South African Rand", flag: "🇿🇦", region: "africa" },
+
+  { code: "USD", label: "US Dollar", flag: "🇺🇸", region: "global" },
+  { code: "EUR", label: "Euro", flag: "🇪🇺", region: "global" },
+  { code: "GBP", label: "British Pound", flag: "🇬🇧", region: "global" },
+];
+
+const EXCHANGE_RATES: Record<string, number> = {
+  KES: 129.5,
+  NGN: 1580,
+  ZAR: 18.6,
+  USD: 1,
+  EUR: 0.92,
+  GBP: 0.79,
+};
+
+
 
 export function PurchaseOrdersPage() {
   const { data, isLoading } = usePurchaseOrders();
   const approveOrder = useApproveOrder();
   const rejectOrder = useRejectOrder();
-
+  const [displayCurrency, setDisplayCurrency] = useState("KES"); // ✅ default African
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [selectedOrderDetails, setSelectedOrderDetails] = useState<PurchaseOrder | null>(null);
 
+  const convertedTotal = useMemo(() => {
+    if (!data?.totalValue) return 0;
+
+    return Object.entries(data.totalValue).reduce((sum, [curr, val]) => {
+      const fromRate = EXCHANGE_RATES[curr];
+      const toRate = EXCHANGE_RATES[displayCurrency];
+
+      if (!fromRate || !toRate) return sum;
+
+      // Convert to USD → then to selected currency
+      const usd = val / fromRate;
+      const converted = usd * toRate;
+
+      return sum + converted;
+    }, 0);
+  }, [data?.totalValue, displayCurrency]);
+
   const filteredOrders = useMemo(() => {
+    
     if (!data?.orders) return [];
     return data.orders.filter((order) => {
       const matchesSearch =
@@ -60,6 +100,8 @@ export function PurchaseOrdersPage() {
     });
   }, [data?.orders, searchQuery, statusFilter]);
 
+  
+  const pendingCount = filteredOrders.filter(o => o.status === 'pending').length;
   const toggleRow = (id: string) => {
     setExpandedRows((prev) => {
       const next = new Set(prev);
@@ -79,10 +121,14 @@ export function PurchaseOrdersPage() {
   };
 
   const toggleSelectAll = () => {
-    if (selectedRows.size === filteredOrders.length && filteredOrders.length > 0) {
+    const pendingIds = filteredOrders
+      .filter(o => o.status === 'pending')
+      .map(o => o.id);
+
+    if (selectedRows.size === pendingIds.length) {
       setSelectedRows(new Set());
     } else {
-      setSelectedRows(new Set(filteredOrders.filter(o => o.status === 'pending').map(o => o.id)));
+      setSelectedRows(new Set(pendingIds));
     }
   };
 
@@ -114,7 +160,56 @@ export function PurchaseOrdersPage() {
         title="Purchase Order Approval"
         subtitle="Review and authorize pending purchase requests"
       />
+      
+      {/* ✅ SUMMARY CARDS (Payments jaisa) */}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
 
+  {/* Pending Orders */}
+  <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+    <div className="flex items-center gap-3">
+      <div className="p-2.5 bg-blue-100 rounded-lg">
+        <Package className="h-5 w-5 text-blue-600" />
+      </div>
+      <div>
+        <p className="text-xs text-gray-500 font-medium">Pending Orders</p>
+        <p className="text-2xl font-bold text-gray-900">
+          {data?.pendingCount || 0}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {/* Total Value */}
+  <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+    <div className="flex items-center gap-3">
+      <div className="p-2.5 bg-emerald-100 rounded-lg">
+        <DollarSign className="h-5 w-5 text-emerald-600" />
+      </div>
+      <div>
+        <p className="text-xs text-gray-500 font-medium">Total Value</p>
+        <p className="text-2xl font-bold text-gray-900">
+          {formatCurrency(convertedTotal, displayCurrency)}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {/* High Priority */}
+  <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+    <div className="flex items-center gap-3">
+      <div className="p-2.5 bg-amber-100 rounded-lg">
+        <AlertTriangle className="h-5 w-5 text-amber-600" />
+      </div>
+      <div>
+        <p className="text-xs text-gray-500 font-medium">High Priority</p>
+        <p className="text-2xl font-bold text-gray-900">
+          {filteredOrders.filter(o => o.priority === 'high' || o.priority === 'critical').length}
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
       <div className="p-6 space-y-4">
         {/* Top toolbar */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
@@ -130,6 +225,8 @@ export function PurchaseOrdersPage() {
                 className="pl-10"
               />
             </div>
+
+
 
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-gray-500" />
@@ -151,21 +248,41 @@ export function PurchaseOrdersPage() {
           <div className="flex items-center gap-3">
             {data && (
               <div className="flex items-center gap-4 mr-4">
-                <div className="flex items-center gap-2 rounded-lg bg-blue-50 border border-blue-200 px-3 py-2">
-                  <Package className="h-4 w-4 text-blue-600" />
-                  <span className="text-xs font-semibold text-blue-700">
-                    Pending: {data.pendingCount}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-2">
-                  <span className="text-xs font-semibold text-emerald-700">
-                    {Object.entries(data.totalValue)
-                      .map(([curr, val]) => formatCurrency(val, curr))
-                      .join(' | ')}
-                  </span>
-                </div>
+
+                
+
               </div>
             )}
+            <div className="flex items-center gap-2">
+              <div className="relative w-[260px]">
+                <select
+                  value={displayCurrency}
+                  onChange={(e) => setDisplayCurrency(e.target.value)}
+                  className="appearance-none w-full cursor-pointer rounded-xl border border-blue-200 bg-white px-4 py-2.5 pr-10 text-sm font-semibold text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                >
+                  <optgroup label="🌍 African (Default)">
+                    {CURRENCIES.filter(c => c.region === "africa").map(c => (
+                      <option key={c.code} value={c.code}>
+                        {c.flag} {c.code} — {c.label}
+                      </option>
+                    ))}
+                  </optgroup>
+
+                  <optgroup label="🌐 Global">
+                    {CURRENCIES.filter(c => c.region === "global").map(c => (
+                      <option key={c.code} value={c.code}>
+                        {c.flag} {c.code} — {c.label}
+                      </option>
+                    ))}
+                  </optgroup>
+                </select>
+
+                {/* Arrow */}
+                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+                  ▼
+                </div>
+              </div>
+            </div>
 
             {selectedRows.size > 0 && (
               <div className="flex items-center gap-2">
@@ -174,18 +291,19 @@ export function PurchaseOrdersPage() {
                 </span>
                 <Button
                   size="sm"
-                  variant="destructive"
-                  onClick={handleBulkReject}
-                >
-                  Return Request
-                </Button>
-                <Button
-                  size="sm"
                   variant="success"
                   onClick={handleBulkApprove}
                 >
                   Approve Orders
                 </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={handleBulkReject}
+                >
+                  Return Request
+                </Button>
+                
               </div>
             )}
           </div>
@@ -200,10 +318,9 @@ export function PurchaseOrdersPage() {
                   <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider w-10">
                     <input
                       type="checkbox"
-                      checked={selectedRows.size > 0 && selectedRows.size === filteredOrders.filter(o => o.status === 'pending').length}
+                      checked={pendingCount > 0 && selectedRows.size === pendingCount}
                       onChange={toggleSelectAll}
-                      className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      title="Select All"
+                      className="h-4 w-4"
                     />
                   </th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider w-10">
@@ -238,33 +355,33 @@ export function PurchaseOrdersPage() {
               <tbody className="divide-y divide-gray-100">
                 {isLoading
                   ? Array(5)
-                      .fill(null)
-                      .map((_, i) => (
-                        <tr key={i}>
-                          {Array(10)
-                            .fill(null)
-                            .map((_, j) => (
-                              <td key={j} className="px-4 py-4">
-                                <Skeleton className="h-4 w-full" />
-                              </td>
-                            ))}
-                        </tr>
-                      ))
+                    .fill(null)
+                    .map((_, i) => (
+                      <tr key={i}>
+                        {Array(10)
+                          .fill(null)
+                          .map((_, j) => (
+                            <td key={j} className="px-4 py-4">
+                              <Skeleton className="h-4 w-full" />
+                            </td>
+                          ))}
+                      </tr>
+                    ))
                   : filteredOrders.map((order) => (
-                      <OrderRow
-                        key={order.id}
-                        order={order}
-                        isExpanded={expandedRows.has(order.id)}
-                        isSelected={selectedRows.has(order.id)}
-                        onToggleExpand={() => toggleRow(order.id)}
-                        onToggleSelect={() => toggleSelect(order.id)}
-                        onApprove={() => handleApprove(order.id)}
-                        onReject={() => handleReject(order.id)}
-                        isApproving={approveOrder.isPending}
-                        isRejecting={rejectOrder.isPending}
-                        onShowDetails={() => setSelectedOrderDetails(order)}
-                      />
-                    ))}
+                    <OrderRow
+                      key={order.id}
+                      order={order}
+                      isExpanded={expandedRows.has(order.id)}
+                      isSelected={selectedRows.has(order.id)}
+                      onToggleExpand={() => toggleRow(order.id)}
+                      onToggleSelect={() => toggleSelect(order.id)}
+                      onApprove={() => handleApprove(order.id)}
+                      onReject={() => handleReject(order.id)}
+                      isApproving={approveOrder.isPending}
+                      isRejecting={rejectOrder.isPending}
+                      onShowDetails={() => setSelectedOrderDetails(order)}
+                    />
+                  ))}
               </tbody>
             </table>
           </div>
@@ -309,7 +426,7 @@ export function PurchaseOrdersPage() {
                   </Badge>
                 </div>
               </div>
-              
+
               <div className="rounded-lg border border-gray-200 overflow-hidden">
                 <table className="w-full text-sm">
                   <thead className="bg-gray-50">
@@ -335,7 +452,7 @@ export function PurchaseOrdersPage() {
                 </table>
               </div>
             </div>
-            
+
             <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 items-center">
               <Button variant="ghost" onClick={() => setSelectedOrderDetails(null)} className="mr-auto">
                 Close
@@ -389,9 +506,8 @@ function OrderRow({
   return (
     <>
       <tr
-        className={`transition-colors duration-150 ${
-          isSelected ? 'bg-blue-50/50' : 'hover:bg-gray-50/80'
-        }`}
+        className={`transition-colors duration-150 ${isSelected ? 'bg-blue-50/50' : 'hover:bg-gray-50/80'
+          }`}
       >
         <td className="px-4 py-3">
           <input
@@ -403,16 +519,7 @@ function OrderRow({
           />
         </td>
         <td className="px-4 py-3">
-          <button
-            onClick={onToggleExpand}
-            className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-all"
-          >
-            {isExpanded ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4" />
-            )}
-          </button>
+
         </td>
         <td className="px-4 py-3">
           <div className="flex items-center gap-2">
@@ -460,101 +567,7 @@ function OrderRow({
       </tr>
 
       {/* Expanded line items */}
-      {isExpanded && (
-        <tr>
-          <td colSpan={10} className="bg-slate-50/80 px-4 py-0">
-            <div className="py-4 pl-10">
-              <div className="rounded-lg border border-gray-200 bg-white overflow-hidden shadow-sm">
-                <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-                  <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Order Line Details
-                  </h4>
-                </div>
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-100">
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">
-                        PO #
-                      </th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">
-                        Line
-                      </th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">
-                        Description
-                      </th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">
-                        Qty
-                      </th>
-                      <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">
-                        UOM
-                      </th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">
-                        Price
-                      </th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">
-                        Total
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-50">
-                    {order.lineItems.map((item) => (
-                      <tr
-                        key={item.id}
-                        className="hover:bg-blue-50/30 transition-colors"
-                      >
-                        <td className="px-4 py-2.5 text-gray-700 font-mono text-xs">
-                          {item.poNumber}
-                        </td>
-                        <td className="px-4 py-2.5 text-gray-700">
-                          {item.lineNumber}
-                        </td>
-                        <td className="px-4 py-2.5 text-gray-900 font-medium">
-                          {item.description}
-                        </td>
-                        <td className="px-4 py-2.5 text-right text-gray-700 font-mono">
-                          {item.quantity.toLocaleString()}
-                        </td>
-                        <td className="px-4 py-2.5 text-center text-gray-500 text-xs">
-                          {item.uom}
-                        </td>
-                        <td className="px-4 py-2.5 text-right text-gray-700 font-mono">
-                          {item.unitPrice.toLocaleString(undefined, {
-                            minimumFractionDigits: 2,
-                          })}
-                        </td>
-                        <td className="px-4 py-2.5 text-right font-semibold text-gray-900 font-mono">
-                          {item.total.toLocaleString(undefined, {
-                            minimumFractionDigits: 2,
-                          })}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr className="border-t border-gray-200 bg-gray-50/50">
-                      <td
-                        colSpan={6}
-                        className="px-4 py-2.5 text-right text-xs font-semibold text-gray-600 uppercase"
-                      >
-                        Total
-                      </td>
-                      <td className="px-4 py-2.5 text-right font-bold text-gray-900 font-mono">
-                        {formatCurrency(order.amount, order.currency)}
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
 
-              <div className="mt-3 flex items-center gap-4 text-xs text-gray-400">
-                <span>Requested by: <span className="font-medium text-gray-600">{order.requestedBy}</span></span>
-                <span>•</span>
-                <span>Department: <span className="font-medium text-gray-600">{order.department}</span></span>
-              </div>
-            </div>
-          </td>
-        </tr>
-      )}
     </>
   );
 }

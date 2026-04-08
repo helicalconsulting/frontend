@@ -33,7 +33,7 @@ export function PaymentsPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('queue');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [expandedRequest, setExpandedRequest] = useState<string | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<string | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -274,52 +274,68 @@ export function PaymentsPage() {
 
         {/* Bulk Actions + Search */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            {selectedIds.size > 0 && (
-              <>
-                <span className="text-xs text-gray-500 font-medium">{selectedIds.size} selected</span>
-                <Button size="sm" variant="success" onClick={() => setSelectedIds(new Set())}>
-                  <CheckCircle2 className="h-4 w-4" />
-                  Approve
-                </Button>
-                <Button size="sm" variant="destructive" onClick={() => setSelectedIds(new Set())}>
-                  <XCircle className="h-4 w-4" />
-                  Reject
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => setSelectedIds(new Set())}>
-                  <ArrowLeft className="h-4 w-4" />
-                  Back
-                </Button>
-              </>
-            )}
-          </div>
 
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                id="search-queue"
-                placeholder="Quick Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 w-64"
-              />
-            </div>
-            <Button size="sm" variant="outline">
-              <Filter className="h-4 w-4" />
-              Filter
-            </Button>
-            <Button
-              size="sm"
-              variant="default"
-              onClick={() => setViewMode('form')}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600"
-            >
-              <Plus className="h-4 w-4" />
-              New Request
-            </Button>
-          </div>
-        </div>
+  {/* LEFT SIDE */}
+  <div className="flex flex-wrap items-center gap-3">
+
+    {/* Search */}
+    <div className="relative">
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+      <Input
+        id="search-queue"
+        placeholder="Quick Search..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="pl-10 w-56"
+      />
+    </div>
+
+    {/* Filter */}
+    <Button size="sm" variant="outline">
+      <Filter className="h-4 w-4" />
+      Filter
+    </Button>
+
+    {/* New Request */}
+    <Button
+      size="sm"
+      variant="default"
+      onClick={() => setViewMode('form')}
+      className="bg-gradient-to-r from-blue-600 to-indigo-600"
+    >
+      <Plus className="h-4 w-4" />
+      New Request
+    </Button>
+
+  </div>
+
+  {/* RIGHT SIDE */}
+  {selectedIds.size > 0 && (
+    <div className="flex items-center gap-2 ml-auto">
+
+      <span className="text-xs text-gray-500 font-medium mr-2">
+        {selectedIds.size} selected
+      </span>
+
+      <Button size="sm" variant="success">
+        <CheckCircle2 className="h-4 w-4" />
+        Approve
+      </Button>
+
+      <Button size="sm" variant="destructive">
+        <XCircle className="h-4 w-4" />
+        Reject
+      </Button>
+
+      <Button size="sm" variant="outline">
+        <ArrowLeft className="h-4 w-4" />
+        Back
+      </Button>
+
+    </div>
+  )}
+
+</div>
 
         {/* Approval Queue Table */}
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
@@ -376,21 +392,12 @@ export function PaymentsPage() {
                         className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
                     </td>
+                    <td className="px-4 py-3 w-10">
+  <button className="w-4 h-4 opacity-0"></button>
+</td>
                     <td className="px-4 py-3">
                       <button
-                        onClick={() => setExpandedRequest(expandedRequest === item.id ? null : item.id)}
-                        className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-all"
-                      >
-                        {expandedRequest === item.id ? (
-                          <ChevronDown className="h-4 w-4" />
-                        ) : (
-                          <ChevronRight className="h-4 w-4" />
-                        )}
-                      </button>
-                    </td>
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={() => setExpandedRequest(expandedRequest === item.id ? null : item.id)}
+                        onClick={() => setSelectedRequest(item.id)}
                         className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 rounded-md font-medium text-xs transition-all shadow-sm border border-blue-200/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                         title="View Details"
                       >
@@ -417,61 +424,73 @@ export function PaymentsPage() {
           </div>
 
           {/* Transaction Breakdown for expanded item */}
-          {expandedRequest && (() => {
-            const req = mockPaymentRequests.find((r) =>
-              mockPaymentApprovalQueue.find((q) => q.id === expandedRequest)?.requestNumber === r.requestNumber
-            );
-            if (!req) return null;
-            return (
-              <div className="border-t border-gray-200 bg-slate-50/80 p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wider">Transaction Breakdown</h4>
-                  <div className="flex items-center gap-2">
-                    <Button size="sm" variant="destructive" onClick={() => setExpandedRequest(null)}>
-                      Reject
-                    </Button>
-                    <Button size="sm" variant="success" onClick={() => setExpandedRequest(null)}>
-                      Approve
-                    </Button>
-                  </div>
-                </div>
-                <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-gray-100 bg-gray-50/50">
-                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
-                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Account</th>
-                        <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Amount</th>
-                        <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">Tax Code</th>
-                        <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Tax</th>
-                        <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-50">
-                      {req.lineItems.map((li) => (
-                        <tr key={li.id} className="hover:bg-blue-50/30 transition-colors">
-                          <td className="px-4 py-2.5 text-gray-900 font-medium">{li.description}</td>
-                          <td className="px-4 py-2.5 text-gray-600 font-mono text-xs">{li.account}</td>
-                          <td className="px-4 py-2.5 text-right text-gray-700 font-mono">{li.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                          <td className="px-4 py-2.5 text-center text-gray-500 text-xs">{li.taxCode}</td>
-                          <td className="px-4 py-2.5 text-right text-gray-600 font-mono">{li.taxAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                          <td className="px-4 py-2.5 text-right font-semibold text-gray-900 font-mono">{li.total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      <tr className="border-t border-gray-200 bg-gray-50/50">
-                        <td colSpan={5} className="px-4 py-2.5 text-right text-xs font-semibold text-gray-600 uppercase">Total</td>
-                        <td className="px-4 py-2.5 text-right font-bold text-gray-900 font-mono">
-                          ${req.totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                        </td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              </div>
-            );
-          })()}
+          {selectedRequest && (() => {
+  const req = mockPaymentRequests.find((r) =>
+    mockPaymentApprovalQueue.find((q) => q.id === selectedRequest)?.requestNumber === r.requestNumber
+  );
+
+  if (!req) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+
+        {/* Header */}
+        <div className="px-6 py-4 border-b flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-gray-900">
+            {req.requestNumber} - Transaction Breakdown
+          </h3>
+          <button onClick={() => setSelectedRequest(null)}>
+            <XCircle className="h-6 w-6 text-gray-400 hover:text-gray-600" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 overflow-y-auto flex-1">
+          <div className="rounded-lg border border-gray-200 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-2 text-left text-xs font-semibold">Description</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold">Account</th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold">Amount</th>
+                  <th className="px-4 py-2 text-center text-xs font-semibold">Tax Code</th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold">Tax</th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold">Total</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {req.lineItems.map((li) => (
+                  <tr key={li.id}>
+                    <td className="px-4 py-2">{li.description}</td>
+                    <td className="px-4 py-2">{li.account}</td>
+                    <td className="px-4 py-2 text-right">{li.amount.toLocaleString()}</td>
+                    <td className="px-4 py-2 text-center">{li.taxCode}</td>
+                    <td className="px-4 py-2 text-right">{li.taxAmount.toLocaleString()}</td>
+                    <td className="px-4 py-2 text-right font-semibold">{li.total.toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-4 bg-gray-50 flex justify-end gap-3">
+          <Button variant="destructive" onClick={() => setSelectedRequest(null)}>
+            Reject
+          </Button>
+          <Button variant="success" onClick={() => setSelectedRequest(null)}>
+            Approve
+          </Button>
+        </div>
+
+      </div>
+    </div>
+  );
+})()}
 
           {filteredQueue.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-gray-400">
