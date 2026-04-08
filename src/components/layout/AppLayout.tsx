@@ -1,20 +1,20 @@
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
-import { useState } from 'react';
+import { useSidebar } from '@/hooks/useSidebar';
 
 export function AppLayout() {
-  const [collapsed, setCollapsed] = useState(false);
+  const { collapsed } = useSidebar();
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen relative bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
 
       {/* Sidebar */}
-      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+      <Sidebar />
 
       {/* Main Content */}
       <main
-        className={`flex-1 transition-all duration-300 ${
-          collapsed ? 'ml-16' : 'ml-64'
+        className={`flex-1 transition-all duration-300 ease-in-out ml-0 ${
+          collapsed ? 'md:ml-[72px]' : 'md:ml-64'
         }`}
       >
         <Outlet />

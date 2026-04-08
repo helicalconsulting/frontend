@@ -1,11 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getPurchaseOrders, approveOrder, rejectOrder } from '@/services/purchaseService';
-import type { ApproveRejectRequest } from '@/types';
+import type { ApproveRejectRequest, PurchaseOrdersResponse } from '@/types';
 
 export function usePurchaseOrders() {
-  return useQuery({
+  return useQuery<PurchaseOrdersResponse>({
     queryKey: ['purchaseOrders'],
-    queryFn: getPurchaseOrders,
+    queryFn: () => getPurchaseOrders(),
     staleTime: 2 * 60 * 1000,
   });
 }

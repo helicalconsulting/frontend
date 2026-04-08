@@ -38,6 +38,12 @@ body {
   font-feature-settings: "kern" 1, "liga" 1;
 }
 
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300;
+  }
+}
+
 /* Selection color - More vibrant */
 ::selection {
   background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);

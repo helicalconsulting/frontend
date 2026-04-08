@@ -249,6 +249,7 @@ export interface SalesOrder {
   salesOrderNumber: string;
   customerName: string;
   orderStatus: string;
+  priority?: 'low' | 'medium' | 'high' | 'critical';
   creditLimit: number;
   currentBalance: number;
   availableBalance: number;

@@ -8,6 +8,8 @@ import {
 } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthContext } from '@/hooks/useAuth';
+import { ThemeProvider } from '@/hooks/useTheme';
+import { SidebarProvider } from '@/hooks/useSidebar';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { LoginPage } from '@/pages/LoginPage';
 import { DashboardPage } from '@/pages/DashboardPage';
@@ -81,40 +83,44 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
 // ============================================
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ToastProvider>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route
-              element={
-                <ProtectedRoute>
-                  <AppLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/purchase-orders" element={<PurchaseOrdersPage />} />
-              <Route path="/accounts-payable" element={<AccountsPayablePage />} />
-              <Route path="/payments" element={<PaymentsPage />} />
-              <Route path="/sales-orders" element={<SalesOrdersPage />} />
-              <Route path="/reports" element={<ReportsPage />} />
-              <Route path="/master-data" element={<MasterDataPage />} />
-              <Route path="/master-data/new" element={<MasterDataRequestPage />} />
-              <Route path="/signature" element={<SignaturePage />} />
-              <Route path="/audit-trail" element={<AuditTrailPage />} />
-              {/* Admin Routes */}
-              <Route path="/admin/users" element={<UsersPage />} />
-              <Route path="/admin/roles" element={<RolesPage />} />
-              <Route path="/admin/approval-levels" element={<ApprovalLevelsPage />} />
-              <Route path="/admin/settings" element={<SettingsPage />} />
-            </Route>
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-      </ToastProvider>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <SidebarProvider>
+        <QueryClientProvider client={queryClient}>
+        <ToastProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <AppLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/purchase-orders" element={<PurchaseOrdersPage />} />
+                <Route path="/accounts-payable" element={<AccountsPayablePage />} />
+                <Route path="/payments" element={<PaymentsPage />} />
+                <Route path="/sales-orders" element={<SalesOrdersPage />} />
+                <Route path="/reports" element={<ReportsPage />} />
+                <Route path="/master-data" element={<MasterDataPage />} />
+                <Route path="/master-data/new" element={<MasterDataRequestPage />} />
+                <Route path="/signature" element={<SignaturePage />} />
+                <Route path="/audit-trail" element={<AuditTrailPage />} />
+                {/* Admin Routes */}
+                <Route path="/admin/users" element={<UsersPage />} />
+                <Route path="/admin/roles" element={<RolesPage />} />
+                <Route path="/admin/approval-levels" element={<ApprovalLevelsPage />} />
+                <Route path="/admin/settings" element={<SettingsPage />} />
+              </Route>
+              <Route path="*" element={<Navigate to="/login" replace />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+        </ToastProvider>
+        </QueryClientProvider>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 }

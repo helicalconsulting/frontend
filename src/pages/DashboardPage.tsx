@@ -108,7 +108,7 @@ export function DashboardPage() {
   const { user } = useAuth();
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20">
+    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20 dark:from-slate-950 dark:via-blue-950/20 dark:to-indigo-950/10 transition-colors duration-300">
       {/* Animated background pattern */}
       <div className="fixed inset-0 -z-10">
         <div
@@ -138,23 +138,23 @@ export function DashboardPage() {
         {/* Welcome + SYSPRO Status */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               Welcome back, {user?.fullName?.split(' ')[0] || 'Admin'} 👋
             </h2>
-            <p className="text-sm text-gray-500 mt-0.5">
+            <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">
               Here's what's happening across your workflow system
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1.5">
-              <Wifi className="h-3.5 w-3.5 text-emerald-600" />
-              <span className="text-xs font-medium text-emerald-700">
+            <div className="flex items-center gap-2 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 px-3 py-1.5">
+              <Wifi className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
                 SYSPRO: Mock Mode
               </span>
             </div>
-            <div className="flex items-center gap-2 rounded-full bg-blue-50 border border-blue-200 px-3 py-1.5">
-              <Activity className="h-3.5 w-3.5 text-blue-600" />
-              <span className="text-xs font-medium text-blue-700">
+            <div className="flex items-center gap-2 rounded-full bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 px-3 py-1.5">
+              <Activity className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+              <span className="text-xs font-medium text-blue-700 dark:text-blue-400">
                 System Healthy
               </span>
             </div>
@@ -202,7 +202,7 @@ export function DashboardPage() {
     <KPICard
       className="h-full"
       title="Total Value"
-      
+      icon={<DollarSign className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />}
       value={
         isLoading
           ? '—'
@@ -239,7 +239,7 @@ export function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Section Cards */}
           <div className="lg:col-span-2">
-            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
+            <h3 className="text-sm font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-3">
               Approval Queues
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -249,13 +249,13 @@ export function DashboardPage() {
                     .map((_, i) => (
                       <div
                         key={i}
-                        className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm animate-pulse"
+                        className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm animate-pulse"
                       >
                         <div className="flex items-center gap-4">
-                          <div className="h-12 w-12 rounded-lg bg-gray-200" />
+                          <div className="h-12 w-12 rounded-lg bg-gray-200 dark:bg-slate-800" />
                           <div className="flex-1">
-                            <div className="h-4 w-28 rounded bg-gray-200 mb-2" />
-                            <div className="h-6 w-16 rounded bg-gray-200" />
+                            <div className="h-4 w-28 rounded bg-gray-200 dark:bg-slate-800 mb-2" />
+                            <div className="h-6 w-16 rounded bg-gray-200 dark:bg-slate-800" />
                           </div>
                         </div>
                       </div>
@@ -272,7 +272,7 @@ export function DashboardPage() {
                         onClick={() =>
                           section.route && navigate(section.route)
                         }
-                        className="group rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 text-left cursor-pointer w-full"
+                        className="group rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm transition-all duration-300 hover:shadow-lg dark:hover:shadow-slate-900/50 hover:-translate-y-1 text-left cursor-pointer w-full"
                       >
                         <div className="flex items-center gap-4">
                           <div
@@ -281,11 +281,11 @@ export function DashboardPage() {
                             <IconComp className="h-6 w-6 text-white" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-sm font-semibold text-gray-700 truncate">
+                            <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300 truncate">
                               {section.title}
                             </h3>
                             <div className="flex items-center gap-2 mt-1">
-                              <span className="text-2xl font-bold text-gray-900">
+                              <span className="text-2xl font-bold text-gray-900 dark:text-white">
                                 {section.count}
                               </span>
                               <Badge variant="warning" className="text-xs">
@@ -301,7 +301,7 @@ export function DashboardPage() {
             </div>
 
             {/* Quick Actions */}
-            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mt-6 mb-3">
+            <h3 className="text-sm font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mt-6 mb-3">
               Quick Access
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -338,7 +338,7 @@ export function DashboardPage() {
                 <button
                   key={item.label}
                   onClick={() => navigate(item.route)}
-                  className="group flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3.5 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 cursor-pointer"
+                  className="group flex items-center gap-3 rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 shadow-sm transition-all hover:shadow-md dark:hover:shadow-slate-900/50 hover:-translate-y-0.5 cursor-pointer"
                 >
                   <div
                     className={`flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br ${item.gradient} shadow-sm transition-transform duration-200 group-hover:scale-110`}
@@ -346,11 +346,11 @@ export function DashboardPage() {
                     <item.icon className="h-4 w-4 text-white" />
                   </div>
                   <div className="text-left">
-                    <p className="text-xs font-semibold text-gray-700">
+                    <p className="text-xs font-semibold text-gray-700 dark:text-slate-300">
                       {item.label}
                     </p>
                     {item.count && (
-                      <p className="text-[10px] text-gray-400">
+                      <p className="text-[10px] text-gray-400 dark:text-slate-500">
                         {item.count} pending
                       </p>
                     )}
@@ -362,15 +362,15 @@ export function DashboardPage() {
 
           {/* Recent Activity Feed */}
           <div>
-            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">
+            <h3 className="text-sm font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-3">
               Recent Activity
             </h3>
-            <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-              <div className="divide-y divide-gray-100">
+            <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+              <div className="divide-y divide-gray-100 dark:divide-slate-800/60">
                 {recentActivity.map((activity) => (
                   <div
                     key={activity.id}
-                    className="p-4 hover:bg-gray-50/80 transition-colors"
+                    className="p-4 hover:bg-gray-50/80 dark:hover:bg-slate-800/60 transition-colors"
                   >
                     <div className="flex items-start gap-3">
                       <div className="mt-0.5">
@@ -379,33 +379,33 @@ export function DashboardPage() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-900">
+                        <p className="text-sm text-gray-900 dark:text-slate-200">
                           <span className="font-semibold">
                             {activity.user}
                           </span>{' '}
                           <span
                             className={
                               activity.action === 'approved'
-                                ? 'text-emerald-600'
+                                ? 'text-emerald-600 dark:text-emerald-400'
                                 : activity.action === 'rejected'
-                                ? 'text-red-600'
-                                : 'text-blue-600'
+                                ? 'text-red-600 dark:text-red-400'
+                                : 'text-blue-600 dark:text-blue-400'
                             }
                           >
                             {activity.action}
                           </span>{' '}
-                          <span className="font-mono text-xs bg-gray-100 px-1.5 py-0.5 rounded">
+                          <span className="font-mono text-xs bg-gray-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
                             {activity.item}
                           </span>
                         </p>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-500 dark:text-slate-500">
                             {activity.module}
                           </span>
                           {activity.amount && (
                             <>
-                              <span className="text-xs text-gray-300">•</span>
-                              <span className="text-xs font-medium text-gray-600">
+                              <span className="text-xs text-gray-300 dark:text-slate-600">•</span>
+                              <span className="text-xs font-medium text-gray-600 dark:text-slate-400">
                                 {formatCurrency(
                                   activity.amount,
                                   activity.currency || 'USD'
@@ -415,14 +415,14 @@ export function DashboardPage() {
                           )}
                         </div>
                       </div>
-                      <span className="text-[10px] text-gray-400 whitespace-nowrap">
+                      <span className="text-[10px] text-gray-400 dark:text-slate-500 whitespace-nowrap">
                         {activity.time}
                       </span>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="px-4 py-3 bg-gray-50/80 border-t border-gray-100">
+              <div className="px-4 py-3 bg-gray-50/80 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800/60">
                 <button
                   onClick={() => navigate('/audit-trail')}
                   className="text-xs font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1"

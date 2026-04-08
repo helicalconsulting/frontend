@@ -70,7 +70,7 @@ export function PaymentsPage() {
 
   if (viewMode === 'form') {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
         <Header
           title="New Payment Request"
           subtitle="Submit a new payment request for approval"
@@ -79,13 +79,13 @@ export function PaymentsPage() {
           <div className="max-w-3xl mx-auto">
             <button
               onClick={() => setViewMode('queue')}
-              className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors mb-5"
+              className="flex items-center gap-2 text-sm text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 transition-colors mb-5"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Approval Queue
             </button>
 
-            <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+            <div className="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
               <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-5">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
@@ -104,27 +104,29 @@ export function PaymentsPage() {
                   <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">General Information</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">Supplier Code</label>
+                      <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1.5">Supplier Code</label>
                       <Input
                         value={formData.supplierCode}
                         onChange={(e) => setFormData({ ...formData, supplierCode: e.target.value })}
                         placeholder="SUP-001"
+                        className="bg-white dark:bg-slate-950 dark:border-slate-800 dark:text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">Supplier Name</label>
+                      <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1.5">Supplier Name</label>
                       <Input
                         value={formData.supplierName}
                         onChange={(e) => setFormData({ ...formData, supplierName: e.target.value })}
                         placeholder="Splash Paints"
+                        className="bg-white dark:bg-slate-950 dark:border-slate-800 dark:text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">Currency</label>
+                      <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1.5">Currency</label>
                       <select
                         value={formData.currency}
                         onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                        className="w-full rounded-lg border border-gray-300 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-200 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       >
                         <option value="USD">USD</option>
                         <option value="KES">KES</option>
@@ -133,20 +135,20 @@ export function PaymentsPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">Due Date</label>
+                      <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1.5">Due Date</label>
                       <input
                         type="date"
                         value={formData.dueDate}
                         onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                        className="w-full rounded-lg border border-gray-300 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-200 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">Category</label>
+                      <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1.5">Category</label>
                       <select
                         value={formData.category}
                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                        className="w-full rounded-lg border border-gray-300 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-200 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       >
                         <option value="Materials">Materials</option>
                         <option value="Equipment">Equipment</option>
@@ -156,29 +158,32 @@ export function PaymentsPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">Net Amount</label>
+                      <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1.5">Net Amount</label>
                       <Input
                         type="number"
                         value={formData.amount}
                         onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                         placeholder="0.00"
+                        className="bg-white dark:bg-slate-950 dark:border-slate-800 dark:text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">VAT Amount</label>
+                      <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1.5">VAT Amount</label>
                       <Input
                         type="number"
                         value={formData.vatAmount}
                         onChange={(e) => setFormData({ ...formData, vatAmount: e.target.value })}
                         placeholder="0.00"
+                        className="bg-white dark:bg-slate-950 dark:border-slate-800 dark:text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">Reference</label>
+                      <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1.5">Reference</label>
                       <Input
                         value={formData.reference}
                         onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
                         placeholder="INV-XXXXX"
+                        className="bg-white dark:bg-slate-950 dark:border-slate-800 dark:text-white"
                       />
                     </div>
                   </div>
@@ -186,12 +191,12 @@ export function PaymentsPage() {
 
                 {/* Notes */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">Notes</label>
+                  <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1.5">Notes</label>
                   <textarea
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     placeholder="Additional notes..."
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm text-gray-700 placeholder:text-gray-400 shadow-sm resize-none focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    className="w-full rounded-lg border border-gray-300 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 py-3 text-sm text-gray-700 dark:text-gray-200 placeholder:text-gray-400 shadow-sm resize-none focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     rows={3}
                   />
                 </div>
@@ -199,8 +204,8 @@ export function PaymentsPage() {
                 {/* Line Items Preview */}
                 <div>
                   <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Line Items</h4>
-                  <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
-                    <p className="text-sm text-gray-400">Line items will appear here after saving general info</p>
+                  <div className="rounded-lg border border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900 p-8 text-center">
+                    <p className="text-sm text-gray-400 dark:text-slate-500">Line items will appear here after saving general info</p>
                     <Button size="sm" variant="outline" className="mt-3">
                       <Plus className="h-4 w-4" />
                       Add Line Item
@@ -224,7 +229,7 @@ export function PaymentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
       <Header
         title="Payment Approval"
         subtitle="Review and process pending payment requests"
@@ -233,38 +238,38 @@ export function PaymentsPage() {
       <div className="p-6 space-y-5">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-blue-100 rounded-lg">
-                <Clock className="h-5 w-5 text-blue-600" />
+              <div className="p-2.5 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
+                <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">Pending Requests</p>
-                <p className="text-2xl font-bold text-gray-900">{totalPending}</p>
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Pending Requests</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalPending}</p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-emerald-100 rounded-lg">
-                <DollarSign className="h-5 w-5 text-emerald-600" />
+              <div className="p-2.5 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg">
+                <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">Total Value</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Total Value</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-amber-100 rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-amber-600" />
+              <div className="p-2.5 bg-amber-100 dark:bg-amber-900/40 rounded-lg">
+                <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">High Priority</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">High Priority</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {mockPaymentApprovalQueue.filter((i) => i.priority === 'high').length}
                 </p>
               </div>
@@ -286,7 +291,7 @@ export function PaymentsPage() {
         placeholder="Quick Search..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="pl-10 w-56"
+        className="pl-10 w-56 bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 dark:text-white"
       />
     </div>
 
@@ -338,18 +343,18 @@ export function PaymentsPage() {
 </div>
 
         {/* Approval Queue Table */}
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-          <div className="border-b border-gray-200 bg-gray-50/80 px-5 py-3">
+        <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+          <div className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/80 dark:bg-slate-800/50 px-5 py-3">
             <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-gray-500" />
-              <h3 className="text-sm font-bold text-gray-700">Pending Requests</h3>
+              <FileText className="h-4 w-4 text-gray-500 dark:text-slate-400" />
+              <h3 className="text-sm font-bold text-gray-700 dark:text-slate-200">Pending Requests</h3>
             </div>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50/50">
+                <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/20">
                   <th className="px-4 py-3 text-left w-10">
                     <input
                       type="checkbox"
@@ -366,22 +371,22 @@ export function PaymentsPage() {
                     />
                   </th>
                   <th className="px-4 py-3 text-left w-10" />
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Request #</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Supplier</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-500 text-xs uppercase tracking-wider">Amount</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Request Date</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Due Date</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Category</th>
-                  <th className="px-4 py-3 text-center font-semibold text-gray-500 text-xs uppercase tracking-wider">Priority</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Requested By</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Request #</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Supplier</th>
+                  <th className="px-4 py-3 text-right font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Amount</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Request Date</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Due Date</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Category</th>
+                  <th className="px-4 py-3 text-center font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Priority</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Requested By</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800/60">
                 {filteredQueue.map((item) => (
                   <tr
                     key={item.id}
-                    className={`transition-colors duration-150 ${
-                      selectedIds.has(item.id) ? 'bg-blue-50/50' : 'hover:bg-gray-50/80'
+                    className={`transition-colors duration-150 text-gray-700 dark:text-slate-300 ${
+                      selectedIds.has(item.id) ? 'bg-blue-50/50 dark:bg-blue-900/20' : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/50'
                     }`}
                   >
                     <td className="px-4 py-3">
@@ -389,7 +394,7 @@ export function PaymentsPage() {
                         type="checkbox"
                         checked={selectedIds.has(item.id)}
                         onChange={() => toggleSelect(item.id)}
-                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className="h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 dark:bg-slate-700"
                       />
                     </td>
                     <td className="px-4 py-3 w-10">
@@ -398,25 +403,25 @@ export function PaymentsPage() {
                     <td className="px-4 py-3">
                       <button
                         onClick={() => setSelectedRequest(item.id)}
-                        className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 rounded-md font-medium text-xs transition-all shadow-sm border border-blue-200/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                        className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 hover:text-blue-800 dark:hover:text-blue-300 rounded-md font-medium text-xs transition-all shadow-sm border border-blue-200/50 dark:border-blue-800/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                         title="View Details"
                       >
                         <span className="font-mono tracking-tight">{item.requestNumber}</span>
                       </button>
                     </td>
-                    <td className="px-4 py-3 font-medium text-gray-900">{item.supplier}</td>
-                    <td className="px-4 py-3 text-right font-semibold text-gray-900 font-mono">
+                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{item.supplier}</td>
+                    <td className="px-4 py-3 text-right font-semibold text-gray-900 dark:text-white font-mono">
                       ${item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </td>
-                    <td className="px-4 py-3 text-gray-600 text-xs">{item.requestDate}</td>
-                    <td className="px-4 py-3 text-gray-600 text-xs">{item.dueDate}</td>
-                    <td className="px-4 py-3 text-gray-700 text-xs">{item.category}</td>
+                    <td className="px-4 py-3 text-xs">{item.requestDate}</td>
+                    <td className="px-4 py-3 text-xs">{item.dueDate}</td>
+                    <td className="px-4 py-3 text-xs">{item.category}</td>
                     <td className="px-4 py-3 text-center">
                       <Badge variant={priorityVariants[item.priority]}>
                         {item.priority.charAt(0).toUpperCase() + item.priority.slice(1)}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-gray-700 text-xs">{item.requestedBy}</td>
+                    <td className="px-4 py-3 text-xs">{item.requestedBy}</td>
                   </tr>
                 ))}
               </tbody>
@@ -434,42 +439,42 @@ export function PaymentsPage() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
 
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-gray-200 dark:border-slate-800">
 
         {/* Header */}
-        <div className="px-6 py-4 border-b flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-gray-900">
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
             {req.requestNumber} - Transaction Breakdown
           </h3>
           <button onClick={() => setSelectedRequest(null)}>
-            <XCircle className="h-6 w-6 text-gray-400 hover:text-gray-600" />
+            <XCircle className="h-6 w-6 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
           </button>
         </div>
 
         {/* Content */}
         <div className="p-6 overflow-y-auto flex-1">
-          <div className="rounded-lg border border-gray-200 overflow-hidden">
+          <div className="rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-slate-800/80">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-semibold">Description</th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold">Account</th>
-                  <th className="px-4 py-2 text-right text-xs font-semibold">Amount</th>
-                  <th className="px-4 py-2 text-center text-xs font-semibold">Tax Code</th>
-                  <th className="px-4 py-2 text-right text-xs font-semibold">Tax</th>
-                  <th className="px-4 py-2 text-right text-xs font-semibold">Total</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Description</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Account</th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Amount</th>
+                  <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500 dark:text-slate-400">Tax Code</th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Tax</th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Total</th>
                 </tr>
               </thead>
 
-              <tbody>
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800 text-gray-700 dark:text-slate-300">
                 {req.lineItems.map((li) => (
-                  <tr key={li.id}>
-                    <td className="px-4 py-2">{li.description}</td>
+                  <tr key={li.id} className="dark:bg-slate-900/50">
+                    <td className="px-4 py-2 text-gray-900 dark:text-white font-medium">{li.description}</td>
                     <td className="px-4 py-2">{li.account}</td>
                     <td className="px-4 py-2 text-right">{li.amount.toLocaleString()}</td>
                     <td className="px-4 py-2 text-center">{li.taxCode}</td>
                     <td className="px-4 py-2 text-right">{li.taxAmount.toLocaleString()}</td>
-                    <td className="px-4 py-2 text-right font-semibold">{li.total.toLocaleString()}</td>
+                    <td className="px-4 py-2 text-right font-semibold text-gray-900 dark:text-white">{li.total.toLocaleString()}</td>
                   </tr>
                 ))}
               </tbody>
@@ -478,7 +483,7 @@ export function PaymentsPage() {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-gray-50 flex justify-end gap-3">
+        <div className="px-6 py-4 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex justify-end gap-3">
           <Button variant="destructive" onClick={() => setSelectedRequest(null)}>
             Reject
           </Button>

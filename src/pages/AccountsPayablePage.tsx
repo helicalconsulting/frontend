@@ -95,7 +95,7 @@ export function AccountsPayablePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
       <Header
         title="Supplier Invoices Due"
         subtitle="Accounts Payable — Invoice approval and GRN matching"
@@ -103,7 +103,7 @@ export function AccountsPayablePage() {
 
       <div className="p-6 space-y-4">
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white p-2 shadow-sm">
+        <div className="flex items-center gap-2 rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2 shadow-sm">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -114,8 +114,8 @@ export function AccountsPayablePage() {
                     ? 'bg-amber-500 text-white shadow-sm'
                     : tab.id === 'release'
                     ? 'bg-emerald-500 text-white shadow-sm'
-                    : 'bg-blue-600 text-white shadow-sm'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  : 'bg-blue-600 text-white shadow-sm'
+                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800'
               }`}
             >
               {tab.label}
@@ -125,47 +125,47 @@ export function AccountsPayablePage() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <FileText className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
+                <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">Total Invoices</p>
-                <p className="text-xl font-bold text-gray-900">{mockSupplierInvoices.length}</p>
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Total Invoices</p>
+                <p className="text-xl font-bold text-gray-900 dark:text-white">{mockSupplierInvoices.length}</p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-amber-100 rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-amber-600" />
+              <div className="p-2 bg-amber-100 dark:bg-amber-900/40 rounded-lg">
+                <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">Pending</p>
-                <p className="text-xl font-bold text-gray-900">{pendingCount}</p>
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Pending</p>
+                <p className="text-xl font-bold text-gray-900 dark:text-white">{pendingCount}</p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-red-100 rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-red-600" />
+              <div className="p-2 bg-red-100 dark:bg-red-900/40 rounded-lg">
+                <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">Overdue</p>
-                <p className="text-xl font-bold text-red-600">{overdueCount}</p>
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Overdue</p>
+                <p className="text-xl font-bold text-red-600 dark:text-red-400">{overdueCount}</p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-100 rounded-lg">
-                <DollarSign className="h-5 w-5 text-emerald-600" />
+              <div className="p-2 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg">
+                <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">Total Value</p>
-                <p className="text-xl font-bold text-gray-900">
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Total Value</p>
+                <p className="text-xl font-bold text-gray-900 dark:text-white">
                   ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </p>
               </div>
@@ -182,7 +182,7 @@ export function AccountsPayablePage() {
               placeholder="Search by supplier, invoice, or reference..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 dark:text-white"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -229,12 +229,12 @@ export function AccountsPayablePage() {
         </div>
 
         {/* Invoices Table */}
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50/80">
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider w-10">
+                <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/80 dark:bg-slate-800/50">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider w-10">
                     <input
                       type="checkbox"
                       checked={selectedRows.size === selectableCount && selectableCount > 0}
@@ -244,20 +244,20 @@ export function AccountsPayablePage() {
                     />
                   </th>
                   <th className="px-4 py-3 text-left w-10" />
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">PO Number</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Ref #</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Supplier</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Invoice #</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-500 text-xs uppercase tracking-wider">Net Value</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Due Date</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-500 text-xs uppercase tracking-wider">Days</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Approver 1</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Comment</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Appr. Date</th>
-                  <th className="px-4 py-3 text-center font-semibold text-gray-500 text-xs uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">PO Number</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Ref #</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Supplier</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Invoice #</th>
+                  <th className="px-4 py-3 text-right font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Net Value</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Due Date</th>
+                  <th className="px-4 py-3 text-right font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Days</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Approver 1</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Comment</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Appr. Date</th>
+                  <th className="px-4 py-3 text-center font-semibold text-gray-500 dark:text-slate-400 text-xs uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800/60">
                 {filteredInvoices.map((invoice) => (
                   <InvoiceRow
                     key={invoice.id}
@@ -421,17 +421,17 @@ function InvoiceRow({
 
   return (
     <>
-      <tr className={`transition-colors duration-150 ${
-        isSelected ? 'bg-blue-50/50' : 'hover:bg-gray-50/80'
+      <tr className={`transition-colors duration-150 text-gray-700 dark:text-slate-300 ${
+        isSelected ? 'bg-blue-50/50 dark:bg-blue-900/20' : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/50'
       }`}>
         <td className="px-4 py-3">
           <input
-  type="checkbox"
-  checked={isSelected}
-  disabled={invoice.status === 'approved'} // 🔥 main logic
-  onChange={onToggleSelect}
-  className="h-4 w-4 rounded border-gray-300 text-blue-600 disabled:opacity-40 cursor-pointer"
-/>
+            type="checkbox"
+            checked={isSelected}
+            disabled={invoice.status === 'approved'} // 🔥 main logic
+            onChange={onToggleSelect}
+            className="h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 disabled:opacity-40 cursor-pointer dark:bg-slate-700"
+          />
         </td>
         <td className="px-4 py-3">
           
@@ -439,39 +439,39 @@ function InvoiceRow({
         <td className="px-4 py-3">
           <button
             onClick={() => onPOClick(poNumber)}
-            className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 rounded-md font-medium text-xs transition-all shadow-sm border border-blue-200/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+            className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 hover:text-blue-800 dark:hover:text-blue-300 rounded-md font-medium text-xs transition-all shadow-sm border border-blue-200/50 dark:border-blue-800/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
             title="View PO Details"
           >
             <span className="font-mono whitespace-nowrap">{poNumber}</span>
           </button>
         </td>
-        <td className="px-4 py-3 font-mono text-xs text-gray-700">{invoice.refNumber}</td>
-        <td className="px-4 py-3 font-medium text-gray-900">{invoice.supplier}</td>
+        <td className="px-4 py-3 font-mono text-xs">{invoice.refNumber}</td>
+        <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{invoice.supplier}</td>
         <td className="px-4 py-3">
           <button
             onClick={() => onInvoiceClick(invoice)}
-            className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 rounded-md font-medium text-xs transition-all shadow-sm border border-blue-200/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+            className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 hover:text-blue-800 dark:hover:text-blue-300 rounded-md font-medium text-xs transition-all shadow-sm border border-blue-200/50 dark:border-blue-800/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
             title="View Invoice Details"
           >
             <span className="font-mono tracking-tight">{invoice.invoiceNumber}</span>
           </button>
         </td>
         <td className="px-4 py-3 text-right">
-          <span className={`font-semibold ${invoice.netValue > 10000 ? 'text-red-600' : 'text-gray-900'}`}>
+          <span className={`font-semibold ${invoice.netValue > 10000 ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}>
             $ {invoice.netValue.toLocaleString(undefined, { minimumFractionDigits: 0 })}
           </span>
         </td>
-        <td className="px-4 py-3 text-gray-600 text-xs">{invoice.dueDate}</td>
+        <td className="px-4 py-3 text-xs">{invoice.dueDate}</td>
         <td className="px-4 py-3 text-right">
           <span className={`font-mono text-xs font-semibold ${
-            invoice.agingDays > 90 ? 'text-red-600' : invoice.agingDays > 30 ? 'text-amber-600' : 'text-gray-600'
+            invoice.agingDays > 90 ? 'text-red-600 dark:text-red-400' : invoice.agingDays > 30 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400'
           }`}>
             {invoice.agingDays}
           </span>
         </td>
-        <td className="px-4 py-3 text-gray-700 text-xs">{invoice.approver1 || '—'}</td>
-        <td className="px-4 py-3 text-gray-600 text-xs">{invoice.comment || '—'}</td>
-        <td className="px-4 py-3 text-gray-600 text-xs">{invoice.approvalDate1 || '—'}</td>
+        <td className="px-4 py-3 text-xs">{invoice.approver1 || '—'}</td>
+        <td className="px-4 py-3 text-xs">{invoice.comment || '—'}</td>
+        <td className="px-4 py-3 text-xs">{invoice.approvalDate1 || '—'}</td>
         <td className="px-4 py-3 text-center">
           <Badge variant={statusVariants[invoice.status]}>
             {invoice.approvalStatus}

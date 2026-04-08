@@ -1,5 +1,5 @@
 import { useAuth } from '@/hooks/useAuth';
-import { Bell, Search, Moon, Sun } from 'lucide-react';
+import { Bell, Search, Moon, Sun, Menu } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface HeaderProps {
@@ -7,34 +7,13 @@ interface HeaderProps {
   subtitle?: string;
 }
 
+import { useTheme } from '@/hooks/useTheme';
+import { useSidebar } from '@/hooks/useSidebar';
+
 export function Header({ title, subtitle }: HeaderProps) {
   const { user } = useAuth();
-
-  const [darkMode, setDarkMode] = useState(false);
-
-// Load theme on mount
-useEffect(() => {
-  const savedTheme = localStorage.getItem('theme');
-
-  if (savedTheme) {
-    setDarkMode(savedTheme === 'dark');
-  } else {
-    // system preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setDarkMode(prefersDark);
-  }
-}, []);
-
-// Apply theme
-useEffect(() => {
-  if (darkMode) {
-    document.documentElement.classList.add('dark');
-    localStorage.setItem('theme', 'dark');
-  } else {
-    document.documentElement.classList.remove('dark');
-    localStorage.setItem('theme', 'light');
-  }
-}, [darkMode]);
+  const { isDarkMode, toggleTheme } = useTheme();
+  const { toggleSidebar } = useSidebar();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between 
@@ -43,36 +22,45 @@ useEffect(() => {
     backdrop-blur-xl px-6 shadow-sm transition-colors duration-300">
 
       {/* LEFT */}
-      <div>
-        <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
+        {/* Mobile Menu Button */}
+        <button 
+          onClick={toggleSidebar} 
+          className="md:hidden p-2 -ml-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        <div>
+          <div className="flex items-center gap-2">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">
             {title}
           </h2>
 
           <button
-  onClick={() => setDarkMode(!darkMode)}
-  className={`relative w-12 h-6 flex items-center rounded-full p-1 transition duration-300
-    ${darkMode ? 'bg-blue-600' : 'bg-gray-300'}`}
->
-  <div
-    className={`w-4 h-4 bg-white rounded-full shadow-md transform transition duration-300 flex items-center justify-center
-      ${darkMode ? 'translate-x-6' : 'translate-x-0'}`}
-  >
-    {darkMode ? (
-      <Sun className="w-3 h-3 text-yellow-400" />
-    ) : (
-      <Moon className="w-3 h-3 text-gray-700" />
-    )}
-  </div>
-</button>
+            onClick={toggleTheme}
+            className={`relative w-12 h-6 flex flex-shrink-0 items-center rounded-full p-1 transition duration-300
+              ${isDarkMode ? 'bg-blue-600' : 'bg-gray-300'}`}
+          >
+            <div
+              className={`w-4 h-4 bg-white rounded-full shadow-md transform transition duration-300 flex items-center justify-center
+                ${isDarkMode ? 'translate-x-6' : 'translate-x-0'}`}
+            >
+              {isDarkMode ? (
+                <Sun className="w-3 h-3 text-yellow-400" />
+              ) : (
+                <Moon className="w-3 h-3 text-gray-700" />
+              )}
+            </div>
+          </button>
         </div>
 
         {subtitle && (
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {subtitle}
           </p>
         )}
       </div>
+    </div>
 
       {/* RIGHT */}
       <div className="flex items-center gap-3">

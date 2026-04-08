@@ -52,7 +52,7 @@ export function SalesOrdersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
       <Header
         title="Sales Order Approvals"
         subtitle="Automated credit risk detection and order governance"
@@ -64,16 +64,16 @@ export function SalesOrdersPage() {
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
   {/* Pending Orders */}
-  <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+  <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
     <div className="flex items-center gap-3">
-      <div className="p-2.5 bg-blue-100 rounded-lg">
-        <Package className="h-5 w-5 text-blue-600" />
+      <div className="p-2.5 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
+        <Package className="h-5 w-5 text-blue-600 dark:text-blue-400" />
       </div>
       <div>
-        <p className="text-xs text-gray-500 font-medium">
+        <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
           Pending Orders
         </p>
-        <p className="text-2xl font-bold text-gray-900">
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">
           {filteredOrders.length}
         </p>
       </div>
@@ -81,16 +81,16 @@ export function SalesOrdersPage() {
   </div>
 
   {/* Total Value */}
-  <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+  <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
     <div className="flex items-center gap-3">
-      <div className="p-2.5 bg-emerald-100 rounded-lg">
-        <DollarSign className="h-5 w-5 text-emerald-600" />
+      <div className="p-2.5 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg">
+        <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
       </div>
       <div>
-        <p className="text-xs text-gray-500 font-medium">
+        <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
           Total Value
         </p>
-        <p className="text-2xl font-bold text-gray-900">
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">
           $
           {filteredOrders
             .reduce((sum, o) => sum + Number(o.availableBalance || 0), 0)
@@ -101,16 +101,16 @@ export function SalesOrdersPage() {
   </div>
 
   {/* High Priority */}
-  <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+  <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
     <div className="flex items-center gap-3">
-      <div className="p-2.5 bg-amber-100 rounded-lg">
-        <AlertTriangle className="h-5 w-5 text-amber-600" />
+      <div className="p-2.5 bg-amber-100 dark:bg-amber-900/40 rounded-lg">
+        <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
       </div>
       <div>
-        <p className="text-xs text-gray-500 font-medium">
+        <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
           High Priority
         </p>
-        <p className="text-2xl font-bold text-gray-900">
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">
           {
             filteredOrders.filter(
               (o) => o.priority === 'high' || o.priority === 'critical'
@@ -131,7 +131,7 @@ export function SalesOrdersPage() {
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 dark:text-white"
             />
           </div>
 
@@ -184,13 +184,13 @@ export function SalesOrdersPage() {
           </div>
         </div>
         {/* TABLE */}
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
 
           {/* ✅ HEADER (Payments jaisa) */}
-          <div className="border-b border-gray-200 bg-gray-50/80 px-5 py-3">
+          <div className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/80 dark:bg-slate-800/50 px-5 py-3">
             <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-gray-500" />
-              <h3 className="text-sm font-bold text-gray-700">Pending Orders</h3>
+              <FileText className="h-4 w-4 text-gray-500 dark:text-slate-400" />
+              <h3 className="text-sm font-bold text-gray-700 dark:text-slate-200">Pending Orders</h3>
             </div>
           </div>
 
@@ -198,7 +198,7 @@ export function SalesOrdersPage() {
             <table className="w-full text-sm">
 
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50/50">
+                <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/30">
 
                   {/* Select All */}
                   <th className="px-4 py-3 w-10">
@@ -213,26 +213,26 @@ export function SalesOrdersPage() {
                   {/* Empty column (IMPORTANT) */}
                   <th className="px-4 py-3 w-10" />
 
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Sales Order</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Customer</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Status</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Credit Limit</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Current Balance</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Available</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">PO</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Date</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Salesperson</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Sales Order</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Customer</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Status</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Credit Limit</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Current Balance</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Available</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">PO</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Date</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Salesperson</th>
 
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800/60">
                 {filteredOrders.map((order) => (
                   <tr
                     key={order.id}
-                    className={`transition-colors ${selectedIds.has(order.id)
-                        ? 'bg-blue-50/50'
-                        : 'hover:bg-gray-50/80'
+                    className={`transition-colors text-gray-700 dark:text-slate-300 ${selectedIds.has(order.id)
+                        ? 'bg-blue-50/50 dark:bg-blue-900/20'
+                        : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/50'
                       }`}
                   >
                     <td className="px-4 py-3">
@@ -246,7 +246,7 @@ export function SalesOrdersPage() {
 
                     <td className="px-4 py-3" />
 
-                    <td className="px-4 py-3">{order.salesOrderNumber}</td>
+                    <td className="px-4 py-3 dark:text-slate-100 font-medium">{order.salesOrderNumber}</td>
 
                     <td className="px-4 py-3">
                       {order.customerName}
