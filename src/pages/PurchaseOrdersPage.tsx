@@ -399,8 +399,10 @@ export function PurchaseOrdersPage() {
       {selectedOrderDetails && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in">
           <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col animate-scale-in border border-gray-200 dark:border-slate-800">
-            <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">PO Details: {selectedOrderDetails.poNumber}</h3>
+            <div className="px-6 py-4 flex items-center justify-between 
+bg-gradient-to-r from-blue-600 to-indigo-600 
+text-white">
+              <h3 className="text-lg font-semibold text-white dark:text-white ">PO Details: {selectedOrderDetails.poNumber}</h3>
               <button onClick={() => setSelectedOrderDetails(null)} className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
                 <XCircle className="h-6 w-6" />
               </button>

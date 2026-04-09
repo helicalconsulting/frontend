@@ -29,6 +29,25 @@ const statusVariants: Record<string, 'default' | 'success' | 'warning' | 'danger
 
 type TabType = 'home' | 'reports' | 'exception' | 'release';
 
+const CURRENCIES = [
+  { code: "KES", label: "Kenyan Shilling", flag: "🇰🇪", region: "africa" },
+  { code: "NGN", label: "Nigerian Naira", flag: "🇳🇬", region: "africa" },
+  { code: "ZAR", label: "South African Rand", flag: "🇿🇦", region: "africa" },
+
+  { code: "USD", label: "US Dollar", flag: "🇺🇸", region: "global" },
+  { code: "EUR", label: "Euro", flag: "🇪🇺", region: "global" },
+  { code: "GBP", label: "British Pound", flag: "🇬🇧", region: "global" },
+];
+
+const EXCHANGE_RATES: Record<string, number> = {
+  KES: 129.5,
+  NGN: 1580,
+  ZAR: 18.6,
+  USD: 1,
+  EUR: 0.92,
+  GBP: 0.79,
+};
+
 export function AccountsPayablePage() {
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,6 +57,9 @@ export function AccountsPayablePage() {
   const [showPOModal, setShowPOModal] = useState(false);
   const [selectedPO, setSelectedPO] = useState<string | null>(null);
   const [selectedInvoiceDetails, setSelectedInvoiceDetails] = useState<SupplierInvoice | null>(null);
+  const [displayCurrency, setDisplayCurrency] = useState("KES");
+
+  
 
   const filteredInvoices = useMemo(() => {
     return mockSupplierInvoices.filter((inv) => {
@@ -85,7 +107,19 @@ export function AccountsPayablePage() {
 
   const pendingCount = mockSupplierInvoices.filter((i) => i.status === 'pending').length;
   const overdueCount = mockSupplierInvoices.filter((i) => i.status === 'overdue').length;
-  const totalValue = mockSupplierInvoices.reduce((sum, i) => sum + i.netValue, 0);
+  const convertedTotal = useMemo(() => {
+  return mockSupplierInvoices.reduce((sum, inv) => {
+    const fromRate = EXCHANGE_RATES["USD"]; // assume USD base
+    const toRate = EXCHANGE_RATES[displayCurrency];
+
+    if (!fromRate || !toRate) return sum;
+
+    const usd = inv.netValue / fromRate;
+    const converted = usd * toRate;
+
+    return sum + converted;
+  }, 0);
+}, [displayCurrency]);
 
   const tabs: { id: TabType; label: string; variant?: string }[] = [
     { id: 'home', label: 'Home' },
@@ -166,7 +200,7 @@ export function AccountsPayablePage() {
               <div>
                 <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Total Value</p>
                 <p className="text-xl font-bold text-gray-900 dark:text-white">
-                  ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  {displayCurrency} {convertedTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </p>
               </div>
             </div>
@@ -221,10 +255,43 @@ export function AccountsPayablePage() {
   )}
 
   {/* View Details (always right side) */}
+  <div className="flex items-center gap-2">
+  {/* Currency Dropdown */}
+  <div className="relative w-[260px]">
+    <select
+      value={displayCurrency}
+      onChange={(e) => setDisplayCurrency(e.target.value)}
+      className="appearance-none w-full cursor-pointer rounded-xl border border-blue-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 pr-10 text-sm font-semibold text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+    >
+      <optgroup label="🌍 African (Default)">
+        {CURRENCIES.filter(c => c.region === "africa").map(c => (
+          <option key={c.code} value={c.code}>
+            {c.flag} {c.code} — {c.label}
+          </option>
+        ))}
+      </optgroup>
+
+      <optgroup label="🌐 Global">
+        {CURRENCIES.filter(c => c.region === "global").map(c => (
+          <option key={c.code} value={c.code}>
+            {c.flag} {c.code} — {c.label}
+          </option>
+        ))}
+      </optgroup>
+    </select>
+
+    {/* Arrow */}
+    <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+      ▼
+    </div>
+  </div>
+
+  {/* View Details */}
   <Button size="sm" variant="outline" onClick={() => setShowFilesModal(true)}>
     <Eye className="h-4 w-4" />
     View Details
   </Button>
+</div>
 </div>
         </div>
 
@@ -329,73 +396,93 @@ function PODetailsModal({ isOpen, onClose, poNumber }: PODetailsModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      
+      <div className="w-full max-w-4xl rounded-2xl overflow-hidden flex flex-col
+bg-white dark:bg-slate-900 
+border border-gray-200 dark:border-slate-800 shadow-2xl">
+
+        {/* HEADER */}
+        <div className="px-6 py-4 flex items-center justify-between 
+        bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white">
+
           <div>
-            <h3 className="text-lg font-bold text-white">Purchase Order Details</h3>
+            <h3 className="text-lg font-bold">Purchase Order Details</h3>
             <p className="text-sm text-blue-100">PO# {poNumber}</p>
           </div>
+
           <button
             onClick={onClose}
-            className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors"
+            className="text-white hover:bg-white/20 rounded-lg p-2"
           >
             <XCircle className="h-5 w-5" />
           </button>
         </div>
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">Supplier</p>
-                <p className="text-sm font-medium text-gray-900 mt-1">Acme Corporation Ltd.</p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">Order Date</p>
-                <p className="text-sm font-medium text-gray-900 mt-1">2024-03-15</p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">Due Date</p>
-                <p className="text-sm font-medium text-gray-900 mt-1">2024-04-15</p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">Total Amount</p>
-                <p className="text-sm font-bold text-gray-900 mt-1">$45,230.00</p>
-              </div>
+
+        {/* BODY */}
+        <div className="p-6 space-y-6 text-gray-900 dark:text-white">
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Supplier</p>
+              <p className="font-medium mt-1">Acme Corporation Ltd.</p>
             </div>
 
-            <div className="border-t border-gray-200 pt-4">
-              <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-3">Line Items</h4>
-              <div className="rounded-lg border border-gray-200 overflow-hidden">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-100 bg-gray-50">
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Item</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Unit Price</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-50">
-                    <tr className="hover:bg-blue-50/30">
-                      <td className="px-4 py-2.5 text-gray-700">1</td>
-                      <td className="px-4 py-2.5 text-gray-900 font-medium">Industrial Equipment</td>
-                      <td className="px-4 py-2.5 text-right text-gray-700 font-mono">150</td>
-                      <td className="px-4 py-2.5 text-right text-gray-700 font-mono">$301.53</td>
-                      <td className="px-4 py-2.5 text-right font-semibold text-gray-900 font-mono">$45,230.00</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+            <div>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Order Date</p>
+              <p className="font-medium mt-1">2024-03-15</p>
+            </div>
+
+            <div>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Due Date</p>
+              <p className="font-medium mt-1">2024-04-15</p>
+            </div>
+
+            <div>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Total Amount</p>
+              <p className="font-bold mt-1">$45,230.00</p>
             </div>
           </div>
+
+          {/* TABLE */}
+          <div className="rounded-xl border border-gray-200 dark:border-slate-800 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 dark:bg-slate-800">
+                <tr>
+                  <th className="px-4 py-2 text-left text-xs">Item</th>
+                  <th className="px-4 py-2 text-left text-xs">Description</th>
+                  <th className="px-4 py-2 text-right text-xs">Qty</th>
+                  <th className="px-4 py-2 text-right text-xs">Price</th>
+                  <th className="px-4 py-2 text-right text-xs">Total</th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+                <tr>
+                  <td className="px-4 py-2">1</td>
+                  <td className="px-4 py-2 font-medium">Industrial Equipment</td>
+                  <td className="px-4 py-2 text-right">150</td>
+                  <td className="px-4 py-2 text-right">$301.53</td>
+                  <td className="px-4 py-2 text-right font-semibold">$45,230.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* FOOTER */}
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-slate-800 
+        bg-gray-50 dark:bg-slate-900 flex justify-end gap-3">
+
+          <Button variant="ghost" onClick={onClose}>Close</Button>
+          <Button variant="destructive" className="shadow-lg shadow-red-500/20">Reject</Button>
+          <Button variant="success" className="shadow-lg shadow-emerald-500/20">Approve</Button>
+
         </div>
       </div>
     </div>
   );
 }
-
 // ================================================
 // Invoice Row with expandable GRN Details
 // ================================================
@@ -555,94 +642,97 @@ function InvoiceDetailsModal({ isOpen, onClose, invoice }: InvoiceDetailsModalPr
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-scale-in">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">Invoice Details: {invoice.invoiceNumber}</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
-            <XCircle className="h-6 w-6" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center 
+    p-4 bg-black/50 backdrop-blur-sm">
+
+      <div className="w-full max-w-4xl rounded-2xl overflow-hidden 
+bg-white dark:bg-slate-900 
+border border-gray-200 dark:border-slate-800 shadow-2xl">
+
+        {/* HEADER */}
+        <div className="px-6 py-4 flex items-center justify-between 
+        bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white">
+
+          <div>
+            <h3 className="text-lg font-bold">Invoice Details</h3>
+            <p className="text-sm text-blue-100">
+              Invoice# {invoice.invoiceNumber}
+            </p>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="text-white hover:bg-white/20 rounded-lg p-2"
+          >
+            <XCircle className="h-5 w-5" />
           </button>
         </div>
-        <div className="p-6 overflow-y-auto flex-1">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+
+        {/* BODY */}
+        <div className="p-6 space-y-6 text-gray-900 dark:text-white">
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">Supplier</p>
-              <p className="font-medium text-gray-900 mt-1">{invoice.supplier}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Supplier</p>
+              <p className="font-medium mt-1">{invoice.supplier}</p>
             </div>
+
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">Reference #</p>
-              <p className="font-medium text-gray-900 mt-1">{invoice.refNumber}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Reference</p>
+              <p className="font-medium mt-1">{invoice.refNumber}</p>
             </div>
+
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">Due Date</p>
-              <p className="font-medium text-gray-900 mt-1">{invoice.dueDate}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Due Date</p>
+              <p className="font-medium mt-1">{invoice.dueDate}</p>
             </div>
+
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">Status</p>
-              <Badge variant={statusVariants[invoice.status]} className="mt-1">
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Status</p>
+              <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-400/10 dark:text-amber-300 text-xs font-semibold">
                 {invoice.approvalStatus}
-              </Badge>
+              </span>
             </div>
           </div>
-          
-          <div className="rounded-lg border border-gray-200 overflow-hidden mt-6">
-            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-              <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                GRN Details — Goods Received
-              </h4>
-            </div>
+
+          {/* TABLE */}
+          <div className="rounded-xl border border-gray-200 dark:border-slate-800 overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-slate-800">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Item</th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">PO #</th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
-                  <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">WH</th>
-                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty</th>
-                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Value</th>
+                  <th className="px-4 py-2 text-left text-xs">Item</th>
+                  <th className="px-4 py-2 text-left text-xs">PO</th>
+                  <th className="px-4 py-2 text-left text-xs">Description</th>
+                  <th className="px-4 py-2 text-right text-xs">Qty</th>
+                  <th className="px-4 py-2 text-right text-xs">Value</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
                 {invoice.grnDetails.map((grn) => (
                   <tr key={grn.id}>
-                    <td className="px-4 py-2 text-gray-700">{grn.item}</td>
-                    <td className="px-4 py-2 font-mono text-xs text-gray-700">{grn.purchaseOrder}</td>
-                    <td className="px-4 py-2 text-gray-900 font-medium">{grn.description}</td>
-                    <td className="px-4 py-2 text-center text-gray-500">{grn.warehouse}</td>
-                    <td className="px-4 py-2 text-right text-gray-700">{grn.qtyReceived.toLocaleString()} {grn.uom}</td>
-                    <td className="px-4 py-2 text-right font-semibold text-gray-900">${grn.matchedValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                    <td className="px-4 py-2">{grn.item}</td>
+                    <td className="px-4 py-2">{grn.purchaseOrder}</td>
+                    <td className="px-4 py-2 font-medium">{grn.description}</td>
+                    <td className="px-4 py-2 text-right">{grn.qtyReceived}</td>
+                    <td className="px-4 py-2 text-right font-semibold">
+                      ${grn.matchedValue.toLocaleString()}
+                    </td>
                   </tr>
                 ))}
               </tbody>
-              <tfoot>
-                <tr className="border-t border-gray-200 bg-gray-50/50">
-                  <td colSpan={5} className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase">
-                    Total Matched
-                  </td>
-                  <td className="px-4 py-2 text-right font-bold text-gray-900 font-mono">
-                    ${invoice.grnDetails.reduce((s, g) => s + g.matchedValue, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                  </td>
-                </tr>
-              </tfoot>
             </table>
           </div>
         </div>
-        
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 items-center">
-          <Button variant="ghost" onClick={onClose} className="mr-auto">Close</Button>
-          {(invoice.status === 'pending' || invoice.status === 'overdue') && (
-            <>
-              <Button variant="destructive" size="sm" onClick={onClose}>
-  <XCircle className="h-4 w-4" />
-  Reject
-</Button>
 
-<Button variant="success" size="sm" onClick={onClose}>
-  <CheckCircle2 className="h-4 w-4" />
-  Approve
-</Button>
-            </>
-          )}
+        {/* FOOTER */}
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-slate-800 
+        bg-gray-50 dark:bg-slate-900 flex justify-end gap-3">
+
+          <Button variant="ghost" onClick={onClose}>Close</Button>
+          <Button variant="destructive" className="shadow-lg shadow-red-500/20">Reject</Button>
+          <Button variant="success" className="shadow-lg shadow-emerald-500/20">Approve</Button>
+
         </div>
       </div>
     </div>

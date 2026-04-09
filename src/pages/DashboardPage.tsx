@@ -110,7 +110,7 @@ export function DashboardPage() {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20 dark:from-slate-950 dark:via-blue-950/20 dark:to-indigo-950/10 transition-colors duration-300">
       {/* Animated background pattern */}
-      <div className="fixed inset-0 -z-10">
+      <div className="absolute inset-0 -z-10">
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{

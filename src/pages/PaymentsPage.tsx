@@ -442,12 +442,13 @@ export function PaymentsPage() {
       <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-gray-200 dark:border-slate-800">
 
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <div className="px-6 py-4 flex items-center justify-between 
+bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+          <h3 className="text-lg font-semibold text-white dark:text-white">
             {req.requestNumber} - Transaction Breakdown
           </h3>
           <button onClick={() => setSelectedRequest(null)}>
-            <XCircle className="h-6 w-6 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
+            <XCircle className="h-6 w-6 text-white hover:text-gray-600 dark:hover:text-gray-300" />
           </button>
         </div>
 

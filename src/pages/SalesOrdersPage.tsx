@@ -51,6 +51,30 @@ export function SalesOrdersPage() {
     }
   };
 
+  const getStatusLabel = (status: string) => {
+    if (status === 'S') return 'Pending';
+    if (status === 'A') return 'Approved';
+    if (status === 'O') return 'Overdue';
+    return status;
+  };
+
+  const getStatusStyle = (status: string) => {
+    const s = status.toLowerCase();
+
+    if (s === 'pending') {
+      return "bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-400/10 dark:text-amber-300 dark:border-amber-400/30";
+    }
+
+    if (s === 'approved') {
+      return "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-400/10 dark:text-emerald-300 dark:border-emerald-400/30";
+    }
+
+    if (s === 'overdue') {
+      return "bg-red-50 text-red-700 border border-red-200 dark:bg-red-400/10 dark:text-red-300 dark:border-red-400/30";
+    }
+
+    return "bg-gray-100 text-gray-700 border border-gray-200 dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600";
+  };
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
       <Header
@@ -60,68 +84,68 @@ export function SalesOrdersPage() {
 
       <div className="p-6 space-y-4">
         {/* ✅ KPI CARDS (Payments jaisa) */}
-{/* ✅ KPI CARDS (WHITE THEME) */}
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* ✅ KPI CARDS (WHITE THEME) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-  {/* Pending Orders */}
-  <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
-    <div className="flex items-center gap-3">
-      <div className="p-2.5 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
-        <Package className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-      </div>
-      <div>
-        <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
-          Pending Orders
-        </p>
-        <p className="text-2xl font-bold text-gray-900 dark:text-white">
-          {filteredOrders.length}
-        </p>
-      </div>
-    </div>
-  </div>
+          {/* Pending Orders */}
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
+                <Package className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
+                  Pending Orders
+                </p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {filteredOrders.length}
+                </p>
+              </div>
+            </div>
+          </div>
 
-  {/* Total Value */}
-  <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
-    <div className="flex items-center gap-3">
-      <div className="p-2.5 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg">
-        <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-      </div>
-      <div>
-        <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
-          Total Value
-        </p>
-        <p className="text-2xl font-bold text-gray-900 dark:text-white">
-          $
-          {filteredOrders
-            .reduce((sum, o) => sum + Number(o.availableBalance || 0), 0)
-            .toLocaleString()}
-        </p>
-      </div>
-    </div>
-  </div>
+          {/* Total Value */}
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg">
+                <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
+                  Total Value
+                </p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  $
+                  {filteredOrders
+                    .reduce((sum, o) => sum + Number(o.availableBalance || 0), 0)
+                    .toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
 
-  {/* High Priority */}
-  <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
-    <div className="flex items-center gap-3">
-      <div className="p-2.5 bg-amber-100 dark:bg-amber-900/40 rounded-lg">
-        <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-      </div>
-      <div>
-        <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
-          High Priority
-        </p>
-        <p className="text-2xl font-bold text-gray-900 dark:text-white">
-          {
-            filteredOrders.filter(
-              (o) => o.priority === 'high' || o.priority === 'critical'
-            ).length
-          }
-        </p>
-      </div>
-    </div>
-  </div>
+          {/* High Priority */}
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-amber-100 dark:bg-amber-900/40 rounded-lg">
+                <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
+                  High Priority
+                </p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {
+                    filteredOrders.filter(
+                      (o) => o.priority === 'high' || o.priority === 'critical'
+                    ).length
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
 
-</div>
+        </div>
 
         {/* Search + Top */}
         <div className="flex flex-col lg:flex-row justify-between gap-4">
@@ -141,7 +165,7 @@ export function SalesOrdersPage() {
               <MessageCircle className="h-4 w-4" /> WhatsApp
             </Button>
             {/* Home button (always last) */}
-            
+
           </div>
         </div>
 
@@ -174,12 +198,12 @@ export function SalesOrdersPage() {
 
                   Return
                 </Button>
-                
+
               </>
-              
+
             )}
 
-            
+
 
           </div>
         </div>
@@ -231,8 +255,8 @@ export function SalesOrdersPage() {
                   <tr
                     key={order.id}
                     className={`transition-colors text-gray-700 dark:text-slate-300 ${selectedIds.has(order.id)
-                        ? 'bg-blue-50/50 dark:bg-blue-900/20'
-                        : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/50'
+                      ? 'bg-blue-50/50 dark:bg-blue-900/20'
+                      : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/50'
                       }`}
                   >
                     <td className="px-4 py-3">
@@ -246,7 +270,20 @@ export function SalesOrdersPage() {
 
                     <td className="px-4 py-3" />
 
-                    <td className="px-4 py-3 dark:text-slate-100 font-medium">{order.salesOrderNumber}</td>
+                    <td className="px-4 py-3">
+                      <button
+                        onClick={() => setSelectedOrder(order)}
+                        className="inline-flex items-center px-2.5 py-1.5 
+    bg-blue-50 dark:bg-blue-900/20 
+    text-blue-700 dark:text-blue-400 
+    hover:bg-blue-100 dark:hover:bg-blue-900/40 
+    rounded-md font-mono text-xs font-medium 
+    border border-blue-200/50 dark:border-blue-800/50 
+    transition"
+                      >
+                        {order.salesOrderNumber}
+                      </button>
+                    </td>
 
                     <td className="px-4 py-3">
                       {order.customerName}
@@ -256,7 +293,13 @@ export function SalesOrdersPage() {
                     </td>
 
                     <td className="px-4 py-3 text-center">
-                      <Badge variant="info">{order.orderStatus}</Badge>
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold 
+    shadow-sm dark:shadow-md
+    ${getStatusStyle(getStatusLabel(order.orderStatus))}`}
+                      >
+                        {getStatusLabel(order.orderStatus)}
+                      </span>
                     </td>
 
                     <td className="px-4 py-3 text-right">{order.creditLimit}</td>
@@ -275,6 +318,149 @@ export function SalesOrdersPage() {
         </div>
 
       </div>
+      {selectedOrder && (
+        <SalesOrderModal
+          isOpen={true}
+          onClose={() => setSelectedOrder(null)}
+          order={selectedOrder}
+        />
+      )}
+    </div>
+  );
+}
+
+// ================================================
+// Sales Order Details Modal
+// ================================================
+function SalesOrderModal({
+  isOpen,
+  onClose,
+  order,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  order: SalesOrder;
+}) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 
+    bg-black/50 backdrop-blur-sm">
+
+      <div className="w-full max-w-4xl rounded-2xl overflow-hidden 
+      bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 
+      border border-gray-200 dark:border-slate-800 shadow-2xl">
+
+        {/* HEADER */}
+        <div className="px-6 py-4 flex items-center justify-between 
+        bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+
+          <div>
+            <h3 className="text-lg font-bold">Sales Order Details</h3>
+            <p className="text-sm text-blue-100">
+              SO# {order.salesOrderNumber}
+            </p>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="text-white hover:bg-white/20 rounded-lg p-2"
+          >
+            <XCircle className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* BODY */}
+        <div className="p-6 space-y-6">
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">
+                Customer
+              </p>
+              <p className="font-medium text-gray-900 dark:text-white mt-1">
+                {order.customerName}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">
+                Order Date
+              </p>
+              <p className="font-medium text-gray-900 dark:text-white mt-1">
+                {order.orderDate}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">
+                Credit Limit
+              </p>
+              <p className="font-medium text-gray-900 dark:text-white mt-1">
+                {order.creditLimit}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">
+                Status
+              </p>
+              <Badge variant="info" className="mt-1">
+                {order.orderStatus}
+              </Badge>
+            </div>
+          </div>
+
+          {/* TABLE */}
+          <div className="rounded-xl border border-gray-200 dark:border-slate-800 overflow-hidden">
+            <div className="bg-gray-50 dark:bg-slate-800 px-4 py-2">
+              <h4 className="text-xs font-semibold text-gray-600 dark:text-slate-300 uppercase">
+                Order Summary
+              </h4>
+            </div>
+
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 dark:bg-slate-800">
+                <tr>
+                  <th className="px-4 py-2 text-left text-xs">PO</th>
+                  <th className="px-4 py-2 text-left text-xs">Salesperson</th>
+                  <th className="px-4 py-2 text-right text-xs">Current Balance</th>
+                  <th className="px-4 py-2 text-right text-xs">Available</th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800 text-gray-700 dark:text-slate-300">
+                <tr>
+                  <td className="px-4 py-2">{order.customerPONumber}</td>
+                  <td className="px-4 py-2">{order.salesperson}</td>
+                  <td className="px-4 py-2 text-right">{order.currentBalance}</td>
+                  <td className="px-4 py-2 text-right font-semibold">
+                    {order.availableBalance}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* FOOTER */}
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-slate-800 
+        bg-gray-50 dark:bg-slate-900 flex justify-end gap-3">
+
+          <Button variant="ghost" onClick={onClose}>
+            Close
+          </Button>
+
+          <Button variant="destructive" className="shadow-lg shadow-red-500/20">
+            Reject
+          </Button>
+
+          <Button variant="success" className="shadow-lg shadow-emerald-500/20">
+            Approve
+          </Button>
+        </div>
+      </div>
+
     </div>
   );
 }
