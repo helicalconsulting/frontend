@@ -37,15 +37,15 @@ export function MasterDataRequestPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Header title="Master Data Request" subtitle="Submit new entity for multi-level approval" />
         <div className="flex items-center justify-center p-12">
           <div className="text-center animate-in">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-              <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+              <CheckCircle2 className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900">Request Submitted Successfully</h3>
-            <p className="text-sm text-gray-500 mt-2">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Request Submitted Successfully</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
               Your request has been queued for approval. Redirecting...
             </p>
           </div>
@@ -55,7 +55,7 @@ export function MasterDataRequestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header
         title="Master Data Request"
         subtitle="Submit new entity for multi-level approval"
@@ -66,14 +66,14 @@ export function MasterDataRequestPage() {
           {/* Back Button */}
           <button
             onClick={() => navigate('/master-data')}
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors mb-5"
+            className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors mb-5"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Master Data
           </button>
 
           {/* Form Card */}
-          <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+          <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-5">
               <div className="flex items-center gap-3">
@@ -91,20 +91,20 @@ export function MasterDataRequestPage() {
               {/* Row: Onboarding Type + Entity Name */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                  <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">
                     Onboarding Type
                   </label>
                   <select
                     value={formData.onboardingType}
                     onChange={(e) => setFormData({ ...formData, onboardingType: e.target.value })}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50"
                   >
                     <option value="Customer">Customer</option>
                     <option value="Supplier">Supplier</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                  <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">
                     Entity Name
                   </label>
                   <Input
@@ -119,7 +119,7 @@ export function MasterDataRequestPage() {
               {/* Row: Tax/VAT + Currency */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                  <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">
                     Tax / VAT Number
                   </label>
                   <Input
@@ -130,13 +130,13 @@ export function MasterDataRequestPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                  <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">
                     Currency
                   </label>
                   <select
                     value={formData.currency}
                     onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50"
                   >
                     <option value="KES">KES</option>
                     <option value="USD">USD</option>
@@ -148,14 +148,14 @@ export function MasterDataRequestPage() {
 
               {/* Full Address */}
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">
                   Full Address
                 </label>
                 <textarea
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   placeholder="Corner House, 5th floor, Kimathi Street, Nairobi."
-                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm text-gray-700 placeholder:text-gray-400 shadow-sm resize-none focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-3 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 shadow-sm resize-none focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50"
                   rows={3}
                   required
                 />
@@ -163,11 +163,11 @@ export function MasterDataRequestPage() {
 
               {/* Support Documents */}
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">
                   Support Documents (Compliance/ID)
                 </label>
                 <div className="flex items-center gap-3">
-                  <label className="flex items-center gap-2 rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-600 cursor-pointer hover:bg-gray-100 transition-colors">
+                  <label className="flex items-center gap-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-4 py-2.5 text-sm text-gray-600 dark:text-gray-400 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                     <Upload className="h-4 w-4" />
                     Browse...
                     <input
@@ -182,9 +182,9 @@ export function MasterDataRequestPage() {
                   </label>
                   <div className="flex-1">
                     {fileName ? (
-                      <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2">
-                        <FileText className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm text-blue-700 truncate">{fileName}</span>
+                      <div className="flex items-center gap-2 rounded-lg border border-blue-200 dark:border-blue-500/30 bg-blue-50 dark:bg-blue-500/10 px-3 py-2">
+                        <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <span className="text-sm text-blue-700 dark:text-blue-400 truncate">{fileName}</span>
                         <button
                           type="button"
                           onClick={() => setFileName('')}
@@ -194,11 +194,11 @@ export function MasterDataRequestPage() {
                         </button>
                       </div>
                     ) : (
-                      <span className="text-sm text-gray-400">No file selected.</span>
+                      <span className="text-sm text-gray-400 dark:text-gray-500">No file selected.</span>
                     )}
                   </div>
                 </div>
-                <p className="text-xs text-gray-400 mt-1.5">Max size 5MB (PDF, JPG, PNG)</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1.5">Max size 5MB (PDF, JPG, PNG)</p>
               </div>
 
               {/* Submit */}

@@ -76,7 +76,7 @@ export function SalesOrdersPage() {
     return "bg-gray-100 text-gray-700 border border-gray-200 dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600";
   };
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
       <Header
         title="Sales Order Approvals"
         subtitle="Automated credit risk detection and order governance"
@@ -230,7 +230,7 @@ export function SalesOrdersPage() {
                       type="checkbox"
                       checked={selectedIds.size === filteredOrders.length && filteredOrders.length > 0}
                       onChange={toggleSelectAll}
-                      className="h-4 w-4"
+                      className="h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 dark:bg-slate-700"
                     />
                   </th>
 
@@ -264,7 +264,7 @@ export function SalesOrdersPage() {
                         type="checkbox"
                         checked={selectedIds.has(order.id)}
                         onChange={() => toggleSelect(order.id)}
-                        className="h-4 w-4"
+                        className="h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 dark:bg-slate-700"
                       />
                     </td>
 

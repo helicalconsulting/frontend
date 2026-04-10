@@ -19,48 +19,48 @@ export function Header({ title, subtitle }: HeaderProps) {
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between 
     border-b border-gray-200/60 dark:border-gray-700
     bg-white/90 dark:bg-gray-900/90 
-    backdrop-blur-xl px-6 shadow-sm transition-colors duration-300">
+    backdrop-blur-xl px-6 shadow-sm">
 
       {/* LEFT */}
       <div className="flex items-center gap-2">
         {/* Mobile Menu Button */}
-        <button 
-          onClick={toggleSidebar} 
+        <button
+          onClick={toggleSidebar}
           className="md:hidden p-2 -ml-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
         >
           <Menu className="h-5 w-5" />
         </button>
         <div>
           <div className="flex items-center gap-2">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-            {title}
-          </h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+              {title}
+            </h2>
 
-          <button
-            onClick={toggleTheme}
-            className={`relative w-12 h-6 flex flex-shrink-0 items-center rounded-full p-1 transition duration-300
+            <button
+              onClick={toggleTheme}
+              className={`relative w-12 h-6 flex flex-shrink-0 items-center rounded-full p-1 transition duration-300
               ${isDarkMode ? 'bg-blue-600' : 'bg-gray-300'}`}
-          >
-            <div
-              className={`w-4 h-4 bg-white rounded-full shadow-md transform transition duration-300 flex items-center justify-center
-                ${isDarkMode ? 'translate-x-6' : 'translate-x-0'}`}
             >
-              {isDarkMode ? (
-                <Sun className="w-3 h-3 text-yellow-400" />
-              ) : (
-                <Moon className="w-3 h-3 text-gray-700" />
-              )}
-            </div>
-          </button>
-        </div>
+              <div
+                className={`w-4 h-4 bg-white rounded-full shadow-md transform transition duration-300 flex items-center justify-center
+                ${isDarkMode ? 'translate-x-6' : 'translate-x-0'}`}
+              >
+                {isDarkMode ? (
+                  <Sun className="w-3 h-3 text-yellow-400" />
+                ) : (
+                  <Moon className="w-3 h-3 text-gray-700" />
+                )}
+              </div>
+            </button>
+          </div>
 
-        {subtitle && (
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            {subtitle}
-          </p>
-        )}
+          {subtitle && (
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              {subtitle}
+            </p>
+          )}
+        </div>
       </div>
-    </div>
 
       {/* RIGHT */}
       <div className="flex items-center gap-3">

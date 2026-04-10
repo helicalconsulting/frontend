@@ -87,7 +87,7 @@ export function PurchaseOrdersPage() {
   }, [data?.totalValue, displayCurrency]);
 
   const filteredOrders = useMemo(() => {
-    
+
     if (!data?.orders) return [];
     return data.orders.filter((order) => {
       const matchesSearch =
@@ -100,7 +100,7 @@ export function PurchaseOrdersPage() {
     });
   }, [data?.orders, searchQuery, statusFilter]);
 
-  
+
   const pendingCount = filteredOrders.filter(o => o.status === 'pending').length;
   const toggleRow = (id: string) => {
     setExpandedRows((prev) => {
@@ -155,61 +155,61 @@ export function PurchaseOrdersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
       <Header
         title="Purchase Order Approval"
         subtitle="Review and authorize pending purchase requests"
       />
-      
+
       {/* ✅ SUMMARY CARDS (Payments jaisa) */}
-<div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
 
-  {/* Pending Orders */}
-  <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
-    <div className="flex items-center gap-3">
-      <div className="p-2.5 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
-        <Package className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-      </div>
-      <div>
-        <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Pending Orders</p>
-        <p className="text-2xl font-bold text-gray-900 dark:text-white">
-          {data?.pendingCount || 0}
-        </p>
-      </div>
-    </div>
-  </div>
+        {/* Pending Orders */}
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
+              <Package className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Pending Orders</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                {data?.pendingCount || 0}
+              </p>
+            </div>
+          </div>
+        </div>
 
-  {/* Total Value */}
-  <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
-    <div className="flex items-center gap-3">
-      <div className="p-2.5 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg">
-        <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-      </div>
-      <div>
-        <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Total Value</p>
-        <p className="text-2xl font-bold text-gray-900 dark:text-white">
-          {formatCurrency(convertedTotal, displayCurrency)}
-        </p>
-      </div>
-    </div>
-  </div>
+        {/* Total Value */}
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg">
+              <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Total Value</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                {formatCurrency(convertedTotal, displayCurrency)}
+              </p>
+            </div>
+          </div>
+        </div>
 
-  {/* High Priority */}
-  <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
-    <div className="flex items-center gap-3">
-      <div className="p-2.5 bg-amber-100 dark:bg-amber-900/40 rounded-lg">
-        <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-      </div>
-      <div>
-        <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">High Priority</p>
-        <p className="text-2xl font-bold text-gray-900 dark:text-white">
-          {filteredOrders.filter(o => o.priority === 'high' || o.priority === 'critical').length}
-        </p>
-      </div>
-    </div>
-  </div>
+        {/* High Priority */}
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-amber-100 dark:bg-amber-900/40 rounded-lg">
+              <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">High Priority</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                {filteredOrders.filter(o => o.priority === 'high' || o.priority === 'critical').length}
+              </p>
+            </div>
+          </div>
+        </div>
 
-</div>
+      </div>
       <div className="p-6 space-y-4">
         {/* Top toolbar */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
@@ -249,7 +249,7 @@ export function PurchaseOrdersPage() {
             {data && (
               <div className="flex items-center gap-4 mr-4">
 
-                
+
 
               </div>
             )}
@@ -303,7 +303,7 @@ export function PurchaseOrdersPage() {
                 >
                   Return Request
                 </Button>
-                
+
               </div>
             )}
           </div>
@@ -387,7 +387,7 @@ export function PurchaseOrdersPage() {
           </div>
 
           {!isLoading && filteredOrders.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <div className="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-slate-500">
               <FileText className="h-12 w-12 mb-3 opacity-50" />
               <p className="text-sm font-medium">No purchase orders found</p>
               <p className="text-xs mt-1">Try adjusting your search or filter</p>
@@ -433,11 +433,11 @@ text-white">
                 <table className="w-full text-sm">
                   <thead className="bg-gray-50 dark:bg-slate-800/80">
                     <tr>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Line</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Price</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Total</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Line</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Description</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Qty</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Price</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Total</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-slate-800">

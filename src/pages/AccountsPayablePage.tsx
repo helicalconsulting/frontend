@@ -59,7 +59,7 @@ export function AccountsPayablePage() {
   const [selectedInvoiceDetails, setSelectedInvoiceDetails] = useState<SupplierInvoice | null>(null);
   const [displayCurrency, setDisplayCurrency] = useState("KES");
 
-  
+
 
   const filteredInvoices = useMemo(() => {
     return mockSupplierInvoices.filter((inv) => {
@@ -90,15 +90,15 @@ export function AccountsPayablePage() {
   };
 
   const toggleSelectAll = () => {
-  const selectableIds = filteredInvoices
-    .filter((inv) => inv.status !== 'approved') // ❗ approved hata diye
-    .map((inv) => inv.id);
-  if (selectedRows.size === selectableIds.length) {
-    setSelectedRows(new Set());
-  } else {
-    setSelectedRows(new Set(selectableIds));
-  }
-};
+    const selectableIds = filteredInvoices
+      .filter((inv) => inv.status !== 'approved') // ❗ approved hata diye
+      .map((inv) => inv.id);
+    if (selectedRows.size === selectableIds.length) {
+      setSelectedRows(new Set());
+    } else {
+      setSelectedRows(new Set(selectableIds));
+    }
+  };
 
   const handlePOClick = (poNumber: string) => {
     setSelectedPO(poNumber);
@@ -108,18 +108,18 @@ export function AccountsPayablePage() {
   const pendingCount = mockSupplierInvoices.filter((i) => i.status === 'pending').length;
   const overdueCount = mockSupplierInvoices.filter((i) => i.status === 'overdue').length;
   const convertedTotal = useMemo(() => {
-  return mockSupplierInvoices.reduce((sum, inv) => {
-    const fromRate = EXCHANGE_RATES["USD"]; // assume USD base
-    const toRate = EXCHANGE_RATES[displayCurrency];
+    return mockSupplierInvoices.reduce((sum, inv) => {
+      const fromRate = EXCHANGE_RATES["USD"]; // assume USD base
+      const toRate = EXCHANGE_RATES[displayCurrency];
 
-    if (!fromRate || !toRate) return sum;
+      if (!fromRate || !toRate) return sum;
 
-    const usd = inv.netValue / fromRate;
-    const converted = usd * toRate;
+      const usd = inv.netValue / fromRate;
+      const converted = usd * toRate;
 
-    return sum + converted;
-  }, 0);
-}, [displayCurrency]);
+      return sum + converted;
+    }, 0);
+  }, [displayCurrency]);
 
   const tabs: { id: TabType; label: string; variant?: string }[] = [
     { id: 'home', label: 'Home' },
@@ -129,7 +129,7 @@ export function AccountsPayablePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
       <Header
         title="Supplier Invoices Due"
         subtitle="Accounts Payable — Invoice approval and GRN matching"
@@ -142,15 +142,14 @@ export function AccountsPayablePage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-                activeTab === tab.id
-                  ? tab.id === 'exception'
-                    ? 'bg-amber-500 text-white shadow-sm'
-                    : tab.id === 'release'
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${activeTab === tab.id
+                ? tab.id === 'exception'
+                  ? 'bg-amber-500 text-white shadow-sm'
+                  : tab.id === 'release'
                     ? 'bg-emerald-500 text-white shadow-sm'
-                  : 'bg-blue-600 text-white shadow-sm'
-                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800'
-              }`}
+                    : 'bg-blue-600 text-white shadow-sm'
+                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800'
+                }`}
             >
               {tab.label}
             </button>
@@ -220,79 +219,79 @@ export function AccountsPayablePage() {
             />
           </div>
           <div className="flex items-center gap-2">
-  {selectedRows.size > 0 && (
-    <>
-      <span className="text-xs text-gray-500 font-medium mr-2">
-        {selectedRows.size} selected
-      </span>
+            {selectedRows.size > 0 && (
+              <>
+                <span className="text-xs text-gray-500 font-medium mr-2">
+                  {selectedRows.size} selected
+                </span>
 
-      
 
-      {/* ✅ Accept */}
-      <Button
-        size="sm"
-        variant="success"
-        className="h-8 px-3 text-xs"
-        onClick={() => {
-          console.log("Approve selected:", Array.from(selectedRows));
-        }}
-        
-      >
-        Approve
-      </Button>
-      {/* ✅ Reject */}
-      <Button
-        size="sm"
-        variant="destructive"
-        className="h-8 px-3 text-xs"
-        onClick={() => {
-          console.log("Reject selected:", Array.from(selectedRows));
-        }}
-      >
-        Reject
-      </Button>
-    </>
-  )}
 
-  {/* View Details (always right side) */}
-  <div className="flex items-center gap-2">
-  {/* Currency Dropdown */}
-  <div className="relative w-[260px]">
-    <select
-      value={displayCurrency}
-      onChange={(e) => setDisplayCurrency(e.target.value)}
-      className="appearance-none w-full cursor-pointer rounded-xl border border-blue-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 pr-10 text-sm font-semibold text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-    >
-      <optgroup label="🌍 African (Default)">
-        {CURRENCIES.filter(c => c.region === "africa").map(c => (
-          <option key={c.code} value={c.code}>
-            {c.flag} {c.code} — {c.label}
-          </option>
-        ))}
-      </optgroup>
+                {/* ✅ Accept */}
+                <Button
+                  size="sm"
+                  variant="success"
+                  className="h-8 px-3 text-xs"
+                  onClick={() => {
+                    console.log("Approve selected:", Array.from(selectedRows));
+                  }}
 
-      <optgroup label="🌐 Global">
-        {CURRENCIES.filter(c => c.region === "global").map(c => (
-          <option key={c.code} value={c.code}>
-            {c.flag} {c.code} — {c.label}
-          </option>
-        ))}
-      </optgroup>
-    </select>
+                >
+                  Approve
+                </Button>
+                {/* ✅ Reject */}
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  className="h-8 px-3 text-xs"
+                  onClick={() => {
+                    console.log("Reject selected:", Array.from(selectedRows));
+                  }}
+                >
+                  Reject
+                </Button>
+              </>
+            )}
 
-    {/* Arrow */}
-    <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-      ▼
-    </div>
-  </div>
+            {/* View Details (always right side) */}
+            <div className="flex items-center gap-2">
+              {/* Currency Dropdown */}
+              <div className="relative w-[260px]">
+                <select
+                  value={displayCurrency}
+                  onChange={(e) => setDisplayCurrency(e.target.value)}
+                  className="appearance-none w-full cursor-pointer rounded-xl border border-blue-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 pr-10 text-sm font-semibold text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                >
+                  <optgroup label="🌍 African (Default)">
+                    {CURRENCIES.filter(c => c.region === "africa").map(c => (
+                      <option key={c.code} value={c.code}>
+                        {c.flag} {c.code} — {c.label}
+                      </option>
+                    ))}
+                  </optgroup>
 
-  {/* View Details */}
-  <Button size="sm" variant="outline" onClick={() => setShowFilesModal(true)}>
-    <Eye className="h-4 w-4" />
-    View Details
-  </Button>
-</div>
-</div>
+                  <optgroup label="🌐 Global">
+                    {CURRENCIES.filter(c => c.region === "global").map(c => (
+                      <option key={c.code} value={c.code}>
+                        {c.flag} {c.code} — {c.label}
+                      </option>
+                    ))}
+                  </optgroup>
+                </select>
+
+                {/* Arrow */}
+                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+                  ▼
+                </div>
+              </div>
+
+              {/* View Details */}
+              <Button size="sm" variant="outline" onClick={() => setShowFilesModal(true)}>
+                <Eye className="h-4 w-4" />
+                View Details
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Invoices Table */}
@@ -397,7 +396,7 @@ function PODetailsModal({ isOpen, onClose, poNumber }: PODetailsModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      
+
       <div className="w-full max-w-4xl rounded-2xl overflow-hidden flex flex-col
 bg-white dark:bg-slate-900 
 border border-gray-200 dark:border-slate-800 shadow-2xl">
@@ -418,66 +417,53 @@ border border-gray-200 dark:border-slate-800 shadow-2xl">
             <XCircle className="h-5 w-5" />
           </button>
         </div>
-
-        {/* BODY */}
-        <div className="p-6 space-y-6 text-gray-900 dark:text-white">
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Supplier</p>
-              <p className="font-medium mt-1">Acme Corporation Ltd.</p>
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Supplier</p>
+                <p className="text-sm font-medium text-gray-900 mt-1">Acme Corporation Ltd.</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Order Date</p>
+                <p className="text-sm font-medium text-gray-900 mt-1">2024-03-15</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Due Date</p>
+                <p className="text-sm font-medium text-gray-900 mt-1">2024-04-15</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Total Amount</p>
+                <p className="text-sm font-bold text-gray-900 mt-1">$45,230.00</p>
+              </div>
             </div>
 
-            <div>
-              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Order Date</p>
-              <p className="font-medium mt-1">2024-03-15</p>
-            </div>
-
-            <div>
-              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Due Date</p>
-              <p className="font-medium mt-1">2024-04-15</p>
-            </div>
-
-            <div>
-              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Total Amount</p>
-              <p className="font-bold mt-1">$45,230.00</p>
+            <div className="border-t border-gray-200 pt-4">
+              <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-3">Line Items</h4>
+              <div className="rounded-lg border border-gray-200 overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-100 bg-gray-50">
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Item</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Unit Price</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    <tr className="hover:bg-blue-50/30">
+                      <td className="px-4 py-2.5 text-gray-700">1</td>
+                      <td className="px-4 py-2.5 text-gray-900 font-medium">Industrial Equipment</td>
+                      <td className="px-4 py-2.5 text-right text-gray-700 font-mono">150</td>
+                      <td className="px-4 py-2.5 text-right text-gray-700 font-mono">$301.53</td>
+                      <td className="px-4 py-2.5 text-right font-semibold text-gray-900 font-mono">$45,230.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-
-          {/* TABLE */}
-          <div className="rounded-xl border border-gray-200 dark:border-slate-800 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 dark:bg-slate-800">
-                <tr>
-                  <th className="px-4 py-2 text-left text-xs">Item</th>
-                  <th className="px-4 py-2 text-left text-xs">Description</th>
-                  <th className="px-4 py-2 text-right text-xs">Qty</th>
-                  <th className="px-4 py-2 text-right text-xs">Price</th>
-                  <th className="px-4 py-2 text-right text-xs">Total</th>
-                </tr>
-              </thead>
-
-              <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
-                <tr>
-                  <td className="px-4 py-2">1</td>
-                  <td className="px-4 py-2 font-medium">Industrial Equipment</td>
-                  <td className="px-4 py-2 text-right">150</td>
-                  <td className="px-4 py-2 text-right">$301.53</td>
-                  <td className="px-4 py-2 text-right font-semibold">$45,230.00</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* FOOTER */}
-        <div className="px-6 py-4 border-t border-gray-200 dark:border-slate-800 
-        bg-gray-50 dark:bg-slate-900 flex justify-end gap-3">
-
-          <Button variant="ghost" onClick={onClose}>Close</Button>
-          <Button variant="destructive" className="shadow-lg shadow-red-500/20">Reject</Button>
-          <Button variant="success" className="shadow-lg shadow-emerald-500/20">Approve</Button>
-
         </div>
       </div>
     </div>
@@ -508,9 +494,8 @@ function InvoiceRow({
 
   return (
     <>
-      <tr className={`transition-colors duration-150 text-gray-700 dark:text-slate-300 ${
-        isSelected ? 'bg-blue-50/50 dark:bg-blue-900/20' : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/50'
-      }`}>
+      <tr className={`transition-colors duration-150 text-gray-700 dark:text-slate-300 ${isSelected ? 'bg-blue-50/50 dark:bg-blue-900/20' : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/50'
+        }`}>
         <td className="px-4 py-3">
           <input
             type="checkbox"
@@ -521,7 +506,7 @@ function InvoiceRow({
           />
         </td>
         <td className="px-4 py-3">
-          
+
         </td>
         <td className="px-4 py-3">
           <button
@@ -550,9 +535,8 @@ function InvoiceRow({
         </td>
         <td className="px-4 py-3 text-xs">{invoice.dueDate}</td>
         <td className="px-4 py-3 text-right">
-          <span className={`font-mono text-xs font-semibold ${
-            invoice.agingDays > 90 ? 'text-red-600 dark:text-red-400' : invoice.agingDays > 30 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400'
-          }`}>
+          <span className={`font-mono text-xs font-semibold ${invoice.agingDays > 90 ? 'text-red-600 dark:text-red-400' : invoice.agingDays > 30 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400'
+            }`}>
             {invoice.agingDays}
           </span>
         </td>
@@ -568,53 +552,53 @@ function InvoiceRow({
       {/* Expanded GRN Details */}
       {isExpanded && (
         <tr>
-          <td colSpan={13} className="bg-slate-50/80 px-4 py-0">
+          <td colSpan={13} className="bg-slate-50/80 dark:bg-slate-900/50 px-4 py-0">
             <div className="py-4 pl-10">
-              <div className="rounded-lg border border-gray-200 bg-white overflow-hidden shadow-sm">
-                <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-                  <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <div className="rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm">
+                <div className="bg-gray-50 dark:bg-slate-800/80 px-4 py-2 border-b border-gray-200 dark:border-slate-700">
+                  <h4 className="text-xs font-semibold text-gray-600 dark:text-slate-300 uppercase tracking-wider">
                     GRN Details — Goods Received
                   </h4>
                 </div>
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-100">
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Item</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Purchase Order</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">GRN</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Stock Code</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
-                      <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">WH</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty Received</th>
-                      <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">UOM</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Delivery Note</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Matched Value</th>
+                    <tr className="border-b border-gray-100 dark:border-slate-700">
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Item</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Purchase Order</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">GRN</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Stock Code</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Description</th>
+                      <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500 dark:text-slate-400">WH</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Qty Received</th>
+                      <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500 dark:text-slate-400">UOM</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Delivery Note</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Matched Value</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50">
+                  <tbody className="divide-y divide-gray-50 dark:divide-slate-700/50">
                     {invoice.grnDetails.map((grn) => (
-                      <tr key={grn.id} className="hover:bg-blue-50/30 transition-colors">
-                        <td className="px-4 py-2.5 text-gray-700">{grn.item}</td>
-                        <td className="px-4 py-2.5 text-gray-700 font-mono text-xs">{grn.purchaseOrder}</td>
-                        <td className="px-4 py-2.5 text-gray-700 font-mono text-xs">{grn.grn}</td>
-                        <td className="px-4 py-2.5 text-gray-700 font-mono text-xs">{grn.stockCode}</td>
-                        <td className="px-4 py-2.5 text-gray-900 font-medium">{grn.description}</td>
-                        <td className="px-4 py-2.5 text-gray-500 text-center text-xs">{grn.warehouse}</td>
-                        <td className="px-4 py-2.5 text-right text-gray-700 font-mono">{grn.qtyReceived.toLocaleString()}</td>
-                        <td className="px-4 py-2.5 text-gray-500 text-center text-xs">{grn.uom}</td>
-                        <td className="px-4 py-2.5 text-gray-700 text-xs">{grn.deliveryNote}</td>
-                        <td className="px-4 py-2.5 text-right font-semibold text-gray-900 font-mono">
+                      <tr key={grn.id} className="hover:bg-blue-50/30 dark:hover:bg-slate-700/30 transition-colors">
+                        <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300">{grn.item}</td>
+                        <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300 font-mono text-xs">{grn.purchaseOrder}</td>
+                        <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300 font-mono text-xs">{grn.grn}</td>
+                        <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300 font-mono text-xs">{grn.stockCode}</td>
+                        <td className="px-4 py-2.5 text-gray-900 dark:text-white font-medium">{grn.description}</td>
+                        <td className="px-4 py-2.5 text-gray-500 dark:text-slate-400 text-center text-xs">{grn.warehouse}</td>
+                        <td className="px-4 py-2.5 text-right text-gray-700 dark:text-slate-300 font-mono">{grn.qtyReceived.toLocaleString()}</td>
+                        <td className="px-4 py-2.5 text-gray-500 dark:text-slate-400 text-center text-xs">{grn.uom}</td>
+                        <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300 text-xs">{grn.deliveryNote}</td>
+                        <td className="px-4 py-2.5 text-right font-semibold text-gray-900 dark:text-white font-mono">
                           ${grn.matchedValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </td>
                       </tr>
                     ))}
                   </tbody>
                   <tfoot>
-                    <tr className="border-t border-gray-200 bg-gray-50/50">
-                      <td colSpan={9} className="px-4 py-2.5 text-right text-xs font-semibold text-gray-600 uppercase">
+                    <tr className="border-t border-gray-200 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50">
+                      <td colSpan={9} className="px-4 py-2.5 text-right text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase">
                         Total Matched
                       </td>
-                      <td className="px-4 py-2.5 text-right font-bold text-gray-900 font-mono">
+                      <td className="px-4 py-2.5 text-right font-bold text-gray-900 dark:text-white font-mono">
                         ${invoice.grnDetails.reduce((s, g) => s + g.matchedValue, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </td>
                     </tr>
@@ -642,97 +626,97 @@ function InvoiceDetailsModal({ isOpen, onClose, invoice }: InvoiceDetailsModalPr
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center 
-    p-4 bg-black/50 backdrop-blur-sm">
-
-      <div className="w-full max-w-4xl rounded-2xl overflow-hidden 
-bg-white dark:bg-slate-900 
-border border-gray-200 dark:border-slate-800 shadow-2xl">
-
-        {/* HEADER */}
-        <div className="px-6 py-4 flex items-center justify-between 
-        bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white">
-
-          <div>
-            <h3 className="text-lg font-bold">Invoice Details</h3>
-            <p className="text-sm text-blue-100">
-              Invoice# {invoice.invoiceNumber}
-            </p>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="text-white hover:bg-white/20 rounded-lg p-2"
-          >
-            <XCircle className="h-5 w-5" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-scale-in">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-gray-900">Invoice Details: {invoice.invoiceNumber}</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
+            <XCircle className="h-6 w-6" />
           </button>
         </div>
-
-        {/* BODY */}
-        <div className="p-6 space-y-6 text-gray-900 dark:text-white">
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="p-6 overflow-y-auto flex-1">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div>
-              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Supplier</p>
-              <p className="font-medium mt-1">{invoice.supplier}</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wider">Supplier</p>
+              <p className="font-medium text-gray-900 mt-1">{invoice.supplier}</p>
             </div>
 
             <div>
-              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Reference</p>
-              <p className="font-medium mt-1">{invoice.refNumber}</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wider">Reference #</p>
+              <p className="font-medium text-gray-900 mt-1">{invoice.refNumber}</p>
             </div>
 
             <div>
-              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Due Date</p>
-              <p className="font-medium mt-1">{invoice.dueDate}</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wider">Due Date</p>
+              <p className="font-medium text-gray-900 mt-1">{invoice.dueDate}</p>
             </div>
 
             <div>
-              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase">Status</p>
-              <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-400/10 dark:text-amber-300 text-xs font-semibold">
+              <p className="text-xs text-gray-500 uppercase tracking-wider">Status</p>
+              <Badge variant={statusVariants[invoice.status]} className="mt-1">
                 {invoice.approvalStatus}
-              </span>
+              </Badge>
             </div>
           </div>
 
-          {/* TABLE */}
-          <div className="rounded-xl border border-gray-200 dark:border-slate-800 overflow-hidden">
+          <div className="rounded-lg border border-gray-200 overflow-hidden mt-6">
+            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+              <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                GRN Details — Goods Received
+              </h4>
+            </div>
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 dark:bg-slate-800">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs">Item</th>
-                  <th className="px-4 py-2 text-left text-xs">PO</th>
-                  <th className="px-4 py-2 text-left text-xs">Description</th>
-                  <th className="px-4 py-2 text-right text-xs">Qty</th>
-                  <th className="px-4 py-2 text-right text-xs">Value</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Item</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">PO #</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
+                  <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">WH</th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty</th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Value</th>
                 </tr>
               </thead>
-
-              <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+              <tbody className="divide-y divide-gray-100">
                 {invoice.grnDetails.map((grn) => (
                   <tr key={grn.id}>
-                    <td className="px-4 py-2">{grn.item}</td>
-                    <td className="px-4 py-2">{grn.purchaseOrder}</td>
-                    <td className="px-4 py-2 font-medium">{grn.description}</td>
-                    <td className="px-4 py-2 text-right">{grn.qtyReceived}</td>
-                    <td className="px-4 py-2 text-right font-semibold">
-                      ${grn.matchedValue.toLocaleString()}
-                    </td>
+                    <td className="px-4 py-2 text-gray-700">{grn.item}</td>
+                    <td className="px-4 py-2 font-mono text-xs text-gray-700">{grn.purchaseOrder}</td>
+                    <td className="px-4 py-2 text-gray-900 font-medium">{grn.description}</td>
+                    <td className="px-4 py-2 text-center text-gray-500">{grn.warehouse}</td>
+                    <td className="px-4 py-2 text-right text-gray-700">{grn.qtyReceived.toLocaleString()} {grn.uom}</td>
+                    <td className="px-4 py-2 text-right font-semibold text-gray-900">${grn.matchedValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   </tr>
                 ))}
               </tbody>
+              <tfoot>
+                <tr className="border-t border-gray-200 bg-gray-50/50">
+                  <td colSpan={5} className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase">
+                    Total Matched
+                  </td>
+                  <td className="px-4 py-2 text-right font-bold text-gray-900 font-mono">
+                    ${invoice.grnDetails.reduce((s, g) => s + g.matchedValue, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
 
-        {/* FOOTER */}
-        <div className="px-6 py-4 border-t border-gray-200 dark:border-slate-800 
-        bg-gray-50 dark:bg-slate-900 flex justify-end gap-3">
+        <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 items-center">
+          <Button variant="ghost" onClick={onClose} className="mr-auto">Close</Button>
+          {(invoice.status === 'pending' || invoice.status === 'overdue') && (
+            <>
+              <Button variant="destructive" size="sm" onClick={onClose}>
+                <XCircle className="h-4 w-4" />
+                Reject
+              </Button>
 
-          <Button variant="ghost" onClick={onClose}>Close</Button>
-          <Button variant="destructive" className="shadow-lg shadow-red-500/20">Reject</Button>
-          <Button variant="success" className="shadow-lg shadow-emerald-500/20">Approve</Button>
-
+              <Button variant="success" size="sm" onClick={onClose}>
+                <CheckCircle2 className="h-4 w-4" />
+                Approve
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </div>

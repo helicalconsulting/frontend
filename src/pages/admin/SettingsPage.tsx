@@ -75,7 +75,7 @@ export function SettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Header
           title="System Settings"
           subtitle="Configure application settings and preferences"
@@ -105,13 +105,13 @@ export function SettingsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Header
           title="System Settings"
           subtitle="Configure application settings and preferences"
         />
         <div className="p-6">
-          <div className="rounded-xl border border-red-200 bg-red-50 p-4 flex items-center gap-3">
+          <div className="rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-900/30 p-4 flex items-center gap-3">
             <AlertTriangle className="h-5 w-5 text-red-500" />
             <p className="text-sm text-red-700">
               Failed to load settings. Please try again later.
@@ -123,7 +123,7 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header
         title="System Settings"
         subtitle="Configure application settings and preferences"
@@ -131,28 +131,28 @@ export function SettingsPage() {
 
       <div className="p-6">
         {/* SYSPRO Connection Status Banner */}
-        <div className="mb-6 rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-4 flex items-center justify-between">
+        <div className="mb-6 rounded-xl border border-emerald-200 dark:border-emerald-500/20 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30 p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-emerald-500 flex items-center justify-center">
               <Wifi className="h-5 w-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <p className="text-sm font-semibold text-emerald-900">
+                <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-400">
                   SYSPRO Integration
                 </p>
                 <Badge variant="success" className="text-xs">
                   Mock Mode
                 </Badge>
               </div>
-              <p className="text-xs text-emerald-700">
+              <p className="text-xs text-emerald-700 dark:text-emerald-500">
                 Running with demo data • Switch to LIVE in .env configuration
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-            <span className="text-sm font-medium text-emerald-700">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            <span className="text-sm font-medium text-emerald-700 dark:text-emerald-400">
               Connected
             </span>
           </div>
@@ -244,7 +244,7 @@ function SecuritySettings({ settings, onSave, isLoading }: SettingsCardProps) {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Session Timeout (minutes)
             </label>
             <Input
@@ -262,7 +262,7 @@ function SecuritySettings({ settings, onSave, isLoading }: SettingsCardProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Max Login Attempts
             </label>
             <Input
@@ -280,7 +280,7 @@ function SecuritySettings({ settings, onSave, isLoading }: SettingsCardProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Password Expiry (days)
             </label>
             <Input
@@ -295,17 +295,17 @@ function SecuritySettings({ settings, onSave, isLoading }: SettingsCardProps) {
               min="0"
               max="365"
             />
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
               Set to 0 to disable password expiry
             </p>
           </div>
 
           <div className="flex items-center justify-between py-2">
             <div>
-              <p className="text-sm font-medium text-gray-700">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Two-Factor Authentication
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Require 2FA for all users
               </p>
             </div>
@@ -325,9 +325,8 @@ function SecuritySettings({ settings, onSave, isLoading }: SettingsCardProps) {
               }}
             >
               <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  formData.enableTwoFactor ? 'translate-x-6' : 'translate-x-1'
-                }`}
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${formData.enableTwoFactor ? 'translate-x-6' : 'translate-x-1'
+                  }`}
               />
             </button>
           </div>
@@ -382,7 +381,7 @@ function RegionalSettings({ settings, onSave, isLoading }: SettingsCardProps) {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Default Currency
             </label>
             <select
@@ -390,7 +389,7 @@ function RegionalSettings({ settings, onSave, isLoading }: SettingsCardProps) {
               onChange={(e) =>
                 setFormData({ ...formData, defaultCurrency: e.target.value })
               }
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50"
             >
               {currencies.map((curr) => (
                 <option key={curr} value={curr}>
@@ -401,7 +400,7 @@ function RegionalSettings({ settings, onSave, isLoading }: SettingsCardProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Default Language
             </label>
             <select
@@ -409,7 +408,7 @@ function RegionalSettings({ settings, onSave, isLoading }: SettingsCardProps) {
               onChange={(e) =>
                 setFormData({ ...formData, defaultLanguage: e.target.value })
               }
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50"
             >
               {languages.map((lang) => (
                 <option key={lang} value={lang}>
@@ -420,7 +419,7 @@ function RegionalSettings({ settings, onSave, isLoading }: SettingsCardProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Fiscal Year Start
             </label>
             <select
@@ -428,7 +427,7 @@ function RegionalSettings({ settings, onSave, isLoading }: SettingsCardProps) {
               onChange={(e) =>
                 setFormData({ ...formData, fiscalYearStart: e.target.value })
               }
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50"
             >
               {[
                 'January',
@@ -500,10 +499,10 @@ function NotificationSettings({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex items-center justify-between py-2">
             <div>
-              <p className="text-sm font-medium text-gray-700">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Email Notifications
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Send email alerts for approvals
               </p>
             </div>
@@ -523,17 +522,16 @@ function NotificationSettings({
               }}
             >
               <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  formData.enableEmailNotifications
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${formData.enableEmailNotifications
                     ? 'translate-x-6'
                     : 'translate-x-1'
-                }`}
+                  }`}
               />
             </button>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Approval Reminder (hours)
             </label>
             <Input
@@ -548,7 +546,7 @@ function NotificationSettings({
               min="1"
               max="168"
             />
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
               Send reminder after pending this many hours
             </p>
           </div>
@@ -604,7 +602,7 @@ function FileSettings({ settings, onSave, isLoading }: SettingsCardProps) {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Max File Size (MB)
             </label>
             <Input
@@ -622,7 +620,7 @@ function FileSettings({ settings, onSave, isLoading }: SettingsCardProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Allowed File Types
             </label>
             <Input
@@ -632,7 +630,7 @@ function FileSettings({ settings, onSave, isLoading }: SettingsCardProps) {
               }
               placeholder="pdf, doc, docx, xls, xlsx"
             />
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
               Comma-separated file extensions
             </p>
           </div>
@@ -683,7 +681,7 @@ function CompanySettings({ settings, onSave, isLoading }: SettingsCardProps) {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Company Name
             </label>
             <Input
@@ -698,14 +696,14 @@ function CompanySettings({ settings, onSave, isLoading }: SettingsCardProps) {
           <div className="flex items-center justify-between py-2">
             <div>
               <div className="flex items-center gap-2">
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Maintenance Mode
                 </p>
                 {formData.maintenanceMode && (
                   <Badge variant="warning">Active</Badge>
                 )}
               </div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Disable access for non-admin users
               </p>
             </div>
@@ -725,9 +723,8 @@ function CompanySettings({ settings, onSave, isLoading }: SettingsCardProps) {
               }}
             >
               <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  formData.maintenanceMode ? 'translate-x-6' : 'translate-x-1'
-                }`}
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${formData.maintenanceMode ? 'translate-x-6' : 'translate-x-1'
+                  }`}
               />
             </button>
           </div>
@@ -777,7 +774,7 @@ function WorkflowSettings({ settings, onSave, isLoading }: SettingsCardProps) {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Audit Log Retention (days)
             </label>
             <Input
@@ -792,7 +789,7 @@ function WorkflowSettings({ settings, onSave, isLoading }: SettingsCardProps) {
               min="30"
               max="3650"
             />
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
               How long to keep audit logs (min 30 days)
             </p>
           </div>

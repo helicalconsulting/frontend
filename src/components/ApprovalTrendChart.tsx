@@ -18,7 +18,7 @@ interface ApprovalTrendChartProps {
 export function ApprovalTrendChart({ data, isLoading }: ApprovalTrendChartProps) {
   if (isLoading) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
         <Skeleton className="h-4 w-40 mb-6" />
         <Skeleton className="h-[250px] w-full rounded-lg" />
       </div>
@@ -26,9 +26,9 @@ export function ApprovalTrendChart({ data, isLoading }: ApprovalTrendChartProps)
   }
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
-      <h3 className="text-sm font-semibold text-gray-700 mb-1">Approval Volume (7 Days)</h3>
-      <p className="text-xs text-gray-400 mb-4">Approvals vs rejections trend</p>
+    <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm hover:shadow-md">
+      <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Approval Volume (7 Days)</h3>
+      <p className="text-xs text-gray-400 dark:text-slate-500 mb-4">Approvals vs rejections trend</p>
       <ResponsiveContainer width="100%" height={250}>
         <AreaChart data={data}>
           <defs>

@@ -112,7 +112,7 @@ export function RolesPage() {
   const isLoading = isLoadingRoles || isLoadingPermissions;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header
         title="Roles & Permissions"
         subtitle="Manage user roles and their access permissions"
@@ -121,11 +121,11 @@ export function RolesPage() {
       <div className="p-6 space-y-5">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Roles</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Roles</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                   {rolesData?.roles.length || 0}
                 </p>
               </div>
@@ -135,11 +135,11 @@ export function RolesPage() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Permissions</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Permissions</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                   {permissionsData?.permissions.length || 0}
                 </p>
               </div>
@@ -149,11 +149,11 @@ export function RolesPage() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Modules</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Modules</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                   {Object.keys(permissionsByModule).length}
                 </p>
               </div>
@@ -175,31 +175,31 @@ export function RolesPage() {
         )}
 
         {/* Roles List */}
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-          <div className="border-b border-gray-200 bg-gray-50/80 px-5 py-3">
-            <h3 className="text-sm font-bold text-gray-700">Roles</h3>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
+          <div className="border-b border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/80 px-5 py-3">
+            <h3 className="text-sm font-bold text-gray-700 dark:text-gray-200">Roles</h3>
           </div>
 
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-gray-100 dark:divide-gray-800">
             {isLoading
               ? Array(4)
-                  .fill(null)
-                  .map((_, i) => (
-                    <div key={i} className="p-4">
-                      <Skeleton className="h-6 w-48 mb-2" />
-                      <Skeleton className="h-4 w-64" />
-                    </div>
-                  ))
+                .fill(null)
+                .map((_, i) => (
+                  <div key={i} className="p-4">
+                    <Skeleton className="h-6 w-48 mb-2" />
+                    <Skeleton className="h-4 w-64" />
+                  </div>
+                ))
               : rolesData?.roles.map((role: Role) => (
-                  <RoleItem
-                    key={role.id}
-                    role={role}
-                    isExpanded={expandedRoles.has(role.id)}
-                    onToggleExpand={() => toggleExpand(role.id)}
-                    onEditPermissions={() => setEditingRole(role)}
-                    permissionsByModule={permissionsByModule}
-                  />
-                ))}
+                <RoleItem
+                  key={role.id}
+                  role={role}
+                  isExpanded={expandedRoles.has(role.id)}
+                  onToggleExpand={() => toggleExpand(role.id)}
+                  onEditPermissions={() => setEditingRole(role)}
+                  permissionsByModule={permissionsByModule}
+                />
+              ))}
           </div>
 
           {!isLoading &&
@@ -261,11 +261,11 @@ function RoleItem({
 
   return (
     <div className="transition-colors">
-      <div className="flex items-center justify-between p-4 hover:bg-gray-50/80">
+      <div className="flex items-center justify-between p-4 hover:bg-gray-50/80 dark:hover:bg-gray-700/50">
         <div className="flex items-center gap-3">
           <button
             onClick={onToggleExpand}
-            className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-all"
+            className="rounded p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-200 transition-all"
           >
             {isExpanded ? (
               <ChevronDown className="h-4 w-4" />
@@ -280,29 +280,29 @@ function RoleItem({
 
           <div>
             <div className="flex items-center gap-2">
-              <h4 className="font-semibold text-gray-900">{role.name}</h4>
+              <h4 className="font-semibold text-gray-900 dark:text-gray-100">{role.name}</h4>
               {role.isSystem && (
                 <Badge variant="outline" className="text-xs">
                   System
                 </Badge>
               )}
             </div>
-            <p className="text-sm text-gray-500">{role.description}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{role.description}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="text-right">
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
               {role.permissions.length}
             </p>
-            <p className="text-xs text-gray-500">permissions</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">permissions</p>
           </div>
           <div className="text-right">
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
               {role.userCount}
             </p>
-            <p className="text-xs text-gray-500">users</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">users</p>
           </div>
           <Button
             size="sm"
@@ -315,9 +315,9 @@ function RoleItem({
       </div>
 
       {isExpanded && (
-        <div className="bg-gray-50/50 px-4 pb-4">
-          <div className="ml-14 rounded-lg border border-gray-200 bg-white p-4">
-            <h5 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+        <div className="bg-gray-50/50 dark:bg-gray-900/50 px-4 pb-4">
+          <div className="ml-14 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+            <h5 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
               Assigned Permissions
             </h5>
 
@@ -407,13 +407,13 @@ function PermissionsModal({
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl mx-4 max-h-[80vh] flex flex-col overflow-hidden animate-scale-in">
-        <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 shrink-0">
+      <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-3xl mx-4 max-h-[80vh] flex flex-col overflow-hidden animate-scale-in">
+        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-6 py-4 shrink-0">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">
               Edit Permissions
             </h2>
-            <p className="text-sm text-gray-500 mt-0.5">{role.name}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{role.name}</p>
           </div>
           <div className="flex items-center gap-4">
             <Badge variant="info">{selectedPermissions.size} selected</Badge>
@@ -445,9 +445,9 @@ function PermissionsModal({
                   return (
                     <div
                       key={module}
-                      className="rounded-lg border border-gray-200 overflow-hidden"
+                      className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
                     >
-                      <div className="flex items-center justify-between bg-gray-50 px-4 py-3 border-b border-gray-200">
+                      <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-900/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                         <label className="flex items-center gap-3 cursor-pointer">
                           <input
                             type="checkbox"
@@ -456,9 +456,9 @@ function PermissionsModal({
                               if (el) el.indeterminate = someSelected;
                             }}
                             onChange={() => toggleModule(permissions)}
-                            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                            className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
                           />
-                          <span className="text-sm font-semibold text-gray-700">
+                          <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                             {module}
                           </span>
                         </label>
@@ -471,19 +471,19 @@ function PermissionsModal({
                         {permissions.map((perm: Permission) => (
                           <label
                             key={perm.id}
-                            className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                            className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/80 cursor-pointer transition-colors"
                           >
                             <input
                               type="checkbox"
                               checked={selectedPermissions.has(perm.name)}
                               onChange={() => togglePermission(perm.name)}
-                              className="h-4 w-4 mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                              className="h-4 w-4 mt-0.5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
                             />
                             <div>
-                              <p className="text-sm font-medium text-gray-700">
+                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                 {perm.name}
                               </p>
-                              <p className="text-xs text-gray-400">
+                              <p className="text-xs text-gray-400 dark:text-gray-500">
                                 {perm.description}
                               </p>
                             </div>
@@ -504,7 +504,7 @@ function PermissionsModal({
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-4 bg-gray-50 shrink-0">
+          <div className="flex items-center justify-end gap-3 border-t border-gray-200 dark:border-gray-700 px-6 py-4 bg-gray-50 dark:bg-gray-900 shrink-0">
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>

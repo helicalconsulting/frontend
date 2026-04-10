@@ -67,7 +67,7 @@ export function MasterDataPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header
         title="Customer/Supplier On-boarding Approval"
         subtitle="Vet entities before they enter the ERP system"
@@ -77,9 +77,9 @@ export function MasterDataPage() {
         {/* Top Section: Distribution + Action Controls */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Request Distribution */}
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-sm font-bold text-gray-900">Request Distribution</h3>
+              <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100">Request Distribution</h3>
               <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                 <Users className="h-4 w-4 text-white" />
               </div>
@@ -115,7 +115,7 @@ export function MasterDataPage() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-bold text-gray-900">{total}</span>
+                  <span className="text-2xl font-bold text-gray-900 dark:text-white">{total}</span>
                   <span className="text-[10px] text-gray-400 font-medium">Total</span>
                 </div>
               </div>
@@ -125,31 +125,31 @@ export function MasterDataPage() {
             <div className="flex items-center justify-center gap-6">
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-blue-800" />
-                <span className="text-xs font-medium text-gray-600">Suppliers ({supplierCount})</span>
+                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Suppliers ({supplierCount})</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-green-600" />
-                <span className="text-xs font-medium text-gray-600">Customers ({customerCount})</span>
+                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Customers ({customerCount})</span>
               </div>
             </div>
           </div>
 
           {/* Action Controls */}
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-4">
               <span className="text-amber-500">⚡</span>
-              <h3 className="text-sm font-bold text-gray-900">Action Controls</h3>
+              <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100">Action Controls</h3>
             </div>
 
             <div className="space-y-3">
-              <label className="block text-xs font-semibold text-gray-600">
+              <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400">
                 Approval/Rejection Comments
               </label>
               <textarea
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
                 placeholder="Enter reason for rejection or approval notes..."
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm text-gray-700 placeholder:text-gray-400 shadow-sm resize-none focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-3 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 shadow-sm resize-none focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50"
                 rows={5}
               />
             </div>
@@ -177,14 +177,14 @@ export function MasterDataPage() {
         </div>
 
         {/* Pending Requests Table */}
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-          <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50/80 px-5 py-3">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/80 px-5 py-3">
             <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-gray-500" />
-              <h3 className="text-sm font-bold text-gray-700">Pending Master Data Requests</h3>
+              <FileText className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <h3 className="text-sm font-bold text-gray-700 dark:text-gray-200">Pending Master Data Requests</h3>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 text-xs text-gray-500">
+              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                 <Filter className="h-3.5 w-3.5" />
                 <span>Filter Active: Level</span>
               </div>
@@ -203,41 +203,40 @@ export function MasterDataPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50/50">
+                <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
                   <th className="px-4 py-3 text-left w-10">
                     <input
                       type="checkbox"
                       checked={selectedIds.size === pendingRequests.length && pendingRequests.length > 0}
                       onChange={toggleSelectAll}
-                      className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
                     />
                   </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">ID</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Entity Type</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Entity Name</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Tax/VAT Number</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Submitted</th>
-                  <th className="px-4 py-3 text-center font-semibold text-gray-500 text-xs uppercase tracking-wider">Documents</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Workflow</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">ID</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Entity Type</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Entity Name</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Tax/VAT Number</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Submitted</th>
+                  <th className="px-4 py-3 text-center font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Documents</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Workflow</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {pendingRequests.map((request) => (
                   <tr
                     key={request.id}
-                    className={`transition-colors duration-150 ${
-                      selectedIds.has(request.id) ? 'bg-blue-50/50' : 'hover:bg-gray-50/80'
-                    }`}
+                    className={`transition-colors duration-150 ${selectedIds.has(request.id) ? 'bg-blue-50/50 dark:bg-blue-900/20' : 'hover:bg-gray-50/80 dark:hover:bg-gray-700/50'
+                      }`}
                   >
                     <td className="px-4 py-3">
                       <input
                         type="checkbox"
                         checked={selectedIds.has(request.id)}
                         onChange={() => toggleSelect(request.id)}
-                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
                       />
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-gray-700">{request.id}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">{request.id}</td>
                     <td className="px-4 py-3">
                       <Badge
                         variant={request.entityType === 'Supplier' ? 'info' : 'success'}
@@ -251,9 +250,9 @@ export function MasterDataPage() {
                         {request.entityType}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 font-medium text-gray-900">{request.entityName}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-blue-600">{request.taxVatNumber}</td>
-                    <td className="px-4 py-3 text-gray-600 text-xs">{request.submittedDate}</td>
+                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">{request.entityName}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-blue-600 dark:text-blue-400">{request.taxVatNumber}</td>
+                    <td className="px-4 py-3 text-gray-600 dark:text-gray-400 text-xs">{request.submittedDate}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-center gap-1">
                         {request.documents.map((docType, i) => {
@@ -271,7 +270,7 @@ export function MasterDataPage() {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                      <span className="text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
                         {request.workflowLevel}
                       </span>
                     </td>
@@ -282,7 +281,7 @@ export function MasterDataPage() {
           </div>
 
           {pendingRequests.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <div className="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500">
               <Users className="h-12 w-12 mb-3 opacity-50" />
               <p className="text-sm font-medium">No pending requests</p>
             </div>

@@ -49,7 +49,7 @@ export function KPICard({
     >
       {/* Gradient overlay on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 via-indigo-50/0 to-purple-50/0 group-hover:from-blue-50/60 group-hover:via-indigo-50/40 group-hover:to-purple-50/20 dark:from-blue-900/0 dark:via-indigo-900/0 dark:to-purple-900/0 dark:group-hover:from-blue-900/30 dark:group-hover:via-indigo-900/20 dark:group-hover:to-purple-900/10 transition-all duration-300" />
-      
+
       {/* Shine effect on hover */}
       <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
@@ -66,8 +66,8 @@ export function KPICard({
               <span
                 className={cn(
                   'inline-flex items-center gap-0.5 text-xs font-bold px-2 py-0.5 rounded-full',
-                  trend.isPositive 
-                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400' 
+                  trend.isPositive
+                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400'
                     : 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400',
                 )}
               >
@@ -81,7 +81,7 @@ export function KPICard({
           className={cn(
             'flex items-center justify-center w-14 h-14 rounded-xl shadow-md transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-lg',
             iconBgColor,
-            iconBgColor.includes('100') && `dark:${iconBgColor.replace('100', '900/60')}` 
+            iconBgColor.includes('100') && `dark:${iconBgColor.replace('100', '900/60')}`
           )}
         >
           {icon}

@@ -70,7 +70,7 @@ export function PaymentsPage() {
 
   if (viewMode === 'form') {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+      <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
         <Header
           title="New Payment Request"
           subtitle="Submit a new payment request for approval"
@@ -229,7 +229,7 @@ export function PaymentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
       <Header
         title="Payment Approval"
         subtitle="Review and process pending payment requests"
@@ -280,67 +280,67 @@ export function PaymentsPage() {
         {/* Bulk Actions + Search */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
 
-  {/* LEFT SIDE */}
-  <div className="flex flex-wrap items-center gap-3">
+          {/* LEFT SIDE */}
+          <div className="flex flex-wrap items-center gap-3">
 
-    {/* Search */}
-    <div className="relative">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-      <Input
-        id="search-queue"
-        placeholder="Quick Search..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="pl-10 w-56 bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 dark:text-white"
-      />
-    </div>
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                id="search-queue"
+                placeholder="Quick Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 w-56 bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 dark:text-white"
+              />
+            </div>
 
-    {/* Filter */}
-    <Button size="sm" variant="outline">
-      <Filter className="h-4 w-4" />
-      Filter
-    </Button>
+            {/* Filter */}
+            <Button size="sm" variant="outline">
+              <Filter className="h-4 w-4" />
+              Filter
+            </Button>
 
-    {/* New Request */}
-    <Button
-      size="sm"
-      variant="default"
-      onClick={() => setViewMode('form')}
-      className="bg-gradient-to-r from-blue-600 to-indigo-600"
-    >
-      <Plus className="h-4 w-4" />
-      New Request
-    </Button>
+            {/* New Request */}
+            <Button
+              size="sm"
+              variant="default"
+              onClick={() => setViewMode('form')}
+              className="bg-gradient-to-r from-blue-600 to-indigo-600"
+            >
+              <Plus className="h-4 w-4" />
+              New Request
+            </Button>
 
-  </div>
+          </div>
 
-  {/* RIGHT SIDE */}
-  {selectedIds.size > 0 && (
-    <div className="flex items-center gap-2 ml-auto">
+          {/* RIGHT SIDE */}
+          {selectedIds.size > 0 && (
+            <div className="flex items-center gap-2 ml-auto">
 
-      <span className="text-xs text-gray-500 font-medium mr-2">
-        {selectedIds.size} selected
-      </span>
+              <span className="text-xs text-gray-500 font-medium mr-2">
+                {selectedIds.size} selected
+              </span>
 
-      <Button size="sm" variant="success">
-        <CheckCircle2 className="h-4 w-4" />
-        Approve
-      </Button>
+              <Button size="sm" variant="success">
+                <CheckCircle2 className="h-4 w-4" />
+                Approve
+              </Button>
 
-      <Button size="sm" variant="destructive">
-        <XCircle className="h-4 w-4" />
-        Reject
-      </Button>
+              <Button size="sm" variant="destructive">
+                <XCircle className="h-4 w-4" />
+                Reject
+              </Button>
 
-      <Button size="sm" variant="outline">
-        <ArrowLeft className="h-4 w-4" />
-        Back
-      </Button>
+              <Button size="sm" variant="outline">
+                <ArrowLeft className="h-4 w-4" />
+                Back
+              </Button>
 
-    </div>
-  )}
+            </div>
+          )}
 
-</div>
+        </div>
 
         {/* Approval Queue Table */}
         <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
@@ -385,9 +385,8 @@ export function PaymentsPage() {
                 {filteredQueue.map((item) => (
                   <tr
                     key={item.id}
-                    className={`transition-colors duration-150 text-gray-700 dark:text-slate-300 ${
-                      selectedIds.has(item.id) ? 'bg-blue-50/50 dark:bg-blue-900/20' : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/50'
-                    }`}
+                    className={`transition-colors duration-150 text-gray-700 dark:text-slate-300 ${selectedIds.has(item.id) ? 'bg-blue-50/50 dark:bg-blue-900/20' : 'hover:bg-gray-50/80 dark:hover:bg-slate-800/50'
+                      }`}
                   >
                     <td className="px-4 py-3">
                       <input
@@ -398,8 +397,8 @@ export function PaymentsPage() {
                       />
                     </td>
                     <td className="px-4 py-3 w-10">
-  <button className="w-4 h-4 opacity-0"></button>
-</td>
+                      <button className="w-4 h-4 opacity-0"></button>
+                    </td>
                     <td className="px-4 py-3">
                       <button
                         onClick={() => setSelectedRequest(item.id)}
@@ -430,76 +429,76 @@ export function PaymentsPage() {
 
           {/* Transaction Breakdown for expanded item */}
           {selectedRequest && (() => {
-  const req = mockPaymentRequests.find((r) =>
-    mockPaymentApprovalQueue.find((q) => q.id === selectedRequest)?.requestNumber === r.requestNumber
-  );
+            const req = mockPaymentRequests.find((r) =>
+              mockPaymentApprovalQueue.find((q) => q.id === selectedRequest)?.requestNumber === r.requestNumber
+            );
 
-  if (!req) return null;
+            if (!req) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            return (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-gray-200 dark:border-slate-800">
+                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-gray-200 dark:border-slate-800">
 
-        {/* Header */}
-        <div className="px-6 py-4 flex items-center justify-between 
+                  {/* Header */}
+                  <div className="px-6 py-4 flex items-center justify-between 
 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-          <h3 className="text-lg font-semibold text-white dark:text-white">
-            {req.requestNumber} - Transaction Breakdown
-          </h3>
-          <button onClick={() => setSelectedRequest(null)}>
-            <XCircle className="h-6 w-6 text-white hover:text-gray-600 dark:hover:text-gray-300" />
-          </button>
-        </div>
+                    <h3 className="text-lg font-semibold text-white dark:text-white">
+                      {req.requestNumber} - Transaction Breakdown
+                    </h3>
+                    <button onClick={() => setSelectedRequest(null)}>
+                      <XCircle className="h-6 w-6 text-white hover:text-gray-600 dark:hover:text-gray-300" />
+                    </button>
+                  </div>
 
-        {/* Content */}
-        <div className="p-6 overflow-y-auto flex-1">
-          <div className="rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 dark:bg-slate-800/80">
-                <tr>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Description</th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Account</th>
-                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Amount</th>
-                  <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500 dark:text-slate-400">Tax Code</th>
-                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Tax</th>
-                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Total</th>
-                </tr>
-              </thead>
+                  {/* Content */}
+                  <div className="p-6 overflow-y-auto flex-1">
+                    <div className="rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden">
+                      <table className="w-full text-sm">
+                        <thead className="bg-gray-50 dark:bg-slate-800/80">
+                          <tr>
+                            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Description</th>
+                            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Account</th>
+                            <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Amount</th>
+                            <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500 dark:text-slate-400">Tax Code</th>
+                            <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Tax</th>
+                            <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Total</th>
+                          </tr>
+                        </thead>
 
-              <tbody className="divide-y divide-gray-100 dark:divide-slate-800 text-gray-700 dark:text-slate-300">
-                {req.lineItems.map((li) => (
-                  <tr key={li.id} className="dark:bg-slate-900/50">
-                    <td className="px-4 py-2 text-gray-900 dark:text-white font-medium">{li.description}</td>
-                    <td className="px-4 py-2">{li.account}</td>
-                    <td className="px-4 py-2 text-right">{li.amount.toLocaleString()}</td>
-                    <td className="px-4 py-2 text-center">{li.taxCode}</td>
-                    <td className="px-4 py-2 text-right">{li.taxAmount.toLocaleString()}</td>
-                    <td className="px-4 py-2 text-right font-semibold text-gray-900 dark:text-white">{li.total.toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                        <tbody className="divide-y divide-gray-100 dark:divide-slate-800 text-gray-700 dark:text-slate-300">
+                          {req.lineItems.map((li) => (
+                            <tr key={li.id} className="dark:bg-slate-900/50">
+                              <td className="px-4 py-2 text-gray-900 dark:text-white font-medium">{li.description}</td>
+                              <td className="px-4 py-2">{li.account}</td>
+                              <td className="px-4 py-2 text-right">{li.amount.toLocaleString()}</td>
+                              <td className="px-4 py-2 text-center">{li.taxCode}</td>
+                              <td className="px-4 py-2 text-right">{li.taxAmount.toLocaleString()}</td>
+                              <td className="px-4 py-2 text-right font-semibold text-gray-900 dark:text-white">{li.total.toLocaleString()}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
 
-        {/* Footer */}
-        <div className="px-6 py-4 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex justify-end gap-3">
-          <Button variant="destructive" onClick={() => setSelectedRequest(null)}>
-            Reject
-          </Button>
-          <Button variant="success" onClick={() => setSelectedRequest(null)}>
-            Approve
-          </Button>
-        </div>
+                  {/* Footer */}
+                  <div className="px-6 py-4 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex justify-end gap-3">
+                    <Button variant="destructive" onClick={() => setSelectedRequest(null)}>
+                      Reject
+                    </Button>
+                    <Button variant="success" onClick={() => setSelectedRequest(null)}>
+                      Approve
+                    </Button>
+                  </div>
 
-      </div>
-    </div>
-  );
-})()}
+                </div>
+              </div>
+            );
+          })()}
 
           {filteredQueue.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <div className="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-slate-500">
               <CreditCard className="h-12 w-12 mb-3 opacity-50" />
               <p className="text-sm font-medium">No pending requests</p>
               <p className="text-xs mt-1">All payment requests have been processed</p>

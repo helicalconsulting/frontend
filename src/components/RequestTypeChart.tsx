@@ -17,7 +17,7 @@ interface RequestTypeChartProps {
 export function RequestTypeChart({ data, isLoading }: RequestTypeChartProps) {
   if (isLoading) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
         <Skeleton className="h-4 w-32 mb-6" />
         <div className="flex items-center justify-center">
           <Skeleton className="h-[200px] w-[200px] rounded-full" />
@@ -29,9 +29,9 @@ export function RequestTypeChart({ data, isLoading }: RequestTypeChartProps) {
   const total = data.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
-      <h3 className="text-sm font-semibold text-gray-700 mb-1">Requests by Type</h3>
-      <p className="text-xs text-gray-400 mb-4">Distribution of pending requests</p>
+    <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm hover:shadow-md">
+      <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">Requests by Type</h3>
+      <p className="text-xs text-gray-400 dark:text-slate-500 mb-4">Distribution of pending requests</p>
       <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie
@@ -70,7 +70,7 @@ export function RequestTypeChart({ data, isLoading }: RequestTypeChartProps) {
             iconType="circle"
             iconSize={8}
             formatter={(value: string) => (
-              <span className="text-xs text-gray-600 ml-1">{value}</span>
+              <span className="text-xs text-gray-600 dark:text-slate-400 ml-1">{value}</span>
             )}
           />
         </PieChart>

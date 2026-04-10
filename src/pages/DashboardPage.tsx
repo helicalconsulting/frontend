@@ -108,7 +108,7 @@ export function DashboardPage() {
   const { user } = useAuth();
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20 dark:from-slate-950 dark:via-blue-950/20 dark:to-indigo-950/10 transition-colors duration-300">
+    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20 dark:from-slate-950 dark:via-blue-950/20 dark:to-indigo-950/10">
       {/* Animated background pattern */}
       <div className="absolute inset-0 -z-10">
         <div
@@ -163,61 +163,61 @@ export function DashboardPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 items-stretch">
 
-  <div className="animate-slide-up h-full">
-    <KPICard
-      className="h-full"
-      title="Pending Approvals"
-      value={isLoading ? '—' : formatNumber(data!.kpis.pendingApprovals)}
-      icon={<AlertTriangle className="h-6 w-6 text-amber-600" />}
-      iconBgColor="bg-amber-100"
-      trend={{ value: 12, isPositive: false }}
-      isLoading={isLoading}
-    />
-  </div>
+          <div className="animate-slide-up h-full">
+            <KPICard
+              className="h-full"
+              title="Pending Approvals"
+              value={isLoading ? '—' : formatNumber(data!.kpis.pendingApprovals)}
+              icon={<AlertTriangle className="h-6 w-6 text-amber-600" />}
+              iconBgColor="bg-amber-100"
+              trend={{ value: 12, isPositive: false }}
+              isLoading={isLoading}
+            />
+          </div>
 
-  <div className="animate-slide-up delay-75 h-full">
-    <KPICard
-      className="h-full"
-      title="Approved Today"
-      value={isLoading ? '—' : formatNumber(data!.kpis.approvedToday)}
-      icon={<CheckCircle2 className="h-6 w-6 text-emerald-600" />}
-      iconBgColor="bg-emerald-100"
-      trend={{ value: 8, isPositive: true }}
-      isLoading={isLoading}
-    />
-  </div>
+          <div className="animate-slide-up delay-75 h-full">
+            <KPICard
+              className="h-full"
+              title="Approved Today"
+              value={isLoading ? '—' : formatNumber(data!.kpis.approvedToday)}
+              icon={<CheckCircle2 className="h-6 w-6 text-emerald-600" />}
+              iconBgColor="bg-emerald-100"
+              trend={{ value: 8, isPositive: true }}
+              isLoading={isLoading}
+            />
+          </div>
 
-  <div className="animate-slide-up delay-100 h-full">
-    <KPICard
-      className="h-full"
-      title="Avg. Processing (hrs)"
-      value={isLoading ? '—' : data!.kpis.avgProcessingTime.toLocaleString()}
-      icon={<Clock className="h-6 w-6 text-blue-600" />}
-      iconBgColor="bg-blue-100"
-      isLoading={isLoading}
-    />
-  </div>
+          <div className="animate-slide-up delay-100 h-full">
+            <KPICard
+              className="h-full"
+              title="Avg. Processing (hrs)"
+              value={isLoading ? '—' : data!.kpis.avgProcessingTime.toLocaleString()}
+              icon={<Clock className="h-6 w-6 text-blue-600" />}
+              iconBgColor="bg-blue-100"
+              isLoading={isLoading}
+            />
+          </div>
 
-  <div className="animate-slide-up delay-200 h-full">
-    <KPICard
-      className="h-full"
-      title="Total Value"
-      icon={<DollarSign className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />}
-      value={
-        isLoading
-          ? '—'
-          : formatCurrency(
-              data!.kpis.totalFinancialExposure,
-              data!.kpis.currency
-            )
-      }
-      iconBgColor="bg-indigo-100"
-      trend={{ value: 15, isPositive: true }}
-      isLoading={isLoading}
-    />
-  </div>
+          <div className="animate-slide-up delay-200 h-full">
+            <KPICard
+              className="h-full"
+              title="Total Value"
+              icon={<DollarSign className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />}
+              value={
+                isLoading
+                  ? '—'
+                  : formatCurrency(
+                    data!.kpis.totalFinancialExposure,
+                    data!.kpis.currency
+                  )
+              }
+              iconBgColor="bg-indigo-100"
+              trend={{ value: 15, isPositive: true }}
+              isLoading={isLoading}
+            />
+          </div>
 
-</div>
+        </div>
 
         {/* Charts + Activity Feed */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -245,59 +245,59 @@ export function DashboardPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {isLoading
                 ? Array(4)
-                    .fill(null)
-                    .map((_, i) => (
-                      <div
-                        key={i}
-                        className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm animate-pulse"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="h-12 w-12 rounded-lg bg-gray-200 dark:bg-slate-800" />
-                          <div className="flex-1">
-                            <div className="h-4 w-28 rounded bg-gray-200 dark:bg-slate-800 mb-2" />
-                            <div className="h-6 w-16 rounded bg-gray-200 dark:bg-slate-800" />
-                          </div>
+                  .fill(null)
+                  .map((_, i) => (
+                    <div
+                      key={i}
+                      className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm animate-pulse"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-lg bg-gray-200 dark:bg-slate-800" />
+                        <div className="flex-1">
+                          <div className="h-4 w-28 rounded bg-gray-200 dark:bg-slate-800 mb-2" />
+                          <div className="h-6 w-16 rounded bg-gray-200 dark:bg-slate-800" />
                         </div>
                       </div>
-                    ))
+                    </div>
+                  ))
                 : data?.sections.map((section) => {
-                    const IconComp =
-                      sectionIcons[section.icon] || ShoppingCart;
-                    const gradient =
-                      sectionColors[section.id] || 'from-gray-500 to-gray-600';
+                  const IconComp =
+                    sectionIcons[section.icon] || ShoppingCart;
+                  const gradient =
+                    sectionColors[section.id] || 'from-gray-500 to-gray-600';
 
-                    return (
-                      <button
-                        key={section.id}
-                        onClick={() =>
-                          section.route && navigate(section.route)
-                        }
-                        className="group rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm transition-all duration-300 hover:shadow-lg dark:hover:shadow-slate-900/50 hover:-translate-y-1 text-left cursor-pointer w-full"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div
-                            className={`flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${gradient} shadow-md transition-transform duration-300 group-hover:scale-110`}
-                          >
-                            <IconComp className="h-6 w-6 text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300 truncate">
-                              {section.title}
-                            </h3>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                                {section.count}
-                              </span>
-                              <Badge variant="warning" className="text-xs">
-                                pending
-                              </Badge>
-                            </div>
-                          </div>
-                          <ArrowRight className="h-4 w-4 text-gray-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-blue-500" />
+                  return (
+                    <button
+                      key={section.id}
+                      onClick={() =>
+                        section.route && navigate(section.route)
+                      }
+                      className="group rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm transition-all duration-300 hover:shadow-lg dark:hover:shadow-slate-900/50 hover:-translate-y-1 text-left cursor-pointer w-full"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={`flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${gradient} shadow-md transition-transform duration-300 group-hover:scale-110`}
+                        >
+                          <IconComp className="h-6 w-6 text-white" />
                         </div>
-                      </button>
-                    );
-                  })}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300 truncate">
+                            {section.title}
+                          </h3>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                              {section.count}
+                            </span>
+                            <Badge variant="warning" className="text-xs">
+                              pending
+                            </Badge>
+                          </div>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-gray-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-blue-500" />
+                      </div>
+                    </button>
+                  );
+                })}
             </div>
 
             {/* Quick Actions */}
@@ -388,8 +388,8 @@ export function DashboardPage() {
                               activity.action === 'approved'
                                 ? 'text-emerald-600 dark:text-emerald-400'
                                 : activity.action === 'rejected'
-                                ? 'text-red-600 dark:text-red-400'
-                                : 'text-blue-600 dark:text-blue-400'
+                                  ? 'text-red-600 dark:text-red-400'
+                                  : 'text-blue-600 dark:text-blue-400'
                             }
                           >
                             {activity.action}
