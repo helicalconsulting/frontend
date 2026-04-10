@@ -29,7 +29,8 @@ export function SignaturePage() {
     canvas.width = rect.width;
     canvas.height = rect.height;
 
-    ctx.strokeStyle = '#1e293b';
+    const isDark = document.documentElement.classList.contains('dark');
+    ctx.strokeStyle = isDark ? '#f8fafc' : '#1e293b';
     ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -87,7 +88,7 @@ export function SignaturePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header
         title="Capture Signature"
         subtitle="Digital signature for high-value transaction approvals"
@@ -96,7 +97,7 @@ export function SignaturePage() {
       <div className="p-6 flex justify-center">
         <div className="w-full max-w-lg">
           {/* Signature Card */}
-          <div className="rounded-2xl border border-gray-200 bg-white shadow-lg overflow-hidden">
+          <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg overflow-hidden">
             {/* Blue Header */}
             <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-5 text-center">
               <PenTool className="h-8 w-8 text-white mx-auto mb-2" />
@@ -105,13 +106,13 @@ export function SignaturePage() {
 
             <div className="p-6 space-y-5">
               {/* Sign Below Label */}
-              <div className="flex items-center gap-2 text-gray-600">
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                 <PenTool className="h-4 w-4" />
                 <span className="text-xs font-bold uppercase tracking-wider">Sign Below</span>
               </div>
 
               {/* Canvas */}
-              <div className="rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/30 overflow-hidden">
+              <div className="rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 bg-gray-50/30 dark:bg-gray-900/50 overflow-hidden">
                 <canvas
                   ref={canvasRef}
                   className="w-full h-56 cursor-crosshair touch-none"
@@ -126,27 +127,27 @@ export function SignaturePage() {
               </div>
 
               {/* Alternative Upload */}
-              <div className="border-t border-gray-100 pt-4">
+              <div className="border-t border-gray-100 dark:border-gray-700 pt-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Upload className="h-4 w-4 text-gray-500" />
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  <Upload className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                  <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Alternative: Upload Image
                   </span>
                 </div>
-                <label className="flex items-center gap-3 rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm text-gray-600 cursor-pointer hover:bg-gray-100 transition-colors">
-                  <span className="rounded border border-gray-300 bg-white px-3 py-1 text-xs font-medium">
+                <label className="flex items-center gap-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 px-4 py-3 text-sm text-gray-600 dark:text-gray-300 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                  <span className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-1 text-xs font-medium dark:text-gray-200">
                     Browse...
                   </span>
-                  <span className="text-gray-400 text-xs">No file selected.</span>
+                  <span className="text-gray-400 dark:text-gray-500 text-xs">No file selected.</span>
                   <input type="file" className="hidden" accept="image/*" />
                 </label>
               </div>
 
               {/* Saved confirmation */}
               {isSaved && (
-                <div className="flex items-center gap-2 rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-3 animate-in">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  <span className="text-sm font-medium text-emerald-700">Signature saved successfully!</span>
+                <div className="flex items-center gap-2 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 px-4 py-3 animate-in">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-sm font-medium text-emerald-700 dark:text-emerald-400">Signature saved successfully!</span>
                 </div>
               )}
 

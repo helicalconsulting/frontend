@@ -146,7 +146,7 @@ export function UsersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header
         title="User Management"
         subtitle="Manage system users and their access permissions"
@@ -155,11 +155,11 @@ export function UsersPage() {
       <div className="p-6 space-y-5">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Users</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Users</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                   {data?.total || 0}
                 </p>
               </div>
@@ -181,10 +181,10 @@ export function UsersPage() {
               </div>
             </div>
           </div>
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Inactive Users</p>
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Inactive Users</p>
                 <p className="text-2xl font-bold text-red-500 mt-1">
                   {data?.users.filter((u: any) => !u.isActive).length || 0}
                 </p>
@@ -223,21 +223,21 @@ export function UsersPage() {
         )}
 
         {/* Data Table */}
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50/80">
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Name</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Email</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Username</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Department</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Roles</th>
-                  <th className="px-4 py-3 text-center font-semibold text-gray-500 text-xs uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-center font-semibold text-gray-500 text-xs uppercase tracking-wider">Actions</th>
+                <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/80">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Name</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Email</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Username</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Department</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Roles</th>
+                  <th className="px-4 py-3 text-center font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-center font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {isLoading
                   ? Array(5)
                       .fill(null)
@@ -263,7 +263,7 @@ export function UsersPage() {
                       return (
                         <tr
                           key={user.id}
-                          className="hover:bg-gray-50/80 transition-colors"
+                          className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors"
                         >
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-3">
@@ -271,16 +271,16 @@ export function UsersPage() {
                                 {user.fullName?.charAt(0) || 'U'}
                               </div>
                               <div>
-                                <span className="font-medium text-gray-900">{user.fullName}</span>
+                                <span className="font-medium text-gray-900 dark:text-gray-100">{user.fullName}</span>
                                 {isAdmin && (
                                   <Crown className="inline h-3.5 w-3.5 ml-1.5 text-amber-500" />
                                 )}
                               </div>
                             </div>
                           </td>
-                          <td className="px-4 py-3 text-gray-600">{user.email}</td>
-                          <td className="px-4 py-3 text-gray-600 font-mono text-xs">{user.username}</td>
-                          <td className="px-4 py-3 text-gray-600">{user.department || '—'}</td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{user.email}</td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400 font-mono text-xs">{user.username}</td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{user.department || '—'}</td>
                           <td className="px-4 py-3">
                             <div className="flex flex-wrap gap-1">
                               {user.roles.slice(0, 2).map((role: string) => (
@@ -380,8 +380,8 @@ export function UsersPage() {
 
           {/* Pagination */}
           {data && data.total > limit && (
-            <div className="flex items-center justify-between border-t border-gray-200 bg-gray-50/50 px-4 py-3">
-              <p className="text-sm text-gray-600">
+            <div className="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 px-4 py-3">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Showing {(page - 1) * limit + 1} to {Math.min(page * limit, data.total)} of{' '}
                 {data.total} users
               </p>
@@ -505,9 +505,9 @@ function UserFormModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-scale-in">
-        <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
-          <h2 className="text-lg font-bold text-gray-900">{title}</h2>
+      <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-scale-in">
+        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h2>
           <button
             onClick={onClose}
             className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
@@ -623,10 +623,10 @@ function RolesModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-scale-in">
-        <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+      <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-scale-in">
+        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-6 py-4">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">Assign Roles</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Assign Roles</h2>
             <p className="text-sm text-gray-500 mt-0.5">{user.fullName}</p>
           </div>
           <button

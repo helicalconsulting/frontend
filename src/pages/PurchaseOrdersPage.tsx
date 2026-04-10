@@ -387,7 +387,7 @@ export function PurchaseOrdersPage() {
           </div>
 
           {!isLoading && filteredOrders.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <div className="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-slate-500">
               <FileText className="h-12 w-12 mb-3 opacity-50" />
               <p className="text-sm font-medium">No purchase orders found</p>
               <p className="text-xs mt-1">Try adjusting your search or filter</p>
@@ -431,11 +431,11 @@ export function PurchaseOrdersPage() {
                 <table className="w-full text-sm">
                   <thead className="bg-gray-50 dark:bg-slate-800/80">
                     <tr>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Line</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Price</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Total</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Line</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Description</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Qty</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Price</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Total</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-slate-800">

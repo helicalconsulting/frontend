@@ -347,43 +347,43 @@ function PODetailsModal({ isOpen, onClose, poNumber }: PODetailsModalProps) {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">Supplier</p>
-                <p className="text-sm font-medium text-gray-900 mt-1">Acme Corporation Ltd.</p>
+                <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Supplier</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white mt-1">Acme Corporation Ltd.</p>
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">Order Date</p>
-                <p className="text-sm font-medium text-gray-900 mt-1">2024-03-15</p>
+                <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Order Date</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white mt-1">2024-03-15</p>
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">Due Date</p>
-                <p className="text-sm font-medium text-gray-900 mt-1">2024-04-15</p>
+                <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Due Date</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white mt-1">2024-04-15</p>
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">Total Amount</p>
-                <p className="text-sm font-bold text-gray-900 mt-1">$45,230.00</p>
+                <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Total Amount</p>
+                <p className="text-sm font-bold text-gray-900 dark:text-white mt-1">$45,230.00</p>
               </div>
             </div>
 
-            <div className="border-t border-gray-200 pt-4">
-              <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-3">Line Items</h4>
-              <div className="rounded-lg border border-gray-200 overflow-hidden">
+            <div className="border-t border-gray-200 dark:border-slate-700 pt-4">
+              <h4 className="text-xs font-bold text-gray-600 dark:text-slate-400 uppercase tracking-wider mb-3">Line Items</h4>
+              <div className="rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-100 bg-gray-50">
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Item</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Unit Price</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Total</th>
+                    <tr className="border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50">
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Item</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Description</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Qty</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Unit Price</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Total</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50">
-                    <tr className="hover:bg-blue-50/30">
-                      <td className="px-4 py-2.5 text-gray-700">1</td>
-                      <td className="px-4 py-2.5 text-gray-900 font-medium">Industrial Equipment</td>
-                      <td className="px-4 py-2.5 text-right text-gray-700 font-mono">150</td>
-                      <td className="px-4 py-2.5 text-right text-gray-700 font-mono">$301.53</td>
-                      <td className="px-4 py-2.5 text-right font-semibold text-gray-900 font-mono">$45,230.00</td>
+                  <tbody className="divide-y divide-gray-50 dark:divide-slate-700">
+                    <tr className="hover:bg-blue-50/30 dark:hover:bg-slate-700/50">
+                      <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300">1</td>
+                      <td className="px-4 py-2.5 text-gray-900 dark:text-white font-medium">Industrial Equipment</td>
+                      <td className="px-4 py-2.5 text-right text-gray-700 dark:text-slate-300 font-mono">150</td>
+                      <td className="px-4 py-2.5 text-right text-gray-700 dark:text-slate-300 font-mono">$301.53</td>
+                      <td className="px-4 py-2.5 text-right font-semibold text-gray-900 dark:text-white font-mono">$45,230.00</td>
                     </tr>
                   </tbody>
                 </table>
@@ -481,53 +481,53 @@ function InvoiceRow({
       {/* Expanded GRN Details */}
       {isExpanded && (
         <tr>
-          <td colSpan={13} className="bg-slate-50/80 px-4 py-0">
+          <td colSpan={13} className="bg-slate-50/80 dark:bg-slate-900/50 px-4 py-0">
             <div className="py-4 pl-10">
-              <div className="rounded-lg border border-gray-200 bg-white overflow-hidden shadow-sm">
-                <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-                  <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <div className="rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm">
+                <div className="bg-gray-50 dark:bg-slate-800/80 px-4 py-2 border-b border-gray-200 dark:border-slate-700">
+                  <h4 className="text-xs font-semibold text-gray-600 dark:text-slate-300 uppercase tracking-wider">
                     GRN Details — Goods Received
                   </h4>
                 </div>
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-100">
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Item</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Purchase Order</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">GRN</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Stock Code</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
-                      <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">WH</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty Received</th>
-                      <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">UOM</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Delivery Note</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Matched Value</th>
+                    <tr className="border-b border-gray-100 dark:border-slate-700">
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Item</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Purchase Order</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">GRN</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Stock Code</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Description</th>
+                      <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500 dark:text-slate-400">WH</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Qty Received</th>
+                      <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500 dark:text-slate-400">UOM</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Delivery Note</th>
+                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Matched Value</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50">
+                  <tbody className="divide-y divide-gray-50 dark:divide-slate-700/50">
                     {invoice.grnDetails.map((grn) => (
-                      <tr key={grn.id} className="hover:bg-blue-50/30 transition-colors">
-                        <td className="px-4 py-2.5 text-gray-700">{grn.item}</td>
-                        <td className="px-4 py-2.5 text-gray-700 font-mono text-xs">{grn.purchaseOrder}</td>
-                        <td className="px-4 py-2.5 text-gray-700 font-mono text-xs">{grn.grn}</td>
-                        <td className="px-4 py-2.5 text-gray-700 font-mono text-xs">{grn.stockCode}</td>
-                        <td className="px-4 py-2.5 text-gray-900 font-medium">{grn.description}</td>
-                        <td className="px-4 py-2.5 text-gray-500 text-center text-xs">{grn.warehouse}</td>
-                        <td className="px-4 py-2.5 text-right text-gray-700 font-mono">{grn.qtyReceived.toLocaleString()}</td>
-                        <td className="px-4 py-2.5 text-gray-500 text-center text-xs">{grn.uom}</td>
-                        <td className="px-4 py-2.5 text-gray-700 text-xs">{grn.deliveryNote}</td>
-                        <td className="px-4 py-2.5 text-right font-semibold text-gray-900 font-mono">
+                      <tr key={grn.id} className="hover:bg-blue-50/30 dark:hover:bg-slate-700/30 transition-colors">
+                        <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300">{grn.item}</td>
+                        <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300 font-mono text-xs">{grn.purchaseOrder}</td>
+                        <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300 font-mono text-xs">{grn.grn}</td>
+                        <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300 font-mono text-xs">{grn.stockCode}</td>
+                        <td className="px-4 py-2.5 text-gray-900 dark:text-white font-medium">{grn.description}</td>
+                        <td className="px-4 py-2.5 text-gray-500 dark:text-slate-400 text-center text-xs">{grn.warehouse}</td>
+                        <td className="px-4 py-2.5 text-right text-gray-700 dark:text-slate-300 font-mono">{grn.qtyReceived.toLocaleString()}</td>
+                        <td className="px-4 py-2.5 text-gray-500 dark:text-slate-400 text-center text-xs">{grn.uom}</td>
+                        <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300 text-xs">{grn.deliveryNote}</td>
+                        <td className="px-4 py-2.5 text-right font-semibold text-gray-900 dark:text-white font-mono">
                           ${grn.matchedValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </td>
                       </tr>
                     ))}
                   </tbody>
                   <tfoot>
-                    <tr className="border-t border-gray-200 bg-gray-50/50">
-                      <td colSpan={9} className="px-4 py-2.5 text-right text-xs font-semibold text-gray-600 uppercase">
+                    <tr className="border-t border-gray-200 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50">
+                      <td colSpan={9} className="px-4 py-2.5 text-right text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase">
                         Total Matched
                       </td>
-                      <td className="px-4 py-2.5 text-right font-bold text-gray-900 font-mono">
+                      <td className="px-4 py-2.5 text-right font-bold text-gray-900 dark:text-white font-mono">
                         ${invoice.grnDetails.reduce((s, g) => s + g.matchedValue, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </td>
                     </tr>
@@ -556,70 +556,70 @@ function InvoiceDetailsModal({ isOpen, onClose, invoice }: InvoiceDetailsModalPr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-scale-in">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">Invoice Details: {invoice.invoiceNumber}</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-scale-in border border-gray-200 dark:border-slate-800">
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Invoice Details: {invoice.invoiceNumber}</h3>
+          <button onClick={onClose} className="text-gray-400 dark:text-slate-400 hover:text-gray-500 dark:hover:text-slate-300">
             <XCircle className="h-6 w-6" />
           </button>
         </div>
-        <div className="p-6 overflow-y-auto flex-1">
+        <div className="p-6 overflow-y-auto flex-1 bg-gray-50/30 dark:bg-slate-900 text-gray-900 dark:text-white">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">Supplier</p>
-              <p className="font-medium text-gray-900 mt-1">{invoice.supplier}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wider">Supplier</p>
+              <p className="font-medium text-gray-900 dark:text-white mt-1">{invoice.supplier}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">Reference #</p>
-              <p className="font-medium text-gray-900 mt-1">{invoice.refNumber}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wider">Reference #</p>
+              <p className="font-medium text-gray-900 dark:text-white mt-1">{invoice.refNumber}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">Due Date</p>
-              <p className="font-medium text-gray-900 mt-1">{invoice.dueDate}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wider">Due Date</p>
+              <p className="font-medium text-gray-900 dark:text-white mt-1">{invoice.dueDate}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">Status</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wider">Status</p>
               <Badge variant={statusVariants[invoice.status]} className="mt-1">
                 {invoice.approvalStatus}
               </Badge>
             </div>
           </div>
           
-          <div className="rounded-lg border border-gray-200 overflow-hidden mt-6">
-            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-              <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
+          <div className="rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden mt-6">
+            <div className="bg-gray-50 dark:bg-slate-800/80 px-4 py-2 border-b border-gray-200 dark:border-slate-700">
+              <h4 className="text-xs font-semibold text-gray-600 dark:text-slate-300 uppercase tracking-wider">
                 GRN Details — Goods Received
               </h4>
             </div>
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50">
+            <table className="w-full text-sm bg-white dark:bg-slate-800">
+              <thead className="bg-gray-50 dark:bg-slate-800/50">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Item</th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">PO #</th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">Description</th>
-                  <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500">WH</th>
-                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Qty</th>
-                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500">Value</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Item</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">PO #</th>
+                  <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Description</th>
+                  <th className="px-4 py-2 text-center text-xs font-semibold text-gray-500 dark:text-slate-400">WH</th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Qty</th>
+                  <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Value</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
                 {invoice.grnDetails.map((grn) => (
                   <tr key={grn.id}>
-                    <td className="px-4 py-2 text-gray-700">{grn.item}</td>
-                    <td className="px-4 py-2 font-mono text-xs text-gray-700">{grn.purchaseOrder}</td>
-                    <td className="px-4 py-2 text-gray-900 font-medium">{grn.description}</td>
-                    <td className="px-4 py-2 text-center text-gray-500">{grn.warehouse}</td>
-                    <td className="px-4 py-2 text-right text-gray-700">{grn.qtyReceived.toLocaleString()} {grn.uom}</td>
-                    <td className="px-4 py-2 text-right font-semibold text-gray-900">${grn.matchedValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                    <td className="px-4 py-2 text-gray-700 dark:text-slate-300">{grn.item}</td>
+                    <td className="px-4 py-2 font-mono text-xs text-gray-700 dark:text-slate-300">{grn.purchaseOrder}</td>
+                    <td className="px-4 py-2 text-gray-900 dark:text-white font-medium">{grn.description}</td>
+                    <td className="px-4 py-2 text-center text-gray-500 dark:text-slate-400">{grn.warehouse}</td>
+                    <td className="px-4 py-2 text-right text-gray-700 dark:text-slate-300">{grn.qtyReceived.toLocaleString()} {grn.uom}</td>
+                    <td className="px-4 py-2 text-right font-semibold text-gray-900 dark:text-white">${grn.matchedValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
-                <tr className="border-t border-gray-200 bg-gray-50/50">
-                  <td colSpan={5} className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase">
+                <tr className="border-t border-gray-200 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50">
+                  <td colSpan={5} className="px-4 py-2 text-right text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase">
                     Total Matched
                   </td>
-                  <td className="px-4 py-2 text-right font-bold text-gray-900 font-mono">
+                  <td className="px-4 py-2 text-right font-bold text-gray-900 dark:text-white font-mono">
                     ${invoice.grnDetails.reduce((s, g) => s + g.matchedValue, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </td>
                 </tr>
@@ -628,8 +628,8 @@ function InvoiceDetailsModal({ isOpen, onClose, invoice }: InvoiceDetailsModalPr
           </div>
         </div>
         
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 items-center">
-          <Button variant="ghost" onClick={onClose} className="mr-auto">Close</Button>
+        <div className="px-6 py-4 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex justify-end gap-3 items-center">
+          <Button variant="ghost" onClick={onClose} className="mr-auto dark:text-slate-300 dark:hover:text-white">Close</Button>
           {(invoice.status === 'pending' || invoice.status === 'overdue') && (
             <>
               <Button variant="destructive" size="sm" onClick={onClose}>

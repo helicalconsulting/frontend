@@ -498,7 +498,7 @@ export function PaymentsPage() {
 })()}
 
           {filteredQueue.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <div className="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-slate-500">
               <CreditCard className="h-12 w-12 mb-3 opacity-50" />
               <p className="text-sm font-medium">No pending requests</p>
               <p className="text-xs mt-1">All payment requests have been processed</p>

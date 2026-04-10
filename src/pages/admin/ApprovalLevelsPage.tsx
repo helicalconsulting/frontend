@@ -200,7 +200,7 @@ export function ApprovalLevelsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header
         title="Approval Levels"
         subtitle="Configure approval workflow levels and thresholds"
@@ -215,7 +215,7 @@ export function ApprovalLevelsPage() {
             return (
               <div
                 key={mod}
-                className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+                className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 shadow-sm"
               >
                 <div className="flex items-center gap-3">
                   <div
@@ -224,8 +224,8 @@ export function ApprovalLevelsPage() {
                     <Layers className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-gray-500">{mod}</p>
-                    <p className="text-lg font-bold text-gray-900">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400">{mod}</p>
+                    <p className="text-lg font-bold text-gray-900 dark:text-white">
                       {count} level{count !== 1 ? 's' : ''}
                     </p>
                   </div>
@@ -238,11 +238,11 @@ export function ApprovalLevelsPage() {
         {/* Top toolbar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Filter className="h-4 w-4 text-gray-500" />
+            <Filter className="h-4 w-4 text-gray-500 dark:text-gray-400" />
             <select
               value={selectedModule}
               onChange={(e) => setSelectedModule(e.target.value)}
-              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+              className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50"
             >
               <option value="all">All Modules</option>
               {modules.map((mod: any) => (
@@ -270,41 +270,41 @@ export function ApprovalLevelsPage() {
         )}
 
         {/* Levels Table */}
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50/80">
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider w-20">
+                <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/80">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider w-20">
                     Order
                   </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                     Level
                   </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                     Name
                   </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                     Module
                   </th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-500 text-xs uppercase tracking-wider">
+                  <th className="px-4 py-3 text-right font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                     Min Value
                   </th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-500 text-xs uppercase tracking-wider">
+                  <th className="px-4 py-3 text-right font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                     Max Value
                   </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                     Required Role
                   </th>
-                  <th className="px-4 py-3 text-center font-semibold text-gray-500 text-xs uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-4 py-3 text-center font-semibold text-gray-500 text-xs uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {isLoadingLevels
                   ? Array(5)
                       .fill(null)
@@ -324,7 +324,7 @@ export function ApprovalLevelsPage() {
                         levels.map((level: ApprovalLevel, index: number) => (
                           <tr
                             key={level.id}
-                            className="hover:bg-gray-50/80 transition-colors"
+                            className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors"
                           >
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-1">
@@ -333,7 +333,7 @@ export function ApprovalLevelsPage() {
                                   disabled={
                                     index === 0 || reorderMutation.isPending
                                   }
-                                  className="p-1 rounded text-gray-400 hover:bg-gray-100 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                                  className="p-1 rounded text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                                 >
                                   <ChevronUp className="h-4 w-4" />
                                 </button>
@@ -344,7 +344,7 @@ export function ApprovalLevelsPage() {
                                       levelsByModule[level.module].length - 1 ||
                                     reorderMutation.isPending
                                   }
-                                  className="p-1 rounded text-gray-400 hover:bg-gray-100 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                                  className="p-1 rounded text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                                 >
                                   <ChevronDown className="h-4 w-4" />
                                 </button>
@@ -355,16 +355,16 @@ export function ApprovalLevelsPage() {
                                 L{level.level}
                               </Badge>
                             </td>
-                            <td className="px-4 py-3 font-medium text-gray-900">
+                            <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">
                               {level.name}
                             </td>
                             <td className="px-4 py-3">
                               <Badge variant="outline">{level.module}</Badge>
                             </td>
-                            <td className="px-4 py-3 text-right font-mono text-gray-600">
+                            <td className="px-4 py-3 text-right font-mono text-gray-600 dark:text-gray-400">
                               {level.minValue.toLocaleString()}
                             </td>
-                            <td className="px-4 py-3 text-right font-mono text-gray-600">
+                            <td className="px-4 py-3 text-right font-mono text-gray-600 dark:text-gray-400">
                               {level.maxValue !== null
                                 ? level.maxValue.toLocaleString()
                                 : '∞'}
@@ -428,7 +428,7 @@ export function ApprovalLevelsPage() {
 
           {!isLoadingLevels &&
             (!levelsData?.levels || levelsData.levels.length === 0) && (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+              <div className="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500">
                 <Layers className="h-12 w-12 mb-3 opacity-50" />
                 <p className="text-sm font-medium">
                   No approval levels configured
@@ -535,9 +535,9 @@ function LevelFormModal({
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden animate-scale-in">
-        <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
-          <h2 className="text-lg font-bold text-gray-900">{title}</h2>
+      <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden animate-scale-in">
+        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h2>
           <button
             onClick={onClose}
             className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
@@ -549,7 +549,7 @@ function LevelFormModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Module
               </label>
               <select
@@ -559,7 +559,7 @@ function LevelFormModal({
                 }
                 required
                 disabled={!!initialData}
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed"
               >
                 <option value="">Select Module</option>
                 {modules.map((mod: any) => (
@@ -570,7 +570,7 @@ function LevelFormModal({
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Level Number
               </label>
               <Input
@@ -587,7 +587,7 @@ function LevelFormModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Level Name
             </label>
             <Input
@@ -602,7 +602,7 @@ function LevelFormModal({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Min Value
               </label>
               <Input
@@ -618,7 +618,7 @@ function LevelFormModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Max Value
               </label>
               <Input
@@ -631,14 +631,14 @@ function LevelFormModal({
                 step="0.01"
                 placeholder="Unlimited"
               />
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                 Leave empty for unlimited
               </p>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Required Role
             </label>
             <Input
@@ -663,7 +663,7 @@ function LevelFormModal({
             />
             <label
               htmlFor="isActive"
-              className="text-sm font-medium text-gray-700"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Active
             </label>
@@ -706,23 +706,23 @@ function DeleteConfirmModal({
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-scale-in">
+      <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-scale-in">
         <div className="p-6">
           <div className="flex items-center gap-4 mb-4">
             <div className="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center">
               <AlertTriangle className="h-6 w-6 text-red-600" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                 Delete Approval Level
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 This action cannot be undone
               </p>
             </div>
           </div>
 
-          <p className="text-sm text-gray-600 mb-6">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
             Are you sure you want to delete the approval level{' '}
             <span className="font-semibold">{levelName}</span>? Any workflows
             using this level will need to be reconfigured.
