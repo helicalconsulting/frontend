@@ -62,7 +62,7 @@ export function PurchaseOrdersPage() {
   const { data, isLoading } = usePurchaseOrders();
   const approveOrder = useApproveOrder();
   const rejectOrder = useRejectOrder();
-  const [displayCurrency, setDisplayCurrency] = useState("KES"); // ✅ default African
+  const [displayCurrency, setDisplayCurrency] = useState("KES");
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
@@ -78,7 +78,6 @@ export function PurchaseOrdersPage() {
 
       if (!fromRate || !toRate) return sum;
 
-      // Convert to USD → then to selected currency
       const usd = val / fromRate;
       const converted = usd * toRate;
 
@@ -161,18 +160,18 @@ export function PurchaseOrdersPage() {
         subtitle="Review and authorize pending purchase requests"
       />
 
-      {/* ✅ SUMMARY CARDS (Payments jaisa) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 p-3 sm:p-6">
 
         {/* Pending Orders */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-4 sm:p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
               <Package className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
               <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Pending Orders</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {data?.pendingCount || 0}
               </p>
             </div>
@@ -180,14 +179,14 @@ export function PurchaseOrdersPage() {
         </div>
 
         {/* Total Value */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-4 sm:p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg">
               <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
               <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Total Value</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white truncate">
                 {formatCurrency(convertedTotal, displayCurrency)}
               </p>
             </div>
@@ -195,14 +194,14 @@ export function PurchaseOrdersPage() {
         </div>
 
         {/* High Priority */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-5 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 p-4 sm:p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-amber-100 dark:bg-amber-900/40 rounded-lg">
               <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
             </div>
             <div>
               <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">High Priority</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {filteredOrders.filter(o => o.priority === 'high' || o.priority === 'critical').length}
               </p>
             </div>
@@ -210,12 +209,13 @@ export function PurchaseOrdersPage() {
         </div>
 
       </div>
-      <div className="p-6 space-y-4">
+
+      <div className="px-3 sm:px-6 pb-6 space-y-4">
         {/* Top toolbar */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-          {/* Search & Filter */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 flex-1 w-full">
-            <div className="relative flex-1 max-w-md w-full">
+        <div className="flex flex-col gap-3">
+          {/* Row 1: Search & Status Filter */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="relative flex-1 w-full sm:max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
                 id="search-orders"
@@ -226,10 +226,8 @@ export function PurchaseOrdersPage() {
               />
             </div>
 
-
-
             <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-gray-500" />
+              <Filter className="h-4 w-4 text-gray-500 flex-shrink-0" />
               <select
                 id="status-filter"
                 value={statusFilter}
@@ -244,48 +242,35 @@ export function PurchaseOrdersPage() {
             </div>
           </div>
 
-          {/* Summary & Bulk Actions */}
-          <div className="flex items-center gap-3">
-            {data && (
-              <div className="flex items-center gap-4 mr-4">
+          {/* Row 2: Currency + Bulk Actions */}
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="relative flex-1 min-w-[200px]">
+              <select
+                value={displayCurrency}
+                onChange={(e) => setDisplayCurrency(e.target.value)}
+                className="appearance-none w-full cursor-pointer rounded-xl border border-blue-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 pr-8 text-sm font-semibold text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              >
+                <optgroup label="🌍 African (Default)">
+                  {CURRENCIES.filter(c => c.region === "africa").map(c => (
+                    <option key={c.code} value={c.code}>
+                      {c.flag} {c.code} — {c.label}
+                    </option>
+                  ))}
+                </optgroup>
 
-
-
-              </div>
-            )}
-            <div className="flex items-center gap-2">
-              <div className="relative w-[260px]">
-                <select
-                  value={displayCurrency}
-                  onChange={(e) => setDisplayCurrency(e.target.value)}
-                  className="appearance-none w-full cursor-pointer rounded-xl border border-blue-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 pr-10 text-sm font-semibold text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-                >
-                  <optgroup label="🌍 African (Default)">
-                    {CURRENCIES.filter(c => c.region === "africa").map(c => (
-                      <option key={c.code} value={c.code}>
-                        {c.flag} {c.code} — {c.label}
-                      </option>
-                    ))}
-                  </optgroup>
-
-                  <optgroup label="🌐 Global">
-                    {CURRENCIES.filter(c => c.region === "global").map(c => (
-                      <option key={c.code} value={c.code}>
-                        {c.flag} {c.code} — {c.label}
-                      </option>
-                    ))}
-                  </optgroup>
-                </select>
-
-                {/* Arrow */}
-                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                  ▼
-                </div>
-              </div>
+                <optgroup label="🌐 Global">
+                  {CURRENCIES.filter(c => c.region === "global").map(c => (
+                    <option key={c.code} value={c.code}>
+                      {c.flag} {c.code} — {c.label}
+                    </option>
+                  ))}
+                </optgroup>
+              </select>
+              <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs">▼</div>
             </div>
 
             {selectedRows.size > 0 && (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs text-gray-500 font-medium">
                   {selectedRows.size} selected
                 </span>
@@ -303,15 +288,14 @@ export function PurchaseOrdersPage() {
                 >
                   Return Request
                 </Button>
-
               </div>
             )}
           </div>
         </div>
 
-        {/* Data Table */}
+        {/* Desktop Table */}
         <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/80 dark:bg-slate-800/50">
@@ -323,33 +307,14 @@ export function PurchaseOrdersPage() {
                       className="h-4 w-4"
                     />
                   </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider w-10">
-                    {' '}
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">
-                    PO Number
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">
-                    Supplier
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">
-                    Order Date
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">
-                    Due Date
-                  </th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-500 text-xs uppercase tracking-wider">
-                    Exchange Rate
-                  </th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-500 text-xs uppercase tracking-wider">
-                    PO Value
-                  </th>
-                  <th className="px-4 py-3 text-center font-semibold text-gray-500 text-xs uppercase tracking-wider">
-                    Priority
-                  </th>
-                  <th className="px-4 py-3 text-center font-semibold text-gray-500 text-xs uppercase tracking-wider">
-                    Status
-                  </th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">PO Number</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Supplier</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Order Date</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 text-xs uppercase tracking-wider">Due Date</th>
+                  <th className="px-4 py-3 text-right font-semibold text-gray-500 text-xs uppercase tracking-wider">Exchange Rate</th>
+                  <th className="px-4 py-3 text-right font-semibold text-gray-500 text-xs uppercase tracking-wider">PO Value</th>
+                  <th className="px-4 py-3 text-center font-semibold text-gray-500 text-xs uppercase tracking-wider">Priority</th>
+                  <th className="px-4 py-3 text-center font-semibold text-gray-500 text-xs uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-slate-800/60">
@@ -358,7 +323,7 @@ export function PurchaseOrdersPage() {
                     .fill(null)
                     .map((_, i) => (
                       <tr key={i}>
-                        {Array(10)
+                        {Array(9)
                           .fill(null)
                           .map((_, j) => (
                             <td key={j} className="px-4 py-4">
@@ -386,6 +351,74 @@ export function PurchaseOrdersPage() {
             </table>
           </div>
 
+          {/* Mobile Card List */}
+          <div className="sm:hidden divide-y divide-gray-100 dark:divide-slate-800/60">
+            {isLoading
+              ? Array(4).fill(null).map((_, i) => (
+                <div key={i} className="p-4 animate-pulse space-y-2">
+                  <div className="h-4 w-32 rounded bg-gray-200 dark:bg-slate-800" />
+                  <div className="h-3 w-48 rounded bg-gray-200 dark:bg-slate-800" />
+                  <div className="h-3 w-24 rounded bg-gray-200 dark:bg-slate-800" />
+                </div>
+              ))
+              : filteredOrders.map((order) => (
+                <div
+                  key={order.id}
+                  className={`p-4 space-y-3 ${selectedRows.has(order.id) ? 'bg-blue-50/50 dark:bg-blue-900/20' : ''}`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.has(order.id)}
+                        onChange={() => toggleSelect(order.id)}
+                        disabled={order.status !== 'pending'}
+                        className="h-4 w-4 rounded border-gray-300 text-blue-600 flex-shrink-0"
+                      />
+                      <button
+                        onClick={() => setSelectedOrderDetails(order)}
+                        className="font-mono text-sm font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2.5 py-1 rounded-md border border-blue-200/50 dark:border-blue-800/50"
+                      >
+                        {order.poNumber}
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      <Badge variant={priorityVariants[order.priority]} className="text-[10px]">
+                        {order.priority}
+                      </Badge>
+                      <Badge variant={statusVariants[order.status]} className="text-[10px]">
+                        {order.status}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{order.supplier}</p>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-xs text-gray-500 dark:text-slate-400">
+                      <span>Order: {formatDate(order.orderDate)}</span>
+                      <span>Due: {formatDate(order.dueDate)}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-gray-900 dark:text-white">
+                      {formatCurrency(order.amount, order.currency)}
+                    </span>
+                    {order.status === 'pending' && (
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="destructive" onClick={() => handleReject(order.id)} className="h-8 px-3 text-xs">
+                          Reject
+                        </Button>
+                        <Button size="sm" variant="success" onClick={() => handleApprove(order.id)} className="h-8 px-3 text-xs">
+                          Approve
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+          </div>
+
           {!isLoading && filteredOrders.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-slate-500">
               <FileText className="h-12 w-12 mb-3 opacity-50" />
@@ -397,29 +430,29 @@ export function PurchaseOrdersPage() {
       </div>
 
       {selectedOrderDetails && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in">
-          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col animate-scale-in border border-gray-200 dark:border-slate-800">
-            <div className="px-6 py-4 flex items-center justify-between 
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm animate-in">
+          <div className="bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col animate-scale-in border border-gray-200 dark:border-slate-800">
+            <div className="px-4 sm:px-6 py-4 flex items-center justify-between 
 bg-gradient-to-r from-blue-600 to-indigo-600 
-text-white">
-              <h3 className="text-lg font-semibold text-white dark:text-white ">PO Details: {selectedOrderDetails.poNumber}</h3>
-              <button onClick={() => setSelectedOrderDetails(null)} className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+text-white flex-shrink-0">
+              <h3 className="text-base sm:text-lg font-semibold text-white truncate">PO Details: {selectedOrderDetails.poNumber}</h3>
+              <button onClick={() => setSelectedOrderDetails(null)} className="text-white/80 hover:text-white ml-2 flex-shrink-0">
                 <XCircle className="h-6 w-6" />
               </button>
             </div>
-            <div className="p-6 overflow-y-auto flex-1">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="p-4 sm:p-6 overflow-y-auto flex-1">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
                 <div>
                   <p className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wider">Supplier</p>
-                  <p className="font-medium text-gray-900 dark:text-white mt-1">{selectedOrderDetails.supplier}</p>
+                  <p className="font-medium text-gray-900 dark:text-white mt-1 text-sm">{selectedOrderDetails.supplier}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wider">Order Date</p>
-                  <p className="font-medium text-gray-900 dark:text-white mt-1">{formatDate(selectedOrderDetails.orderDate)}</p>
+                  <p className="font-medium text-gray-900 dark:text-white mt-1 text-sm">{formatDate(selectedOrderDetails.orderDate)}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wider">Total Value</p>
-                  <p className="font-medium text-gray-900 dark:text-white mt-1">{formatCurrency(selectedOrderDetails.amount, selectedOrderDetails.currency)}</p>
+                  <p className="font-medium text-gray-900 dark:text-white mt-1 text-sm">{formatCurrency(selectedOrderDetails.amount, selectedOrderDetails.currency)}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wider">Status</p>
@@ -430,32 +463,34 @@ text-white">
               </div>
 
               <div className="rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden">
-                <table className="w-full text-sm">
-                  <thead className="bg-gray-50 dark:bg-slate-800/80">
-                    <tr>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Line</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Description</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Qty</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Price</th>
-                      <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
-                    {selectedOrderDetails.lineItems.map((item) => (
-                      <tr key={item.id} className="dark:bg-slate-900/50">
-                        <td className="px-4 py-2 text-gray-700 dark:text-slate-300">{item.lineNumber}</td>
-                        <td className="px-4 py-2 text-gray-900 dark:text-white font-medium">{item.description}</td>
-                        <td className="px-4 py-2 text-right text-gray-700 dark:text-slate-300">{item.quantity.toLocaleString()}</td>
-                        <td className="px-4 py-2 text-right text-gray-700 dark:text-slate-300">{item.unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                        <td className="px-4 py-2 text-right font-semibold text-gray-900 dark:text-white">{item.total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50 dark:bg-slate-800/80">
+                      <tr>
+                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Line</th>
+                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-slate-400">Description</th>
+                        <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Qty</th>
+                        <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Price</th>
+                        <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 dark:text-slate-400">Total</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+                      {selectedOrderDetails.lineItems.map((item) => (
+                        <tr key={item.id} className="dark:bg-slate-900/50">
+                          <td className="px-4 py-2 text-gray-700 dark:text-slate-300">{item.lineNumber}</td>
+                          <td className="px-4 py-2 text-gray-900 dark:text-white font-medium">{item.description}</td>
+                          <td className="px-4 py-2 text-right text-gray-700 dark:text-slate-300">{item.quantity.toLocaleString()}</td>
+                          <td className="px-4 py-2 text-right text-gray-700 dark:text-slate-300">{item.unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                          <td className="px-4 py-2 text-right font-semibold text-gray-900 dark:text-white">{item.total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
-            <div className="px-6 py-4 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex justify-end gap-3 items-center">
+            <div className="px-4 sm:px-6 py-4 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex justify-end gap-3 items-center flex-shrink-0">
               <Button variant="ghost" onClick={() => setSelectedOrderDetails(null)} className="mr-auto dark:text-slate-200">
                 Close
               </Button>
@@ -478,7 +513,7 @@ text-white">
 }
 
 // ============================================
-// Order Row Component
+// Order Row Component (Desktop only)
 // ============================================
 interface OrderRowProps {
   order: PurchaseOrder;
@@ -519,9 +554,6 @@ function OrderRow({
             disabled={order.status !== 'pending'}
             className="h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 disabled:opacity-30 dark:bg-slate-700"
           />
-        </td>
-        <td className="px-4 py-3">
-
         </td>
         <td className="px-4 py-3">
           <div className="flex items-center gap-2">
@@ -567,9 +599,6 @@ function OrderRow({
           </Badge>
         </td>
       </tr>
-
-      {/* Expanded line items */}
-
     </>
   );
 }

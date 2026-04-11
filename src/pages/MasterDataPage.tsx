@@ -73,7 +73,7 @@ export function MasterDataPage() {
         subtitle="Vet entities before they enter the ERP system"
       />
 
-      <div className="p-6 space-y-5">
+      <div className="p-3 sm:p-6 space-y-4 sm:space-y-5">
         {/* Top Section: Distribution + Action Controls */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Request Distribution */}
@@ -178,12 +178,12 @@ export function MasterDataPage() {
 
         {/* Pending Requests Table */}
         <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
-          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/80 px-5 py-3">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/80 px-4 sm:px-5 py-3">
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-gray-500 dark:text-gray-400" />
               <h3 className="text-sm font-bold text-gray-700 dark:text-gray-200">Pending Master Data Requests</h3>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                 <Filter className="h-3.5 w-3.5" />
                 <span>Filter Active: Level</span>
@@ -200,7 +200,8 @@ export function MasterDataPage() {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          {/* Desktop Table */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
@@ -278,6 +279,54 @@ export function MasterDataPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card List */}
+          <div className="sm:hidden divide-y divide-gray-100 dark:divide-gray-800">
+            {pendingRequests.map((request) => (
+              <div
+                key={request.id}
+                className={`p-4 space-y-2.5 ${selectedIds.has(request.id) ? 'bg-blue-50/50 dark:bg-blue-900/20' : ''}`}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(request.id)}
+                      onChange={() => toggleSelect(request.id)}
+                      className="h-4 w-4 rounded border-gray-300 text-blue-600"
+                    />
+                    <span className="font-mono text-xs text-gray-600 dark:text-gray-400">{request.id}</span>
+                  </div>
+                  <Badge variant={request.entityType === 'Supplier' ? 'info' : 'success'} className="text-[10px] gap-1 flex-shrink-0">
+                    {request.entityType}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{request.entityName}</p>
+                  <div className="flex flex-wrap gap-x-4 gap-y-0.5 mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    <span>Tax: {request.taxVatNumber}</span>
+                    <span>Submitted: {request.submittedDate}</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-1">
+                    {request.documents.map((docType, i) => {
+                      const Icon = docIcons[docType] || FileText;
+                      const bg = docColors[docType] || 'bg-gray-500';
+                      return (
+                        <div key={i} className={`flex h-6 w-6 items-center justify-center rounded ${bg}`}>
+                          <Icon className="h-3 w-3 text-white" />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <span className="text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                    {request.workflowLevel}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
 
           {pendingRequests.length === 0 && (

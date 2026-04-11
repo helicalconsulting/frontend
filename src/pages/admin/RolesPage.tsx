@@ -118,7 +118,7 @@ export function RolesPage() {
         subtitle="Manage user roles and their access permissions"
       />
 
-      <div className="p-6 space-y-5">
+      <div className="p-3 sm:p-6 space-y-4 sm:space-y-5">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm">

@@ -94,7 +94,7 @@ export function SignaturePage() {
         subtitle="Digital signature for high-value transaction approvals"
       />
 
-      <div className="p-6 flex justify-center">
+      <div className="p-3 sm:p-6 flex justify-center">
         <div className="w-full max-w-lg">
           {/* Signature Card */}
           <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg overflow-hidden">
@@ -152,7 +152,7 @@ export function SignaturePage() {
               )}
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-between pt-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-0 pt-2">
                 <Button variant="outline" onClick={() => navigate('/dashboard')}>
                   <Home className="h-4 w-4" />
                   Home

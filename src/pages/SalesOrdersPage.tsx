@@ -82,7 +82,7 @@ export function SalesOrdersPage() {
         subtitle="Automated credit risk detection and order governance"
       />
 
-      <div className="p-6 space-y-4">
+      <div className="p-3 sm:p-6 space-y-4">
         {/* ✅ KPI CARDS (Payments jaisa) */}
         {/* ✅ KPI CARDS (WHITE THEME) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -148,8 +148,8 @@ export function SalesOrdersPage() {
         </div>
 
         {/* Search + Top */}
-        <div className="flex flex-col lg:flex-row justify-between gap-4">
-          <div className="relative flex-1 max-w-lg">
+        <div className="flex flex-col sm:flex-row justify-between gap-3">
+          <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Search..."
@@ -159,13 +159,11 @@ export function SalesOrdersPage() {
             />
           </div>
 
-          <div className="flex gap-3">
-            <Button size="sm" variant="outline">Override 2nd Approver</Button>
-            <Button size="sm" className="bg-emerald-600 text-white">
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" variant="outline" className="text-xs">Override 2nd Approver</Button>
+            <Button size="sm" className="bg-emerald-600 text-white text-xs">
               <MessageCircle className="h-4 w-4" /> WhatsApp
             </Button>
-            {/* Home button (always last) */}
-
           </div>
         </div>
 
@@ -210,21 +208,18 @@ export function SalesOrdersPage() {
         {/* TABLE */}
         <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
 
-          {/* ✅ HEADER (Payments jaisa) */}
-          <div className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/80 dark:bg-slate-800/50 px-5 py-3">
+          <div className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/80 dark:bg-slate-800/50 px-4 sm:px-5 py-3">
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-gray-500 dark:text-slate-400" />
               <h3 className="text-sm font-bold text-gray-700 dark:text-slate-200">Pending Orders</h3>
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          {/* Desktop Table */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-sm">
-
               <thead>
                 <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/30">
-
-                  {/* Select All */}
                   <th className="px-4 py-3 w-10">
                     <input
                       type="checkbox"
@@ -233,10 +228,7 @@ export function SalesOrdersPage() {
                       className="h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 dark:bg-slate-700"
                     />
                   </th>
-
-                  {/* Empty column (IMPORTANT) */}
                   <th className="px-4 py-3 w-10" />
-
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Sales Order</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Customer</th>
                   <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Status</th>
@@ -246,10 +238,8 @@ export function SalesOrdersPage() {
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">PO</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Date</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Salesperson</th>
-
                 </tr>
               </thead>
-
               <tbody className="divide-y divide-gray-100 dark:divide-slate-800/60">
                 {filteredOrders.map((order) => (
                   <tr
@@ -267,53 +257,89 @@ export function SalesOrdersPage() {
                         className="h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500 dark:bg-slate-700"
                       />
                     </td>
-
                     <td className="px-4 py-3" />
-
                     <td className="px-4 py-3">
                       <button
                         onClick={() => setSelectedOrder(order)}
-                        className="inline-flex items-center px-2.5 py-1.5 
-    bg-blue-50 dark:bg-blue-900/20 
-    text-blue-700 dark:text-blue-400 
-    hover:bg-blue-100 dark:hover:bg-blue-900/40 
-    rounded-md font-mono text-xs font-medium 
-    border border-blue-200/50 dark:border-blue-800/50 
-    transition"
+                        className="inline-flex items-center px-2.5 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-md font-mono text-xs font-medium border border-blue-200/50 dark:border-blue-800/50 transition"
                       >
                         {order.salesOrderNumber}
                       </button>
                     </td>
-
                     <td className="px-4 py-3">
                       {order.customerName}
                       {order.isCreditBreached && (
                         <ShieldAlert className="inline ml-1 text-red-500 h-4 w-4" />
                       )}
                     </td>
-
                     <td className="px-4 py-3 text-center">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold 
-    shadow-sm dark:shadow-md
-    ${getStatusStyle(getStatusLabel(order.orderStatus))}`}
-                      >
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${getStatusStyle(getStatusLabel(order.orderStatus))}`}>
                         {getStatusLabel(order.orderStatus)}
                       </span>
                     </td>
-
                     <td className="px-4 py-3 text-right">{order.creditLimit}</td>
                     <td className="px-4 py-3 text-right">{order.currentBalance}</td>
                     <td className="px-4 py-3 text-right font-semibold">{order.availableBalance}</td>
                     <td className="px-4 py-3">{order.customerPONumber}</td>
                     <td className="px-4 py-3">{order.orderDate}</td>
                     <td className="px-4 py-3">{order.salesperson}</td>
-
                   </tr>
                 ))}
               </tbody>
-
             </table>
+          </div>
+
+          {/* Mobile Card List */}
+          <div className="sm:hidden divide-y divide-gray-100 dark:divide-slate-800/60">
+            {filteredOrders.map((order) => (
+              <div
+                key={order.id}
+                className={`p-4 space-y-2.5 ${selectedIds.has(order.id) ? 'bg-blue-50/50 dark:bg-blue-900/20' : ''}`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(order.id)}
+                      onChange={() => toggleSelect(order.id)}
+                      className="h-4 w-4 rounded border-gray-300 text-blue-600"
+                    />
+                    <button
+                      onClick={() => setSelectedOrder(order)}
+                      className="font-mono text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-md border border-blue-200/50"
+                    >
+                      {order.salesOrderNumber}
+                    </button>
+                  </div>
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-semibold ${getStatusStyle(getStatusLabel(order.orderStatus))}`}>
+                    {getStatusLabel(order.orderStatus)}
+                  </span>
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {order.customerName}
+                    {order.isCreditBreached && <ShieldAlert className="inline ml-1 text-red-500 h-3.5 w-3.5" />}
+                  </p>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-xs text-gray-500 dark:text-slate-400">
+                    <span>PO: {order.customerPONumber}</span>
+                    <span>{order.orderDate}</span>
+                    <span>{order.salesperson}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="text-xs text-gray-500 dark:text-slate-400 space-y-0.5">
+                    <div>Avail: <span className="font-semibold text-gray-900 dark:text-white">{order.availableBalance}</span></div>
+                    <div>Limit: {order.creditLimit}</div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="destructive" className="h-7 px-2.5 text-xs">Reject</Button>
+                    <Button size="sm" variant="success" className="h-7 px-2.5 text-xs">Approve</Button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -344,10 +370,9 @@ function SalesOrderModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 
-    bg-black/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm">
 
-      <div className="w-full max-w-4xl rounded-2xl overflow-hidden 
+      <div className="w-full max-w-4xl rounded-t-2xl sm:rounded-2xl overflow-hidden max-h-[90vh] flex flex-col
       bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 
       border border-gray-200 dark:border-slate-800 shadow-2xl">
 
@@ -371,7 +396,7 @@ function SalesOrderModal({
         </div>
 
         {/* BODY */}
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto flex-1">
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
@@ -444,7 +469,7 @@ function SalesOrderModal({
         </div>
 
         {/* FOOTER */}
-        <div className="px-6 py-4 border-t border-gray-200 dark:border-slate-800 
+        <div className="px-4 sm:px-6 py-4 border-t border-gray-200 dark:border-slate-800 flex-shrink-0
         bg-gray-50 dark:bg-slate-900 flex justify-end gap-3">
 
           <Button variant="ghost" onClick={onClose}>

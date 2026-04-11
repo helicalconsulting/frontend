@@ -80,7 +80,7 @@ export function SettingsPage() {
           title="System Settings"
           subtitle="Configure application settings and preferences"
         />
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {Array(4)
               .fill(null)
@@ -110,7 +110,7 @@ export function SettingsPage() {
           title="System Settings"
           subtitle="Configure application settings and preferences"
         />
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
           <div className="rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-900/30 p-4 flex items-center gap-3">
             <AlertTriangle className="h-5 w-5 text-red-500" />
             <p className="text-sm text-red-700">
@@ -129,9 +129,9 @@ export function SettingsPage() {
         subtitle="Configure application settings and preferences"
       />
 
-      <div className="p-6">
+      <div className="p-3 sm:p-6">
         {/* SYSPRO Connection Status Banner */}
-        <div className="mb-6 rounded-xl border border-emerald-200 dark:border-emerald-500/20 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30 p-4 flex items-center justify-between">
+        <div className="mb-4 sm:mb-6 rounded-xl border border-emerald-200 dark:border-emerald-500/20 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30 p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-emerald-500 flex items-center justify-center">
               <Wifi className="h-5 w-5 text-white" />

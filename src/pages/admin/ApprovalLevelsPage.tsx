@@ -206,7 +206,7 @@ export function ApprovalLevelsPage() {
         subtitle="Configure approval workflow levels and thresholds"
       />
 
-      <div className="p-6 space-y-5">
+      <div className="p-3 sm:p-6 space-y-4 sm:space-y-5">
         {/* Summary Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {['PAYMENT', 'PO', 'AP', 'SALES'].map((mod) => {

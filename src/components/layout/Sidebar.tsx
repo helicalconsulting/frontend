@@ -73,6 +73,14 @@ export function Sidebar() {
     navigate('/login');
   };
 
+  // Close sidebar on mobile when a nav link is clicked
+  const handleNavClick = () => {
+    // On mobile (md breakpoint), close the sidebar after navigation
+    if (window.innerWidth < 768) {
+      setCollapsed(true);
+    }
+  };
+
   return (
     <>
       {/* Mobile Overlay */}
@@ -126,6 +134,7 @@ export function Sidebar() {
                     <NavLink
                       key={item.to}
                       to={item.to}
+                      onClick={handleNavClick}
                       className={({ isActive }) =>
                         cn(
                           'group relative flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300 ease-in-out',
@@ -195,10 +204,10 @@ export function Sidebar() {
           )}
         </div>
 
-        {/* Collapse toggle */}
+        {/* Collapse toggle - hidden on mobile */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute -right-3 top-20 z-50 flex h-7 w-7 items-center justify-center rounded-full border-2 border-gray-200 dark:border-slate-700 bg-gradient-to-br from-white to-gray-50 dark:from-slate-800 dark:to-slate-900 shadow-lg transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-xl hover:scale-110 active:scale-95 group"
+          className="hidden md:flex absolute -right-3 top-20 z-50 h-7 w-7 items-center justify-center rounded-full border-2 border-gray-200 dark:border-slate-700 bg-gradient-to-br from-white to-gray-50 dark:from-slate-800 dark:to-slate-900 shadow-lg transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-xl hover:scale-110 active:scale-95 group"
         >
           {collapsed ? (
             <ChevronRight className="h-3.5 w-3.5 text-gray-600 dark:text-slate-400 transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400" />

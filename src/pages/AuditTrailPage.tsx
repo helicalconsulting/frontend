@@ -38,7 +38,7 @@ export function AuditTrailPage() {
         subtitle="Comprehensive approval history and reporting"
       />
 
-      <div className="p-6 space-y-5">
+      <div className="p-3 sm:p-6 space-y-4 sm:space-y-5">
         {/* Page Title */}
         <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
           <div className="flex items-center gap-3 mb-1">
@@ -105,7 +105,7 @@ export function AuditTrailPage() {
           </div>
 
           {/* Export Buttons */}
-          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-slate-800/80">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-slate-800/80">
             <Button variant="destructive" size="sm" className="bg-red-600 hover:bg-red-700">
               <FileText className="h-4 w-4" />
               Export PDF
@@ -119,7 +119,8 @@ export function AuditTrailPage() {
 
         {/* Audit Trail Table */}
         <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Desktop Table */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/80 dark:bg-slate-800/50">
@@ -170,6 +171,36 @@ export function AuditTrailPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card List */}
+          <div className="sm:hidden divide-y divide-gray-100 dark:divide-slate-800/60">
+            {filteredEntries.map((entry) => (
+              <div key={entry.id} className="p-4 space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded">{entry.poNumber}</span>
+                    <Badge variant="success" className="text-[10px]">{entry.statusLabel}</Badge>
+                  </div>
+                  <Badge variant="success" className="text-[10px]">{entry.approvalStatus}</Badge>
+                </div>
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">{entry.supplier}</p>
+                <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-gray-500 dark:text-slate-400">
+                  <span>{entry.entryDate}</span>
+                  <span>Appr1: {entry.approver1}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">
+                    ${entry.value.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </span>
+                  {entry.hasFiles && (
+                    <button className="p-1.5 rounded text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/40">
+                      <Eye className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
 
           {filteredEntries.length === 0 && (

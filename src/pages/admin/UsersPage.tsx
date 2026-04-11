@@ -152,7 +152,7 @@ export function UsersPage() {
         subtitle="Manage system users and their access permissions"
       />
 
-      <div className="p-6 space-y-5">
+      <div className="p-3 sm:p-6 space-y-4 sm:space-y-5">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm">
@@ -224,7 +224,8 @@ export function UsersPage() {
 
         {/* Data Table */}
         <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Desktop Table */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/80">
@@ -368,6 +369,65 @@ export function UsersPage() {
                   })}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card List */}
+          <div className="sm:hidden divide-y divide-gray-100 dark:divide-gray-800">
+            {isLoading
+              ? Array(4).fill(null).map((_, i) => (
+                <div key={i} className="p-4 animate-pulse space-y-2">
+                  <div className="h-4 w-32 rounded bg-gray-200 dark:bg-slate-700" />
+                  <div className="h-3 w-48 rounded bg-gray-200 dark:bg-slate-700" />
+                </div>
+              ))
+              : data?.users.map((user: any) => {
+                const isAdmin = user.roles.some((r: string) => r === 'Super Admin' || r === 'Administrator' || r === 'super_admin' || r === 'admin');
+                return (
+                  <div key={user.id} className="p-4 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2.5">
+                        <div className={`h-9 w-9 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0 ${isAdmin ? 'bg-gradient-to-br from-amber-500 to-orange-600' : 'bg-gradient-to-br from-blue-500 to-indigo-600'}`}>
+                          {user.fullName?.charAt(0) || 'U'}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+                            {user.fullName}
+                            {isAdmin && <Crown className="inline h-3.5 w-3.5 ml-1 text-amber-500" />}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+                        </div>
+                      </div>
+                      <Badge variant={user.isActive ? 'success' : 'danger'} className="text-[10px] flex-shrink-0">
+                        {user.isActive ? 'Active' : 'Inactive'}
+                      </Badge>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1">
+                      {user.roles.slice(0, 2).map((role: string) => (
+                        <Badge key={role} variant={role === 'Super Admin' ? 'warning' : role === 'Administrator' ? 'danger' : 'info'} className="text-xs">
+                          {role}
+                        </Badge>
+                      ))}
+                      {user.roles.length > 2 && <Badge variant="outline" className="text-xs">+{user.roles.length - 2}</Badge>}
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{user.department || 'No dept.'}</span>
+                      <div className="flex items-center gap-1">
+                        <Button size="sm" variant="ghost" onClick={() => openEditModal(user)} className="h-7 w-7 p-0"><Edit2 className="h-3.5 w-3.5" /></Button>
+                        <Button size="sm" variant="ghost" onClick={() => openRolesModal(user)} className="h-7 w-7 p-0"><Shield className="h-3.5 w-3.5" /></Button>
+                        <Button size="sm" variant="ghost" onClick={() => handleMakeAdmin(user)} className="h-7 w-7 p-0">
+                          <Crown className={`h-3.5 w-3.5 ${isAdmin ? 'text-amber-500 fill-amber-500' : 'text-gray-400'}`} />
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => toggleStatusMutation.mutate({ id: user.id, isActive: !user.isActive })} className="h-7 w-7 p-0">
+                          {user.isActive ? <UserX className="h-3.5 w-3.5 text-red-500" /> : <UserCheck className="h-3.5 w-3.5 text-emerald-500" />}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            }
           </div>
 
           {!isLoading && (!data?.users || data.users.length === 0) && (

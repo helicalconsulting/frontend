@@ -37,7 +37,7 @@ export function ReportsPage() {
         subtitle="Audit and report payment approvals and overdue aging"
       />
 
-      <div className="p-6 space-y-5">
+      <div className="p-3 sm:p-6 space-y-4 sm:space-y-5">
         {/* Page Title Card */}
         <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
           <div className="flex items-center gap-3 mb-1">
@@ -106,7 +106,7 @@ export function ReportsPage() {
           </div>
 
           {/* Export Buttons */}
-          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-slate-800/80">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-slate-800/80">
             <Button variant="destructive" size="sm" className="bg-red-600 hover:bg-red-700">
               <FileText className="h-4 w-4" />
               Export PDF
@@ -124,7 +124,8 @@ export function ReportsPage() {
         {/* Report Table */}
         {showReport && (
           <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden animate-in">
-            <div className="overflow-x-auto">
+            {/* Desktop Table */}
+            <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-200 dark:border-slate-800 bg-gray-50/80 dark:bg-slate-800/50">
@@ -179,6 +180,32 @@ export function ReportsPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Card List */}
+            <div className="sm:hidden divide-y divide-gray-100 dark:divide-slate-800/60">
+              {filteredEntries.map((entry) => (
+                <div key={entry.id} className="p-4 space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-mono text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded">{entry.refNumber}</span>
+                    <Badge variant={entry.approved ? 'success' : 'warning'} className="text-[10px]">{
+                      entry.approved ? 'Approved' : 'Pending'
+                    }</Badge>
+                  </div>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{entry.supplier}</p>
+                  <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-gray-500 dark:text-slate-400">
+                    <span>Inv: {entry.invoiceNumber}</span>
+                    <span>Due: {entry.dueDate}</span>
+                    <span className={`font-semibold ${entry.agingDays > 90 ? 'text-red-600 dark:text-red-400' : entry.agingDays > 30 ? 'text-amber-600 dark:text-amber-400' : ''}`}>{entry.agingDays} days</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className={`text-sm font-bold ${entry.netValue > 10000 ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}>
+                      ${entry.netValue.toLocaleString()}
+                    </span>
+                    <span className="text-xs text-gray-400 dark:text-slate-500">{entry.approvalDate || '—'}</span>
+                  </div>
+                </div>
+              ))}
             </div>
 
             {filteredEntries.length === 0 && (

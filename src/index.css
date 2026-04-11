@@ -216,6 +216,15 @@ textarea {
               opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Faster tap response on mobile — removes 300ms click delay */
+button,
+a,
+[role="button"],
+input[type="submit"],
+input[type="button"] {
+  touch-action: manipulation;
+}
+
 /* Focus visible for better accessibility */
 *:focus-visible {
   outline: 2px solid #3b82f6;
@@ -239,3 +248,33 @@ textarea {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* Mobile safe area utilities */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Mobile card list — used for data tables on small screens */
+.mobile-card {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.dark .mobile-card {
+  border-bottom-color: rgba(255,255,255,0.05);
+}
+
+/* Prevent horizontal scroll leakage */
+body {
+  overflow-x: hidden;
+}
+
+/* Responsive table wrapper — always allows horizontal scroll */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
