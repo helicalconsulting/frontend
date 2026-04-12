@@ -214,83 +214,85 @@ export function PurchaseOrdersPage() {
         {/* Top toolbar */}
         <div className="flex flex-col gap-3">
           {/* Row 1: Search & Status Filter */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <div className="relative flex-1 w-full sm:max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                id="search-orders"
-                placeholder="PO Number or Supplier Name..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 dark:text-white"
-              />
-            </div>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full">
 
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-gray-500 flex-shrink-0" />
-              <select
-                id="status-filter"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-              >
-                <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
-              </select>
-            </div>
+  {/* LEFT SIDE */}
+  <div className="flex flex-1 items-center gap-3 w-full">
+
+    {/* Search */}
+    <div className="relative flex-1 max-w-md">
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+      <Input
+        placeholder="PO Number or Supplier Name..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="pl-10 bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 dark:text-white"
+      />
+    </div>
+
+    {/* Status */}
+    <select
+      value={statusFilter}
+      onChange={(e) => setStatusFilter(e.target.value)}
+      className="h-10 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 text-sm text-gray-700 dark:text-gray-200"
+    >
+      <option value="all">All Status</option>
+      <option value="pending">Pending</option>
+      <option value="approved">Approved</option>
+      <option value="rejected">Rejected</option>
+    </select>
+
+  </div>
+
+  {/* RIGHT SIDE (FIXED) */}
+  <div className="w-full sm:w-auto sm:ml-auto">
+    <div className="relative w-full sm:w-[220px]">
+      <select
+        value={displayCurrency}
+        onChange={(e) => setDisplayCurrency(e.target.value)}
+        className="appearance-none w-full cursor-pointer rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 pr-8 text-sm font-medium text-gray-800 dark:text-gray-200"
+      >
+        {CURRENCIES.map(c => (
+          <option key={c.code} value={c.code}>
+            {c.code} — {c.label}
+          </option>
+        ))}
+      </select>
+
+      <ChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+    </div>
+  </div>
+
           </div>
+           {selectedRows.size > 0 && (
+    <div className="flex items-center justify-end gap-3 w-full">
 
-          {/* Row 2: Currency + Bulk Actions */}
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="relative flex-1 min-w-[200px]">
-              <select
-                value={displayCurrency}
-                onChange={(e) => setDisplayCurrency(e.target.value)}
-                className="appearance-none w-full cursor-pointer rounded-xl border border-blue-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 pr-8 text-sm font-semibold text-gray-800 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-              >
-                <optgroup label="🌍 African (Default)">
-                  {CURRENCIES.filter(c => c.region === "africa").map(c => (
-                    <option key={c.code} value={c.code}>
-                      {c.flag} {c.code} — {c.label}
-                    </option>
-                  ))}
-                </optgroup>
+      <span className="text-sm text-gray-400 whitespace-nowrap">
+        {selectedRows.size} selected
+      </span>
 
-                <optgroup label="🌐 Global">
-                  {CURRENCIES.filter(c => c.region === "global").map(c => (
-                    <option key={c.code} value={c.code}>
-                      {c.flag} {c.code} — {c.label}
-                    </option>
-                  ))}
-                </optgroup>
-              </select>
-              <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs">▼</div>
-            </div>
+      <Button
+        size="sm"
+        variant="success"
+        onClick={handleBulkApprove}
+        className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-4"
+      >
+        <CheckCircle2 className="h-4 w-4 mr-1" />
+        Approve
+      </Button>
 
-            {selectedRows.size > 0 && (
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs text-gray-500 font-medium">
-                  {selectedRows.size} selected
-                </span>
-                <Button
-                  size="sm"
-                  variant="success"
-                  onClick={handleBulkApprove}
-                >
-                  Approve Orders
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={handleBulkReject}
-                >
-                  Return Request
-                </Button>
-              </div>
-            )}
-          </div>
+      <Button
+        size="sm"
+        variant="destructive"
+        onClick={handleBulkReject}
+        className="rounded-full px-4"
+      >
+        <XCircle className="h-4 w-4 mr-1" />
+        Reject
+      </Button>
+
+    </div>
+  )}
         </div>
 
         {/* Desktop Table */}

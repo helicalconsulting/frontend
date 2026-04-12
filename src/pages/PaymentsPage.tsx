@@ -285,7 +285,7 @@ export function PaymentsPage() {
                 placeholder="Quick Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 dark:text-white"
+                className="pl-10 sm:w-1/2 bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800 dark:text-white"
               />
             </div>
 
@@ -306,7 +306,7 @@ export function PaymentsPage() {
           </div>
 
           {selectedIds.size > 0 && (
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2 w-full justify-end">
               <span className="text-xs text-gray-500 font-medium">{selectedIds.size} selected</span>
               <Button size="sm" variant="success">
                 <CheckCircle2 className="h-4 w-4" />
@@ -512,14 +512,23 @@ bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex-shrink-0">
                     </div>
                   </div>
 
-                  {/* Footer */}
-                  <div className="px-4 sm:px-6 py-4 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex justify-end gap-3 flex-shrink-0">
-                    <Button variant="destructive" onClick={() => setSelectedRequest(null)}>
+                  <div className="px-4 sm:px-6 py-4 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex items-center justify-end gap-3 w-full">
+                    <Button
+                      variant="destructive"
+                      onClick={() => setSelectedRequest(null)}
+                      className="whitespace-nowrap"
+                    >
                       Reject
                     </Button>
-                    <Button variant="success" onClick={() => setSelectedRequest(null)}>
+
+                    <Button
+                      variant="success"
+                      onClick={() => setSelectedRequest(null)}
+                      className="whitespace-nowrap"
+                    >
                       Approve
                     </Button>
+
                   </div>
 
                 </div>

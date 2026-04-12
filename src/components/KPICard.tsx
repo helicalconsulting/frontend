@@ -53,14 +53,29 @@ export function KPICard({
       {/* Shine effect on hover */}
       <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-      <div className="relative flex items-start justify-between">
+      <div className="relative flex items-start justify-between gap-3">
         <div className="space-y-1 flex-1">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-slate-400 group-hover:text-gray-600 dark:group-hover:text-slate-300 transition-colors">
             {title}
           </p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight mt-2 group-hover:scale-105 transition-transform duration-200 origin-left">
-            {value}
-          </p>
+          <div className="flex items-center gap-3">
+
+  <div
+    className={cn(
+      'flex-shrink-0 flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl shadow-md transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-lg',
+      iconBgColor,
+      iconBgColor.includes('100') && `dark:${iconBgColor.replace('100', '900/60')}`
+    )}
+  >
+    {icon}
+  </div>
+
+  <p className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight leading-tight whitespace-nowrap">
+    {value}
+  </p>
+
+</div>
+
           {trend && (
             <div className="flex items-center gap-1.5 mt-2">
               <span
@@ -77,15 +92,7 @@ export function KPICard({
             </div>
           )}
         </div>
-        <div
-          className={cn(
-            'flex items-center justify-center w-14 h-14 rounded-xl shadow-md transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-lg',
-            iconBgColor,
-            iconBgColor.includes('100') && `dark:${iconBgColor.replace('100', '900/60')}`
-          )}
-        >
-          {icon}
-        </div>
+        
       </div>
     </div>
   );

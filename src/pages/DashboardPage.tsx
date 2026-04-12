@@ -108,7 +108,7 @@ export function DashboardPage() {
   const { user } = useAuth();
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20 dark:from-slate-950 dark:via-blue-950/20 dark:to-indigo-950/10">
+    <div className="relative min-h-screen w-full overflow-x-hidden contain-layout bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20 dark:from-slate-950 dark:via-blue-950/20 dark:to-indigo-950/10">
       {/* Animated background pattern */}
       <div className="absolute inset-0 -z-10">
         <div
@@ -120,13 +120,12 @@ export function DashboardPage() {
           }}
         />
         <div
-          className="absolute top-40 -left-40 h-96 w-96 rounded-full bg-blue-400/10 blur-3xl animate-pulse"
-          style={{ animationDuration: '4s' }}
-        />
-        <div
-          className="absolute bottom-40 -right-40 h-96 w-96 rounded-full bg-indigo-400/10 blur-3xl animate-pulse"
-          style={{ animationDuration: '6s', animationDelay: '2s' }}
-        />
+  className="absolute top-40 -left-40 h-72 w-72 rounded-full bg-blue-400/10 blur-2xl opacity-50 pointer-events-none"
+/>
+
+<div
+  className="absolute bottom-40 -right-40 h-72 w-72 rounded-full bg-indigo-400/10 blur-2xl opacity-50 pointer-events-none"
+/>
       </div>
 
       <Header
@@ -134,7 +133,7 @@ export function DashboardPage() {
         subtitle="Real-time approval command center"
       />
 
-      <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 animate-in">
+      <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
         {/* Welcome + SYSPRO Status */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
@@ -162,26 +161,26 @@ export function DashboardPage() {
         </div>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 items-stretch">
 
           <div className="animate-slide-up h-full">
             <KPICard
               className="h-full"
               title="Pending Approvals"
               value={isLoading ? '—' : formatNumber(data!.kpis.pendingApprovals)}
-              icon={<AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6 text-amber-600" />}
+              icon={<AlertTriangle className="h-4 w-4 sm:h-6 sm:w-6 text-amber-600" />}
               iconBgColor="bg-amber-100"
               trend={{ value: 12, isPositive: false }}
               isLoading={isLoading}
             />
           </div>
 
-          <div className="animate-slide-up delay-75 h-full">
+          <div className="h-full">
             <KPICard
               className="h-full"
               title="Approved Today"
               value={isLoading ? '—' : formatNumber(data!.kpis.approvedToday)}
-              icon={<CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />}
+              icon={<CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 text-emerald-600" />}
               iconBgColor="bg-emerald-100"
               trend={{ value: 8, isPositive: true }}
               isLoading={isLoading}
@@ -193,7 +192,7 @@ export function DashboardPage() {
               className="h-full"
               title="Avg. Processing (hrs)"
               value={isLoading ? '—' : data!.kpis.avgProcessingTime.toLocaleString()}
-              icon={<Clock className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />}
+              icon={<Clock className="h-4 w-4 sm:h-6 sm:w-6 text-blue-600" />}
               iconBgColor="bg-blue-100"
               isLoading={isLoading}
             />
@@ -203,7 +202,7 @@ export function DashboardPage() {
             <KPICard
               className="h-full"
               title="Total Value"
-              icon={<DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-indigo-600 dark:text-indigo-400" />}
+              icon={<DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-indigo-700 dark:text-indigo-300 stroke-[2.5]" />}
               value={
                 isLoading
                   ? '—'
@@ -221,19 +220,19 @@ export function DashboardPage() {
         </div>
 
         {/* Charts + Activity Feed */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
           <div className="lg:col-span-2">
             <ApprovalTrendChart
               data={data?.approvalTrends || []}
               isLoading={isLoading}
             />
           </div>
-          <div>
-            <RequestTypeChart
-              data={data?.requestTypes || []}
-              isLoading={isLoading}
-            />
-          </div>
+          <div className="h-full">
+  <RequestTypeChart
+    data={data?.requestTypes || []}
+    isLoading={isLoading}
+  />
+</div>
         </div>
 
         {/* Module Cards + Recent Activity */}
