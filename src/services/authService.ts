@@ -3,7 +3,7 @@ import { mockAuthResponse } from '@/mocks/data';
 import apiClient from './apiClient';
 
 // Toggle between mock and real API calls
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 // Demo users for mock login - matches backend credentials
 const mockUsers: Record<string, { password: string; user: AuthResponse['user'] }> = {

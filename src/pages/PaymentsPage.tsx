@@ -388,9 +388,7 @@ export function PaymentsPage() {
               </div>
 
               {/* Filter */}
-              <Button size="sm" variant="outline">
-                <Filter className="h-4 w-4" />
-              </Button>
+              
 
             </div>
           </div>

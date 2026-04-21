@@ -4,7 +4,7 @@
 export interface LoginCredentials {
   username: string;
   password: string;
-  company: string;
+  companyCode: string;
 }
 
 export interface AuthResponse {

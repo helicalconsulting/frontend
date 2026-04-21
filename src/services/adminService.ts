@@ -2,7 +2,7 @@ import apiClient from './apiClient';
 import { mockUsers, mockRoles, mockPermissions, mockApprovalLevels, mockSystemSettings } from '@/mocks/data';
 
 // Toggle between mock and real API calls
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 // ============================================
 // Types
@@ -21,16 +21,22 @@ export interface AdminUser {
 
 export interface Role {
   id: number;
-  name: string;
+  roleName: string;           // matches backend `roleName` field
+  name?: string;              // kept for backwards-compat with other consumers
   description?: string;
+  userCount?: number;         // from _count.userRoles
   permissions?: Permission[];
 }
 
 export interface Permission {
   id: number;
-  name: string;
+  roleId: number;
   module: string;
-  description?: string;
+  canView: boolean;
+  canCreate: boolean;
+  canApprove: boolean;
+  canReject: boolean;
+  maxValue?: number | null;
 }
 
 export interface ApprovalLevel {
@@ -132,8 +138,15 @@ export async function getUsers(params?: GetUsersParams): Promise<PaginatedRespon
       pagination: { page: 1, limit: 20, total: users.length, pages: 1 } 
     };
   }
+
   const response = await apiClient.get('/admin/users', { params });
-  return response.data.data;
+  
+  const apiData = response.data.data;
+
+  return {
+    items: apiData.users,        // ✅ FIX
+    pagination: apiData.pagination
+  };
 }
 
 /**
@@ -145,7 +158,7 @@ export async function getUser(id: number): Promise<AdminUser> {
     throw new Error('User not found');
   }
   const response = await apiClient.get(`/admin/users/${id}`);
-  return response.data.data;
+  return response.data.data || response.data.data.user;
 }
 
 /**
@@ -157,7 +170,8 @@ export async function createUser(data: CreateUserData): Promise<AdminUser> {
     throw new Error('Mock mode - cannot create user');
   }
   const response = await apiClient.post('/admin/users', data);
-  return response.data.data;
+  console.log("api calling");
+  return response.data.data.user || response.data.data;
 }
 
 /**
@@ -169,7 +183,7 @@ export async function updateUser(id: number, data: UpdateUserData): Promise<Admi
     throw new Error('Mock mode - cannot update user');
   }
   const response = await apiClient.put(`/admin/users/${id}`, data);
-  return response.data.data;
+  return response.data.data || response.data.data.user;
 }
 
 /**
@@ -206,46 +220,75 @@ export async function updateUserRoles(id: number, roleIds: number[]): Promise<Ad
 export async function getRoles(): Promise<Role[]> {
   if (USE_MOCK) {
     await new Promise((r) => setTimeout(r, 200));
-    return mockRoles.map(r => ({
+    return mockRoles.map((r) => ({
       id: parseInt(r.id.replace('role-', '')),
+      roleName: r.displayName,
       name: r.displayName,
       description: r.description,
-      permissions: r.permissions.map((p, i) => ({ id: i, name: p, module: p.split(':')[0], description: p })),
+      userCount: 0,
+      permissions: r.permissions.map((p, i) => ({
+        id: i,
+        roleId: 0,
+        module: p.split(':')[0],
+        canView: true,
+        canCreate: false,
+        canApprove: false,
+        canReject: false,
+      })),
     }));
   }
   const response = await apiClient.get('/admin/roles');
+  // Backend returns: { success, data: Role[] }
   return response.data.data;
 }
 
 /**
- * Get all permissions
+ * Get all permissions grouped by module.
+ * Backend returns: Record<string, Permission[]>
  */
-export async function getPermissions(): Promise<Permission[]> {
+export async function getPermissions(): Promise<Record<string, Permission[]>> {
   if (USE_MOCK) {
     await new Promise((r) => setTimeout(r, 200));
-    return mockPermissions.map(p => ({
-      id: parseInt(p.id.replace('perm-', '')),
-      name: `${p.module}:${p.action}`,
-      module: p.module,
-      description: p.description,
-    }));
+    const byModule: Record<string, Permission[]> = {};
+    mockPermissions.forEach((p, i) => {
+      const mod = p.module;
+      if (!byModule[mod]) byModule[mod] = [];
+      byModule[mod].push({
+        id: i,
+        roleId: 0,
+        module: mod,
+        canView: true,
+        canCreate: false,
+        canApprove: false,
+        canReject: false,
+      });
+    });
+    return byModule;
   }
   const response = await apiClient.get('/admin/permissions');
   return response.data.data;
 }
 
 /**
- * Update permissions for a role
+ * Update permissions for a role.
+ * Sends: { permissions: Array<{ module, canView, canCreate, canApprove, canReject, maxValue }> }
  */
 export async function updateRolePermissions(
   roleId: number,
-  permissionIds: number[]
-): Promise<Role> {
+  permissions: Array<{
+    module: string;
+    canView?: boolean;
+    canCreate?: boolean;
+    canApprove?: boolean;
+    canReject?: boolean;
+    maxValue?: number | null;
+  }>
+): Promise<Permission[]> {
   if (USE_MOCK) {
     await new Promise((r) => setTimeout(r, 400));
     throw new Error('Mock mode - cannot update permissions');
   }
-  const response = await apiClient.put(`/admin/roles/${roleId}/permissions`, { permissionIds });
+  const response = await apiClient.put(`/admin/roles/${roleId}/permissions`, { permissions });
   return response.data.data;
 }
 
@@ -381,3 +424,9 @@ export async function updateSettings(
   const response = await apiClient.put('/admin/settings', data);
   return response.data.data;
 }
+// ✅ NAYA - REPLACE KARO
+export async function toggleUserStatus(id: number, isActive: boolean): Promise<AdminUser> {
+  const response = await apiClient.patch(`/admin/users/${id}/status`, { isActive });
+  return response.data.data;
+}
+

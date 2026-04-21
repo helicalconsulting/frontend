@@ -9,9 +9,9 @@ import { Eye, EyeOff, Loader2, Building2, Sun, Moon, ChevronRight, Lock, User, B
 export function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('password123');
-  const [company, setCompany] = useState('DEMO');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [companyCode, setCompanyCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -23,15 +23,20 @@ export function LoginPage() {
     setError('');
     setIsLoading(true);
     try {
-      const response = await loginService({ username, password, company });
+      const response = await loginService({ username, password, companyCode });
       login(response.token, response.user);
       navigate('/dashboard');
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Authentication failed. Please verify your credentials.');
-      }
+    } catch (err: any) {
+      console.log(err);
+
+      const message =
+        err?.response?.data?.message ||   // ✅ correct
+        (err?.response?.status === 401
+          ? 'Invalid username or password or company code'
+          : null) ||
+        'Login failed. Please try again';
+
+      setError(message); // ✅ ALWAYS STRING
     } finally {
       setIsLoading(false);
     }
@@ -132,36 +137,36 @@ export function LoginPage() {
       <div className={`hidden lg:flex lg:w-[45%] xl:w-[40%] ${theme.sidebarBg} flex-col justify-between p-12 relative overflow-hidden`}>
         {/* Geometric background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-[0.04] bg-white" style={{transform:'translate(30%,-30%)'}} />
-          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full opacity-[0.03] bg-white" style={{transform:'translate(-30%,30%)'}} />
+          <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-[0.04] bg-white" style={{ transform: 'translate(30%,-30%)' }} />
+          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full opacity-[0.03] bg-white" style={{ transform: 'translate(-30%,30%)' }} />
           {/* Grid lines */}
           <svg className="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
-                <path d="M 48 0 L 0 0 0 48" fill="none" stroke="white" strokeWidth="0.5"/>
+                <path d="M 48 0 L 0 0 0 48" fill="none" stroke="white" strokeWidth="0.5" />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
           </svg>
           {/* Diagonal accent */}
-          <div className="absolute inset-0" style={{background:'linear-gradient(135deg, transparent 60%, rgba(0,112,255,0.06) 100%)'}} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, transparent 60%, rgba(0,112,255,0.06) 100%)' }} />
         </div>
 
         {/* Logo + Brand */}
         <div className="relative z-10 anim-slide">
           <div className="flex items-center gap-3 mb-2">
             {/* 3x3 circle dots icon matching logo */}
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background:'#1c2e4a'}}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#1c2e4a' }}>
               <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <circle cx="3"  cy="3"  r="2.2" fill="#4d9de0"/>
-                <circle cx="11" cy="3"  r="2.2" fill="#4d9de0"/>
-                <circle cx="19" cy="3"  r="2.2" fill="#4d9de0"/>
-                <circle cx="3"  cy="11" r="2.2" fill="#4d9de0"/>
-                <circle cx="11" cy="11" r="2.2" fill="#2a6db5"/>
-                <circle cx="19" cy="11" r="2.2" fill="#4d9de0"/>
-                <circle cx="3"  cy="19" r="2.2" fill="#4d9de0"/>
-                <circle cx="11" cy="19" r="2.2" fill="#4d9de0"/>
-                <circle cx="19" cy="19" r="2.2" fill="#4d9de0"/>
+                <circle cx="3" cy="3" r="2.2" fill="#4d9de0" />
+                <circle cx="11" cy="3" r="2.2" fill="#4d9de0" />
+                <circle cx="19" cy="3" r="2.2" fill="#4d9de0" />
+                <circle cx="3" cy="11" r="2.2" fill="#4d9de0" />
+                <circle cx="11" cy="11" r="2.2" fill="#2a6db5" />
+                <circle cx="19" cy="11" r="2.2" fill="#4d9de0" />
+                <circle cx="3" cy="19" r="2.2" fill="#4d9de0" />
+                <circle cx="11" cy="19" r="2.2" fill="#4d9de0" />
+                <circle cx="19" cy="19" r="2.2" fill="#4d9de0" />
               </svg>
             </div>
             <div>
@@ -180,7 +185,7 @@ export function LoginPage() {
           </div>
           <h2 className="anim-slide anim-delay-2 text-4xl xl:text-5xl font-bold text-white leading-[1.15] mb-4 tracking-tight">
             Workflow<br />
-            <span style={{color:'#60a5fa'}}>Approval</span><br />
+            <span style={{ color: '#60a5fa' }}>Approval</span><br />
             System
           </h2>
           <p className="anim-slide anim-delay-3 text-sm text-blue-200/50 leading-relaxed mb-8 max-w-[280px]">
@@ -191,9 +196,9 @@ export function LoginPage() {
           <div className="space-y-3 anim-slide anim-delay-4">
             {['Multi-level Authorization', 'Real-time Audit Trails', 'Role-based Access Control'].map((f, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0" style={{background:'rgba(59,130,246,0.15)', border:'1px solid rgba(59,130,246,0.25)'}}>
+                <div className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.25)' }}>
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                    <path d="M1.5 5L4 7.5L8.5 2.5" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M1.5 5L4 7.5L8.5 2.5" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
                 <span className="text-xs text-blue-200/60">{f}</span>
@@ -218,17 +223,17 @@ export function LoginPage() {
         <div className="sapbar" />
         <div className={`flex items-center justify-between px-6 py-3 border-b ${theme.divider} ${theme.cardBg.split(' ')[0]}`}>
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{background:'#1c2e4a'}}>
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: '#1c2e4a' }}>
               <svg width="16" height="16" viewBox="0 0 22 22" fill="none">
-                <circle cx="3"  cy="3"  r="2.2" fill="#4d9de0"/>
-                <circle cx="11" cy="3"  r="2.2" fill="#4d9de0"/>
-                <circle cx="19" cy="3"  r="2.2" fill="#4d9de0"/>
-                <circle cx="3"  cy="11" r="2.2" fill="#4d9de0"/>
-                <circle cx="11" cy="11" r="2.2" fill="#2a6db5"/>
-                <circle cx="19" cy="11" r="2.2" fill="#4d9de0"/>
-                <circle cx="3"  cy="19" r="2.2" fill="#4d9de0"/>
-                <circle cx="11" cy="19" r="2.2" fill="#4d9de0"/>
-                <circle cx="19" cy="19" r="2.2" fill="#4d9de0"/>
+                <circle cx="3" cy="3" r="2.2" fill="#4d9de0" />
+                <circle cx="11" cy="3" r="2.2" fill="#4d9de0" />
+                <circle cx="19" cy="3" r="2.2" fill="#4d9de0" />
+                <circle cx="3" cy="11" r="2.2" fill="#4d9de0" />
+                <circle cx="11" cy="11" r="2.2" fill="#2a6db5" />
+                <circle cx="19" cy="11" r="2.2" fill="#4d9de0" />
+                <circle cx="3" cy="19" r="2.2" fill="#4d9de0" />
+                <circle cx="11" cy="19" r="2.2" fill="#4d9de0" />
+                <circle cx="19" cy="19" r="2.2" fill="#4d9de0" />
               </svg>
             </div>
             <div className="flex items-baseline gap-1.5">
@@ -262,8 +267,8 @@ export function LoginPage() {
                 {error && (
                   <div className={`flex items-start gap-2.5 rounded-lg px-4 py-3 text-sm ${theme.errorBg}`}>
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="flex-shrink-0 mt-0.5">
-                      <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
-                      <path d="M8 5v3.5M8 11h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
+                      <path d="M8 5v3.5M8 11h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
                     <span>{error}</span>
                   </div>
@@ -327,8 +332,8 @@ export function LoginPage() {
                     <Briefcase className={`input-icon h-3.5 w-3.5 ${theme.iconColor}`} />
                     <Input
                       id="company"
-                      value={company}
-                      onChange={(e) => setCompany(e.target.value)}
+                      value={companyCode}
+                      onChange={(e) => setCompanyCode(e.target.value.toUpperCase())}
                       placeholder="e.g. DEMO"
                       className={`h-9 rounded-lg text-sm input-padded ${theme.inputBg}`}
                       required
@@ -355,7 +360,7 @@ export function LoginPage() {
                   type="submit"
                   disabled={isLoading}
                   className="btn-primary w-full h-10 rounded-lg text-sm font-semibold text-white flex items-center justify-center gap-2 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed mt-1"
-                  style={{background: isLoading ? '#1a4fa0' : 'linear-gradient(135deg, #1a5fd6 0%, #0038a0 100%)', boxShadow:'0 2px 12px rgba(26,95,214,0.35)'}}
+                  style={{ background: isLoading ? '#1a4fa0' : 'linear-gradient(135deg, #1a5fd6 0%, #0038a0 100%)', boxShadow: '0 2px 12px rgba(26,95,214,0.35)' }}
                 >
                   {isLoading ? (
                     <>
@@ -375,10 +380,10 @@ export function LoginPage() {
             {/* Demo credentials */}
             <div className={`mt-4 rounded-xl ${theme.demoBg} p-4 anim-fade anim-delay-2`}>
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-4 h-4 rounded flex items-center justify-center" style={{background:'rgba(59,130,246,0.15)', border:'1px solid rgba(59,130,246,0.2)'}}>
+                <div className="w-4 h-4 rounded flex items-center justify-center" style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.2)' }}>
                   <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-                    <circle cx="4" cy="3" r="1.5" fill="#60a5fa"/>
-                    <path d="M1 7c0-1.657 1.343-3 3-3s3 1.343 3 3" stroke="#60a5fa" strokeWidth="1" strokeLinecap="round"/>
+                    <circle cx="4" cy="3" r="1.5" fill="#60a5fa" />
+                    <path d="M1 7c0-1.657 1.343-3 3-3s3 1.343 3 3" stroke="#60a5fa" strokeWidth="1" strokeLinecap="round" />
                   </svg>
                 </div>
                 <span className={`text-[11px] font-semibold uppercase tracking-wider ${theme.label}`}>Demo Accounts</span>
@@ -393,12 +398,16 @@ export function LoginPage() {
                   <button
                     key={user}
                     type="button"
-                    onClick={() => { setUsername(user); setPassword('password123'); setCompany('DEMO'); }}
+                    onClick={() => {
+                      setUsername(user);
+                      setPassword('password123');
+                      setCompanyCode('DEMO');
+                    }}
                     className={`text-left p-2.5 rounded-lg transition-colors ${theme.demoItemBg}`}
                   >
                     <div className="flex items-center gap-1.5 mb-0.5">
-                      <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background: color}} />
-                      <span className="text-[11px] font-semibold" style={{color}}>{user}</span>
+                      <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: color }} />
+                      <span className="text-[11px] font-semibold" style={{ color }}>{user}</span>
                     </div>
                     <span className={`text-[10px] ${theme.footerText}`}>{role}</span>
                   </button>
