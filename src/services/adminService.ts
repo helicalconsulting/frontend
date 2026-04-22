@@ -133,14 +133,14 @@ export async function getUsers(params?: GetUsersParams): Promise<PaginatedRespon
       createdAt: u.createdAt,
       updatedAt: u.createdAt,
     }));
-    return { 
-      items: users, 
-      pagination: { page: 1, limit: 20, total: users.length, pages: 1 } 
+    return {
+      items: users,
+      pagination: { page: 1, limit: 20, total: users.length, pages: 1 }
     };
   }
 
   const response = await apiClient.get('/admin/users', { params });
-  
+
   const apiData = response.data.data;
 
   return {
@@ -303,9 +303,11 @@ export async function getApprovalLevels(module?: string): Promise<ApprovalLevel[
   if (USE_MOCK) {
     await new Promise((r) => setTimeout(r, 200));
     let levels = mockApprovalLevels;
+
     if (module) {
       levels = levels.filter(l => l.module.toLowerCase() === module.toLowerCase());
     }
+
     return levels.map(l => ({
       id: parseInt(l.id.replace('lvl-', '')),
       module: l.module,
@@ -313,16 +315,31 @@ export async function getApprovalLevels(module?: string): Promise<ApprovalLevel[
       name: l.levelName,
       minValue: l.minValue,
       maxValue: l.maxValue,
-      roleId: 1,
+      role: l.requiredRole || 'admin', // ✅ FIX (string role)
       isActive: l.isActive,
       createdAt: '2026-01-01T00:00:00Z',
       updatedAt: '2026-01-01T00:00:00Z',
     }));
   }
+
   const params = module ? { module } : undefined;
   const response = await apiClient.get('/admin/approval-levels', { params });
-  return response.data.data;
+
+  // ✅ IMPORTANT FIX: backend → frontend mapping
+  return response.data.data.map((l: any) => ({
+    id: l.id,
+    module: l.module,
+    level: l.levelNumber,        // ✅ FIX
+    name: l.levelName,           // ✅ FIX
+    minValue: l.minValue,
+    maxValue: l.maxValue,
+    role: l.requiredRole,        // ✅ FIX (not roleId)
+    isActive: l.isActive,
+    createdAt: l.createdAt,
+    updatedAt: l.updatedAt,
+  }));
 }
+
 
 /**
  * Get list of modules that have approval levels
@@ -332,9 +349,13 @@ export async function getApprovalModules(): Promise<string[]> {
     await new Promise((r) => setTimeout(r, 200));
     return ['po', 'ap', 'payments', 'sales', 'onboarding'];
   }
+
   const response = await apiClient.get('/admin/approval-levels/modules');
-  return response.data.data;
+
+  // ✅ FIX: backend returns [{ module, levelCount }]
+  return response.data.data.map((m: any) => m.module);
 }
+
 
 /**
  * Create a new approval level
@@ -344,9 +365,33 @@ export async function createApprovalLevel(data: CreateApprovalLevelData): Promis
     await new Promise((r) => setTimeout(r, 400));
     throw new Error('Mock mode - cannot create approval level');
   }
-  const response = await apiClient.post('/admin/approval-levels', data);
-  return response.data.data;
+
+  // ✅ FIX: map frontend → backend
+  const payload = {
+    module: data.module,
+    levelNumber: data.level,
+    levelName: data.name,
+    requiredRole: data.role,
+    minValue: data.minValue ?? null,
+    maxValue: data.maxValue ?? null,
+  };
+
+  const response = await apiClient.post('/admin/approval-levels', payload);
+
+  return {
+    id: response.data.data.id,
+    module: response.data.data.module,
+    level: response.data.data.levelNumber,
+    name: response.data.data.levelName,
+    minValue: response.data.data.minValue,
+    maxValue: response.data.data.maxValue,
+    role: response.data.data.requiredRole,
+    isActive: response.data.data.isActive,
+    createdAt: response.data.data.createdAt,
+    updatedAt: response.data.data.updatedAt,
+  };
 }
+
 
 /**
  * Update an approval level
@@ -359,9 +404,32 @@ export async function updateApprovalLevel(
     await new Promise((r) => setTimeout(r, 400));
     throw new Error('Mock mode - cannot update approval level');
   }
-  const response = await apiClient.put(`/admin/approval-levels/${id}`, data);
-  return response.data.data;
+
+  // ✅ FIX: mapping
+  const payload: any = {
+    ...(data.name !== undefined && { levelName: data.name }),
+    ...(data.role !== undefined && { requiredRole: data.role }),
+    ...(data.minValue !== undefined && { minValue: data.minValue }),
+    ...(data.maxValue !== undefined && { maxValue: data.maxValue }),
+    ...(data.isActive !== undefined && { isActive: data.isActive }),
+  };
+
+  const response = await apiClient.put(`/admin/approval-levels/${id}`, payload);
+
+  return {
+    id: response.data.data.id,
+    module: response.data.data.module,
+    level: response.data.data.levelNumber,
+    name: response.data.data.levelName,
+    minValue: response.data.data.minValue,
+    maxValue: response.data.data.maxValue,
+    role: response.data.data.requiredRole,
+    isActive: response.data.data.isActive,
+    createdAt: response.data.data.createdAt,
+    updatedAt: response.data.data.updatedAt,
+  };
 }
+
 
 /**
  * Delete an approval level
@@ -371,21 +439,45 @@ export async function deleteApprovalLevel(id: number): Promise<void> {
     await new Promise((r) => setTimeout(r, 300));
     throw new Error('Mock mode - cannot delete approval level');
   }
+
   await apiClient.delete(`/admin/approval-levels/${id}`);
 }
+
 
 /**
  * Reorder approval levels for a module
  */
 export async function reorderApprovalLevels(
+  module: string, // ✅ FIX: module required
   levels: { id: number; level: number }[]
 ): Promise<ApprovalLevel[]> {
   if (USE_MOCK) {
     await new Promise((r) => setTimeout(r, 400));
     throw new Error('Mock mode - cannot reorder levels');
   }
-  const response = await apiClient.post('/admin/approval-levels/reorder', { levels });
-  return response.data.data;
+
+  const payload = {
+    module,
+    levelOrder: levels.map(l => ({
+      id: l.id,
+      levelNumber: l.level, // ✅ FIX
+    })),
+  };
+
+  const response = await apiClient.post('/admin/approval-levels/reorder', payload);
+
+  return response.data.data.map((l: any) => ({
+    id: l.id,
+    module: l.module,
+    level: l.levelNumber,
+    name: l.levelName,
+    minValue: l.minValue,
+    maxValue: l.maxValue,
+    role: l.requiredRole,
+    isActive: l.isActive,
+    createdAt: l.createdAt,
+    updatedAt: l.updatedAt,
+  }));
 }
 
 // ============================================
@@ -429,4 +521,5 @@ export async function toggleUserStatus(id: number, isActive: boolean): Promise<A
   const response = await apiClient.patch(`/admin/users/${id}/status`, { isActive });
   return response.data.data;
 }
+
 

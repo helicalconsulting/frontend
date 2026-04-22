@@ -6,7 +6,14 @@ import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/components/ui/Toast';
-import * as mockApi from '@/services/mockAdminApi';
+import {
+  getApprovalLevels,
+  getApprovalModules,
+  createApprovalLevel,
+  updateApprovalLevel,
+  deleteApprovalLevel,
+  reorderApprovalLevels,
+} from '@/services/adminService';
 import {
   Plus,
   Edit2,
@@ -20,17 +27,24 @@ import {
   Filter,
 } from 'lucide-react';
 
-// Types
+// Type matches adminService return shape exactly
 interface ApprovalLevel {
-  id: string;
+  id: number;
   module: string;
   level: number;
   name: string;
   minValue: number;
   maxValue: number | null;
-  requiredRole: string;
+  role: string;
   isActive: boolean;
   createdAt: string;
+  updatedAt: string;
+}
+
+interface ModuleOption {
+  id: string;
+  name: string;
+  displayName: string;
 }
 
 const moduleColors: Record<string, string> = {
@@ -51,29 +65,38 @@ export function ApprovalLevelsPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState<ApprovalLevel | null>(null);
 
-  // Queries
+  // ── Queries ──────────────────────────────────────────────────────────────────
+
   const {
     data: levelsData,
     isLoading: isLoadingLevels,
     error: levelsError,
-  } = useQuery({
+  } = useQuery<ApprovalLevel[]>({
     queryKey: ['admin-approval-levels', selectedModule],
     queryFn: () =>
-      mockApi.getApprovalLevels(
-        selectedModule === 'all' ? undefined : selectedModule
-      ),
+      getApprovalLevels(selectedModule === 'all' ? undefined : selectedModule),
     staleTime: 30000,
   });
 
-  const { data: modules = [] } = useQuery({
+  // getApprovalModules returns string[] — e.g. ['PO', 'AP', 'PAYMENT', ...]
+  const { data: rawModules = [] } = useQuery<string[]>({
     queryKey: ['admin-modules'],
-    queryFn: mockApi.getModules,
+    queryFn: () => getApprovalModules(),
     staleTime: 60000,
   });
 
-  // Mutations
+  // Normalise string[] → ModuleOption[] for selects
+  const moduleOptions: ModuleOption[] = rawModules.map((m) => ({
+    id: m,
+    name: m,
+    displayName: m.charAt(0).toUpperCase() + m.slice(1).toLowerCase(),
+  }));
+
+  // ── Mutations ─────────────────────────────────────────────────────────────────
+
   const createMutation = useMutation({
-    mutationFn: (data: any) => mockApi.createApprovalLevel(data),
+    mutationFn: (data: Parameters<typeof createApprovalLevel>[0]) =>
+      createApprovalLevel(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-approval-levels'] });
       showToast('success', 'Level Created', 'New approval level has been created');
@@ -85,8 +108,13 @@ export function ApprovalLevelsPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) =>
-      mockApi.updateApprovalLevel(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: Parameters<typeof updateApprovalLevel>[1];
+    }) => updateApprovalLevel(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-approval-levels'] });
       showToast('success', 'Level Updated', 'Approval level has been updated');
@@ -99,7 +127,7 @@ export function ApprovalLevelsPage() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => mockApi.deleteApprovalLevel(id),
+    mutationFn: (id: number) => deleteApprovalLevel(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-approval-levels'] });
       showToast('success', 'Level Deleted', 'Approval level has been removed');
@@ -114,11 +142,11 @@ export function ApprovalLevelsPage() {
   const reorderMutation = useMutation({
     mutationFn: ({
       module,
-      levelIds,
+      levels,
     }: {
       module: string;
-      levelIds: string[];
-    }) => mockApi.reorderApprovalLevels(module, levelIds),
+      levels: { id: number; level: number }[];
+    }) => reorderApprovalLevels(module, levels),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-approval-levels'] });
     },
@@ -127,9 +155,10 @@ export function ApprovalLevelsPage() {
     },
   });
 
+  // toggleStatus reuses updateApprovalLevel — no separate mock fn needed
   const toggleStatusMutation = useMutation({
-    mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
-      mockApi.toggleApprovalLevelStatus(id, isActive),
+    mutationFn: ({ id, isActive }: { id: number; isActive: boolean }) =>
+      updateApprovalLevel(id, { isActive }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-approval-levels'] });
       showToast('success', 'Status Updated', 'Level status has been changed');
@@ -139,53 +168,51 @@ export function ApprovalLevelsPage() {
     },
   });
 
-  // Group levels by module
+  // ── Derived state ─────────────────────────────────────────────────────────────
+
+  // levelsData is ApprovalLevel[] — group by module
   const levelsByModule = useMemo(() => {
-    if (!levelsData?.levels) return {};
-    return levelsData.levels.reduce(
-      (acc: Record<string, ApprovalLevel[]>, level: ApprovalLevel) => {
-        if (!acc[level.module]) {
-          acc[level.module] = [];
-        }
-        acc[level.module].push(level);
-        return acc;
-      },
-      {} as Record<string, ApprovalLevel[]>
-    );
+    if (!levelsData || !Array.isArray(levelsData)) return {};
+
+    return levelsData.reduce<Record<string, ApprovalLevel[]>>((acc, level) => {
+      if (!acc[level.module]) acc[level.module] = [];
+      acc[level.module].push(level);
+      return acc;
+    }, {});
   }, [levelsData]);
 
-  // Sort levels within each module
+  // Sort each module's levels ascending by level number
   Object.keys(levelsByModule).forEach((mod) => {
-    levelsByModule[mod].sort((a: ApprovalLevel, b: ApprovalLevel) => a.level - b.level);
+    levelsByModule[mod].sort((a, b) => a.level - b.level);
   });
+
+  // ── Handlers ──────────────────────────────────────────────────────────────────
 
   const handleMoveUp = (level: ApprovalLevel) => {
     const moduleLevels = levelsByModule[level.module];
-    const currentIndex = moduleLevels.findIndex((l: ApprovalLevel) => l.id === level.id);
-    if (currentIndex <= 0) return;
+    const idx = moduleLevels.findIndex((l) => l.id === level.id);
+    if (idx <= 0) return;
+
     const newOrder = [...moduleLevels];
-    [newOrder[currentIndex - 1], newOrder[currentIndex]] = [
-      newOrder[currentIndex],
-      newOrder[currentIndex - 1],
-    ];
+    [newOrder[idx - 1], newOrder[idx]] = [newOrder[idx], newOrder[idx - 1]];
+
     reorderMutation.mutate({
       module: level.module,
-      levelIds: newOrder.map((l: ApprovalLevel) => l.id),
+      levels: newOrder.map((l, i) => ({ id: l.id, level: i + 1 })),
     });
   };
 
   const handleMoveDown = (level: ApprovalLevel) => {
     const moduleLevels = levelsByModule[level.module];
-    const currentIndex = moduleLevels.findIndex((l: ApprovalLevel) => l.id === level.id);
-    if (currentIndex >= moduleLevels.length - 1) return;
+    const idx = moduleLevels.findIndex((l) => l.id === level.id);
+    if (idx >= moduleLevels.length - 1) return;
+
     const newOrder = [...moduleLevels];
-    [newOrder[currentIndex], newOrder[currentIndex + 1]] = [
-      newOrder[currentIndex + 1],
-      newOrder[currentIndex],
-    ];
+    [newOrder[idx], newOrder[idx + 1]] = [newOrder[idx + 1], newOrder[idx]];
+
     reorderMutation.mutate({
       module: level.module,
-      levelIds: newOrder.map((l: ApprovalLevel) => l.id),
+      levels: newOrder.map((l, i) => ({ id: l.id, level: i + 1 })),
     });
   };
 
@@ -199,6 +226,8 @@ export function ApprovalLevelsPage() {
     setIsDeleteModalOpen(true);
   };
 
+  // ── Render ────────────────────────────────────────────────────────────────────
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header
@@ -207,6 +236,7 @@ export function ApprovalLevelsPage() {
       />
 
       <div className="p-3 sm:p-6 space-y-4 sm:space-y-5">
+
         {/* Summary Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {['PAYMENT', 'PO', 'AP', 'SALES'].map((mod) => {
@@ -218,9 +248,7 @@ export function ApprovalLevelsPage() {
                 className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 shadow-sm"
               >
                 <div className="flex items-center gap-3">
-                  <div
-                    className={`h-10 w-10 rounded-lg bg-gradient-to-br ${gradient} flex items-center justify-center`}
-                  >
+                  <div className={`h-10 w-10 rounded-lg bg-gradient-to-br ${gradient} flex items-center justify-center`}>
                     <Layers className="h-5 w-5 text-white" />
                   </div>
                   <div>
@@ -235,7 +263,7 @@ export function ApprovalLevelsPage() {
           })}
         </div>
 
-        {/* Top toolbar */}
+        {/* Toolbar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Filter className="h-4 w-4 text-gray-500 dark:text-gray-400" />
@@ -245,7 +273,7 @@ export function ApprovalLevelsPage() {
               className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50"
             >
               <option value="all">All Modules</option>
-              {modules.map((mod: any) => (
+              {moduleOptions.map((mod) => (
                 <option key={mod.id} value={mod.name}>
                   {mod.displayName}
                 </option>
@@ -259,7 +287,7 @@ export function ApprovalLevelsPage() {
           </Button>
         </div>
 
-        {/* Error state */}
+        {/* Error */}
         {levelsError && (
           <div className="rounded-xl border border-red-200 bg-red-50 p-4 flex items-center gap-3">
             <AlertTriangle className="h-5 w-5 text-red-500" />
@@ -269,59 +297,36 @@ export function ApprovalLevelsPage() {
           </div>
         )}
 
-        {/* Levels Table */}
+        {/* Table */}
         <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/80">
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider w-20">
-                    Order
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
-                    Level
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
-                    Module
-                  </th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
-                    Min Value
-                  </th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
-                    Max Value
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
-                    Required Role
-                  </th>
-                  <th className="px-4 py-3 text-center font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-4 py-3 text-center font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
-                    Actions
-                  </th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider w-20">Order</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Level</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Name</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Module</th>
+                  <th className="px-4 py-3 text-right font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Min Value</th>
+                  <th className="px-4 py-3 text-right font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Max Value</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Required Role</th>
+                  <th className="px-4 py-3 text-center font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-center font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {isLoadingLevels
-                  ? Array(5)
-                    .fill(null)
-                    .map((_, i) => (
+                  ? Array(5).fill(null).map((_, i) => (
                       <tr key={i}>
-                        {Array(9)
-                          .fill(null)
-                          .map((_, j) => (
-                            <td key={j} className="px-4 py-4">
-                              <Skeleton className="h-4 w-full" />
-                            </td>
-                          ))}
+                        {Array(9).fill(null).map((_, j) => (
+                          <td key={j} className="px-4 py-4">
+                            <Skeleton className="h-4 w-full" />
+                          </td>
+                        ))}
                       </tr>
                     ))
-                  : Object.entries(levelsByModule).flatMap(
-                    ([, levels]: [string, ApprovalLevel[]]) =>
-                      levels.map((level: ApprovalLevel, index: number) => (
+                  : Object.entries(levelsByModule).flatMap(([, levels]) =>
+                      levels.map((level, index) => (
                         <tr
                           key={level.id}
                           className="hover:bg-gray-50/80 dark:hover:bg-gray-700/50 transition-colors"
@@ -330,9 +335,7 @@ export function ApprovalLevelsPage() {
                             <div className="flex items-center gap-1">
                               <button
                                 onClick={() => handleMoveUp(level)}
-                                disabled={
-                                  index === 0 || reorderMutation.isPending
-                                }
+                                disabled={index === 0 || reorderMutation.isPending}
                                 className="p-1 rounded text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                               >
                                 <ChevronUp className="h-4 w-4" />
@@ -340,8 +343,7 @@ export function ApprovalLevelsPage() {
                               <button
                                 onClick={() => handleMoveDown(level)}
                                 disabled={
-                                  index ===
-                                  levelsByModule[level.module].length - 1 ||
+                                  index === levelsByModule[level.module].length - 1 ||
                                   reorderMutation.isPending
                                 }
                                 className="p-1 rounded text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
@@ -350,28 +352,31 @@ export function ApprovalLevelsPage() {
                               </button>
                             </div>
                           </td>
+
                           <td className="px-4 py-3">
-                            <Badge variant="info" className="font-mono">
-                              L{level.level}
-                            </Badge>
+                            <Badge variant="info" className="font-mono">L{level.level}</Badge>
                           </td>
+
                           <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">
                             {level.name}
                           </td>
+
                           <td className="px-4 py-3">
                             <Badge variant="outline">{level.module}</Badge>
                           </td>
+
                           <td className="px-4 py-3 text-right font-mono text-gray-600 dark:text-gray-400">
                             {level.minValue.toLocaleString()}
                           </td>
+
                           <td className="px-4 py-3 text-right font-mono text-gray-600 dark:text-gray-400">
-                            {level.maxValue !== null
-                              ? level.maxValue.toLocaleString()
-                              : '∞'}
+                            {level.maxValue !== null ? level.maxValue.toLocaleString() : '∞'}
                           </td>
+
                           <td className="px-4 py-3">
-                            <Badge variant="default">{level.requiredRole}</Badge>
+                            <Badge variant="default">{level.role}</Badge>
                           </td>
+
                           <td className="px-4 py-3 text-center">
                             <button
                               onClick={() =>
@@ -382,20 +387,16 @@ export function ApprovalLevelsPage() {
                               }
                               disabled={toggleStatusMutation.isPending}
                               className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                              style={{
-                                backgroundColor: level.isActive
-                                  ? '#10b981'
-                                  : '#d1d5db',
-                              }}
+                              style={{ backgroundColor: level.isActive ? '#10b981' : '#d1d5db' }}
                             >
                               <span
-                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${level.isActive
-                                    ? 'translate-x-6'
-                                    : 'translate-x-1'
-                                  }`}
+                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                  level.isActive ? 'translate-x-6' : 'translate-x-1'
+                                }`}
                               />
                             </button>
                           </td>
+
                           <td className="px-4 py-3">
                             <div className="flex items-center justify-center gap-1">
                               <Button
@@ -420,37 +421,35 @@ export function ApprovalLevelsPage() {
                           </td>
                         </tr>
                       ))
-                  )}
+                    )}
               </tbody>
             </table>
           </div>
 
-          {!isLoadingLevels &&
-            (!levelsData?.levels || levelsData.levels.length === 0) && (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500">
-                <Layers className="h-12 w-12 mb-3 opacity-50" />
-                <p className="text-sm font-medium">
-                  No approval levels configured
-                </p>
-                <p className="text-xs mt-1">Add a level to get started</p>
-              </div>
-            )}
+          {/* Empty state */}
+          {!isLoadingLevels && Object.keys(levelsByModule).length === 0 && (
+            <div className="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500">
+              <Layers className="h-12 w-12 mb-3 opacity-50" />
+              <p className="text-sm font-medium">No approval levels configured</p>
+              <p className="text-xs mt-1">Add a level to get started</p>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Create Level Modal */}
+      {/* Create Modal */}
       {isCreateModalOpen && (
         <LevelFormModal
           title="Create Approval Level"
           isOpen={isCreateModalOpen}
           onClose={() => setIsCreateModalOpen(false)}
-          onSubmit={(data: any) => createMutation.mutate(data)}
+          onSubmit={(data) => createMutation.mutate(data)}
           isLoading={createMutation.isPending}
-          modules={modules}
+          modules={moduleOptions}
         />
       )}
 
-      {/* Edit Level Modal */}
+      {/* Edit Modal */}
       {isEditModalOpen && selectedLevel && (
         <LevelFormModal
           title="Edit Approval Level"
@@ -459,16 +458,14 @@ export function ApprovalLevelsPage() {
             setIsEditModalOpen(false);
             setSelectedLevel(null);
           }}
-          onSubmit={(data: any) =>
-            updateMutation.mutate({ id: selectedLevel.id, data })
-          }
+          onSubmit={(data) => updateMutation.mutate({ id: selectedLevel.id, data })}
           isLoading={updateMutation.isPending}
-          modules={modules}
+          modules={moduleOptions}
           initialData={selectedLevel}
         />
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Modal */}
       {isDeleteModalOpen && selectedLevel && (
         <DeleteConfirmModal
           isOpen={isDeleteModalOpen}
@@ -485,7 +482,8 @@ export function ApprovalLevelsPage() {
   );
 }
 
-// Level Form Modal Component
+// ─── Level Form Modal ─────────────────────────────────────────────────────────
+
 function LevelFormModal({
   title,
   isOpen,
@@ -500,28 +498,28 @@ function LevelFormModal({
   onClose: () => void;
   onSubmit: (data: any) => void;
   isLoading: boolean;
-  modules: any[];
+  modules: ModuleOption[];
   initialData?: ApprovalLevel;
 }) {
   const [formData, setFormData] = useState({
-    module: initialData?.module || '',
-    level: initialData?.level?.toString() || '',
-    name: initialData?.name || '',
+    module:   initialData?.module             || '',
+    level:    initialData?.level?.toString()  || '',
+    name:     initialData?.name               || '',
     minValue: initialData?.minValue?.toString() || '0',
     maxValue: initialData?.maxValue?.toString() || '',
-    requiredRole: initialData?.requiredRole || '',
-    isActive: initialData?.isActive ?? true,
+    role:     initialData?.role               || '',
+    isActive: initialData?.isActive           ?? true,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
-      module: formData.module,
-      level: parseInt(formData.level, 10),
-      name: formData.name,
+      module:   formData.module,
+      level:    parseInt(formData.level, 10),
+      name:     formData.name,
       minValue: parseFloat(formData.minValue),
       maxValue: formData.maxValue ? parseFloat(formData.maxValue) : null,
-      requiredRole: formData.requiredRole,
+      role:     formData.role,
       isActive: formData.isActive,
     });
   };
@@ -530,11 +528,9 @@ function LevelFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden animate-scale-in">
+
         <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-6 py-4">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h2>
           <button
@@ -553,15 +549,13 @@ function LevelFormModal({
               </label>
               <select
                 value={formData.module}
-                onChange={(e) =>
-                  setFormData({ ...formData, module: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, module: e.target.value })}
                 required
                 disabled={!!initialData}
                 className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed"
               >
                 <option value="">Select Module</option>
-                {modules.map((mod: any) => (
+                {modules.map((mod) => (
                   <option key={mod.id} value={mod.name}>
                     {mod.displayName}
                   </option>
@@ -575,9 +569,7 @@ function LevelFormModal({
               <Input
                 type="number"
                 value={formData.level}
-                onChange={(e) =>
-                  setFormData({ ...formData, level: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, level: e.target.value })}
                 required
                 min="1"
                 placeholder="1"
@@ -591,9 +583,7 @@ function LevelFormModal({
             </label>
             <Input
               value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
               placeholder="Department Head Approval"
             />
@@ -607,9 +597,7 @@ function LevelFormModal({
               <Input
                 type="number"
                 value={formData.minValue}
-                onChange={(e) =>
-                  setFormData({ ...formData, minValue: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, minValue: e.target.value })}
                 required
                 min="0"
                 step="0.01"
@@ -623,9 +611,7 @@ function LevelFormModal({
               <Input
                 type="number"
                 value={formData.maxValue}
-                onChange={(e) =>
-                  setFormData({ ...formData, maxValue: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, maxValue: e.target.value })}
                 min="0"
                 step="0.01"
                 placeholder="Unlimited"
@@ -641,10 +627,8 @@ function LevelFormModal({
               Required Role
             </label>
             <Input
-              value={formData.requiredRole}
-              onChange={(e) =>
-                setFormData({ ...formData, requiredRole: e.target.value })
-              }
+              value={formData.role}
+              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               required
               placeholder="Finance Manager"
             />
@@ -655,15 +639,10 @@ function LevelFormModal({
               type="checkbox"
               id="isActive"
               checked={formData.isActive}
-              onChange={(e) =>
-                setFormData({ ...formData, isActive: e.target.checked })
-              }
+              onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
               className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
-            <label
-              htmlFor="isActive"
-              className="text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
+            <label htmlFor="isActive" className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Active
             </label>
           </div>
@@ -683,7 +662,8 @@ function LevelFormModal({
   );
 }
 
-// Delete Confirmation Modal Component
+// ─── Delete Confirmation Modal ────────────────────────────────────────────────
+
 function DeleteConfirmModal({
   isOpen,
   onClose,
@@ -701,10 +681,7 @@ function DeleteConfirmModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-scale-in">
         <div className="p-6">
           <div className="flex items-center gap-4 mb-4">
@@ -722,7 +699,7 @@ function DeleteConfirmModal({
           </div>
 
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
-            Are you sure you want to delete the approval level{' '}
+            Are you sure you want to delete{' '}
             <span className="font-semibold">{levelName}</span>? Any workflows
             using this level will need to be reconfigured.
           </p>
