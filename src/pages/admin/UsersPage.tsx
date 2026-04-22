@@ -246,9 +246,9 @@ export function UsersPage() {
               </span>
               <button
                 onClick={() => setIsCreateModalOpen(true)}
-                className="h-7 px-2.5 rounded border border-blue-200 dark:border-blue-700 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors flex items-center gap-1"
+                className="h-8 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold transition-colors flex items-center gap-1.5 shadow-sm"
               >
-                <Plus className="h-3 w-3" /> Add User
+                <Plus className="h-4 w-4" /> Add User
               </button>
             </div>
           </div>
